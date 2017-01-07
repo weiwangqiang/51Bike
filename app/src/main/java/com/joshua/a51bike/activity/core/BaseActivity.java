@@ -20,6 +20,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     public BaseActivity(){
         mBaseActivity=this;
+
     }
 
     @Override
