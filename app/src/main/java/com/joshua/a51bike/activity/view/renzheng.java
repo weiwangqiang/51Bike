@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.control.UserControl;
+
 import com.joshua.a51bike.activity.core.BaseActivity;
 
 import org.xutils.view.annotation.ContentView;
@@ -26,12 +27,14 @@ import java.io.File;
 @ContentView(R.layout.renzheng)
 public class renzheng extends BaseActivity {
     private String TAG = "renzheng" ;
+
     String filePath = Environment.getExternalStorageDirectory()+"/51get";
 
     //拍照和图库的Intent请求码
     public final int TAKE_PHOTO_WITH_DATE = 200;
     public final int TAKE_PHOTO_FROM_IMAGE = 201;
     private UserControl userControl ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +42,9 @@ public class renzheng extends BaseActivity {
     }
 
     public void init() {
+
         userControl = UserControl.getUserControl();
+
         findId();
         setLister();
     }
@@ -50,6 +55,7 @@ public class renzheng extends BaseActivity {
 
     public void setLister() {
         findViewById(R.id.left_back).setOnClickListener(this);
+
         findViewById(R.id.getSrc).setOnClickListener(this);
 
     }
@@ -65,13 +71,16 @@ public class renzheng extends BaseActivity {
             case R.id.left_back:
                 finish();
                 break;
+
             case R.id.getSrc:
                 userControl.getUserIcn(renzheng.this);
                 break;
+
             default:
                 break;
         }
     }
+
     /**
      * 获取系统拍照或图库的回调函数
      * @param requestCode
@@ -116,4 +125,5 @@ public class renzheng extends BaseActivity {
         Log.i(TAG,"-->获取拍照图片 file is :\n "+filePath+ " translate uri is ：\n "+uri);
 
     }
+
 }

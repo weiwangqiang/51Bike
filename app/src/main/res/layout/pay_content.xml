@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <TextView
+            style="@style/blackTextStyle"
+            android:text="订单号:"/>
+
+        <TextView
+            style="@style/grayTextStyle"
+            android:id="@+id/order_number"
+            android:lines="1"
+            android:enabled="true"
+            android:text="12345254242453454254452424525426789"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center_vertical"
+
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/blackTextStyle"
+            android:text="车号:"
+            android:id="@+id/textView9" />
+
+        <TextView
+            style="@style/grayTextStyle"
+            android:id="@+id/bike_id"
+            android:layout_weight="1"
+            android:text="123456789"/>
+        <TextView
+            style="@style/blackTextStyle"
+            android:id="@+id/unPay"
+            android:text="未付款"/>
+    </LinearLayout>
+
+    <TextView
+        style="@style/BColorBigTextStyle"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:text="-1元"
+        android:id="@+id/sum"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:gravity="center_vertical"
+
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/blackTextStyle"
+            android:text="订单起始时间"
+            android:id="@+id/textView8" />
+
+        <TextView
+            style="@style/grayTextStyle"
+           android:id="@+id/order_startTime"
+            android:text="@string/startTime"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:gravity="center_vertical"
+
+        android:orientation="horizontal">
+        <TextView
+            style="@style/blackTextStyle"
+            android:text="订单结束时间:"/>
+        <TextView
+            style="@style/grayTextStyle"
+            android:id="@+id/order_endTime"
+            android:text="@string/endTime"/>
+    </LinearLayout>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        >
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:background="@color/white"
+            android:drawableLeft="@drawable/zhifubao"
+            android:drawableRight="@drawable/check_button_bcolor"
+            android:id="@+id/radio1" />
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:button="@null"
+            android:checked="true"
+            android:background="@color/white"
+            android:drawableLeft="@drawable/zhifubao"
+            android:drawableRight="@drawable/check_button_bcolor"
+            android:id="@+id/radio2" />
+    </RadioGroup>
+
+</LinearLayout>
