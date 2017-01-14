@@ -1,11 +1,16 @@
 package com.joshua.a51bike.utils;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.util.Log;
 import android.view.View;
 
 import com.joshua.a51bike.application.BaseApplication;
+
+import java.util.List;
 
 
 /**
@@ -25,6 +30,7 @@ import com.joshua.a51bike.application.BaseApplication;
  **/
 
 public class UiUtils {
+    public static Boolean backstage = true;
     /**
      * 获取到字符数组
      * @param tabNames  字符数组的id
@@ -92,4 +98,30 @@ public class UiUtils {
         BaseApplication.getHandler().removeCallbacks(auToRunTask);
     }
 
+    public static void setBackstage(Boolean b){
+        backstage = b;
+    }
+    public static Boolean getBackstage(){
+        return backstage;
+    }
+    public static String getTopActivityInfo(Context context) {
+        ActivityManager manager = ((ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE));
+        String topActivityName = "";
+        if (Build.VERSION.SDK_INT >= 21) {
+            List<ActivityManager.RunningAppProcessInfo> pis = manager.getRunningAppProcesses();
+            ActivityManager.RunningAppProcessInfo topAppProcess = pis.get(0);
+            if (topAppProcess != null && topAppProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                topActivityName = topAppProcess.processName;
+//                info.topActivityName = "";
+            }
+        } else {
+            //getRunningTasks() is deprecated since API Level 21 (Android 5.0)
+            List localList = manager.getRunningTasks(1);
+            ActivityManager.RunningTaskInfo localRunningTaskInfo = (ActivityManager.RunningTaskInfo)localList.get(0);
+            topActivityName = localRunningTaskInfo.topActivity.getPackageName();
+//            info.topActivityName = localRunningTaskInfo.topActivity.getClassName();
+        }
+        Log.e("UiUtils","topActivityName is "+topActivityName);
+        return topActivityName;
+    }
 }

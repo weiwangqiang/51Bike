@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            >
+            <TextView
+                style="@style/blackTextStyle"
+                android:textSize="18sp"
+                android:text="租车单价:"/>
+            <TextView
+                style="@style/BColorTextStyle"
+                android:id="@+id/bike_mes_price"
+                android:textSize="18sp"
+                android:text="3元/小时"/>
+        </LinearLayout>
+<TextView
+    style="@style/blackTextStyle"
+    android:text="@string/bike_message_text1"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="11dp"
+
+        android:orientation="horizontal">
+        <TextView
+            style="@style/blackTextStyle"
+            android:textSize="18sp"
+            android:text="账户余额"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/textView2" />
+        <TextView
+            style="@style/BColorTextStyle"
+            android:id="@+id/bike_mes_account"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:textSize="18sp"
+            android:text="18元"/>
+    </RelativeLayout>
+
+    <Button
+        style="@style/borderButtonStyle"
+        android:id="@+id/bike_mes_rent"
+        android:text="@string/sure_rent"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <TextView
+            style="@style/blackTextStyle"
+            android:layout_centerInParent="true"
+            android:text="确认即同意"/>
+        <TextView
+            style="@style/BColorTextStyle"
+            android:layout_centerInParent="true"
+            android:id="@+id/bike_mes_agreement"
+            android:text="@string/agreement"/>
+
+    </LinearLayout>
+</LinearLayout>

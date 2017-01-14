@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="@dimen/dialog_bg_margin"
+    android:layout_marginLeft="@dimen/dialog_bg_margin"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:background="@drawable/button_circle_white">
+    <TextView
+            style="@style/blackTextStyle"
+            android:id="@+id/dialog_title"
+            android:textSize="@dimen/text_size_title"
+            android:text="title"/>
+    <TextView
+        style="@style/blackTextStyle"
+        android:id="@+id/dialog_content"
+
+        android:text="content"
+        android:textSize="@dimen/text_size_content"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/gray"/>
+
+    <View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/gray"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_circle_white"
+
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dialog_button_height"
+            android:background="@drawable/button_circle_white"
+            android:text="取消"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_content"
+            android:id="@+id/dialog_cancel" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="@dimen/dialog_button_height"
+            android:background="@color/gray"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dialog_button_height"
+            android:background="@drawable/button_circle_white"
+            android:textSize="@dimen/text_size_content"
+            android:text="确定"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:id="@+id/dialog_sure" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,11 +1,129 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/baseColor</item>
+        <item name="colorPrimaryDark">@color/baseColor</item>
+        <item name="colorAccent">@color/baseColor</item>
+    </style>
+    //welcome的style
+    <style name="StartAppTheme" parent="@style/AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+    <!--主色调的圆形button-->
+    <style name="buttonStyle">
+    <item name="android:textColor">@color/white</item>
+    <item name="android:background">@drawable/buttonbg</item>
+    <item name="android:textSize">18sp</item>
+    <item name="android:layout_marginLeft">10dp</item>
+    <item name="android:layout_marginRight">10dp</item>
+</style>
+    <!--主色调的圆大间距button-->
+
+    <style name="buttonSmallStyle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/buttonbg</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_marginLeft">30dp</item>
+        <item name="android:layout_marginRight">30dp</item>
     </style>
 
+    <!--left_main 的button-->
+    <style name="listButtonStyle">
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:drawableEnd">@drawable/gray_next</item>
+        <item name="android:paddingRight">18dp</item>
+        <item name="android:paddingLeft">18dp</item>
+    </style>
+    <!--内容text的基本 Style-->
+    <style name="baseTextStyle" >
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+
+    </style>
+    <!--黑色的text Style-->
+
+    <style name="blackTextStyle" parent="baseTextStyle">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_margin">10dp</item>
+    </style>
+    <!--灰色的text Style-->
+
+    <style name="grayTextStyle" parent="baseTextStyle">
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:layout_margin">20dp</item>
+    </style>
+    <!--白色的text Style-->
+
+    <style name="whiteTextStyle" parent="baseTextStyle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_margin">10dp</item>
+    </style>
+    <style name="whiteBigTextStyle" parent="baseTextStyle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+    <!--主色调的text Style-->
+
+    <style name="BColorTextStyle" parent="baseTextStyle">
+        <item name="android:textColor">@color/baseColor</item>
+    </style>
+
+    <style name="BColorBigTextStyle" parent="baseTextStyle">
+        <item name="android:textColor">@color/baseColor</item>
+        <item name="android:textSize">@dimen/text_size_title</item>
+
+    </style>
+    <style name="OrangeTextStyle" parent="baseTextStyle">
+        <item name="android:textColor">@color/orange</item>
+
+    </style>
+    <!--标题的text Style-->
+
+    <style name="titleStyle" parent="baseTextStyle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textSize">21sp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
+    <!--返回键的 Style-->
+
+    <style name="backStyle" >
+        <item name="android:src">@drawable/white_back</item>
+        <item name="android:background">@color/baseColor</item>
+        <item name="android:layout_width">@dimen/top_height</item>
+        <item name="android:layout_height">@dimen/top_height</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+    <!--返回键的 Style-->
+
+    <style name="backArrowStyle">
+        <item name="android:src">@drawable/back_arrow</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:layout_width">@dimen/top_height</item>
+        <item name="android:layout_height">@dimen/top_height</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+    <!--带有边框的button-->
+    <style name="borderButtonStyle">
+        <item name="android:background">@drawable/border_button</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">50dp</item>
+        <item name="android:layout_marginRight">50dp</item>
+        <item name="android:textColor">@color/baseColor</item>
+
+        <item name="android:layout_centerVertical">true</item>
+
+
+    </style>
 </resources>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_height"
+        android:background="@color/baseColor">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/left_title"
+            style="@style/titleStyle"
+            android:text="@string/user_infor"/>
+
+        <ImageButton
+            style="@style/backStyle"
+            android:id="@+id/left_back"
+            />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+
+        android:background="@drawable/button_circle_little_gray"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_circle_little_gray"
+
+            android:text="真实姓名 : "
+            android:paddingLeft="10dp"
+            android:textColor="@color/black"
+            android:gravity="center_vertical"
+             />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/main_Bottom_height"
+            android:layout_weight="4"
+            android:hint="请输入真实姓名"
+            android:background="@drawable/button_circle_little_gray"
+
+            android:id="@+id/name"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+
+        android:background="@drawable/button_circle_little_gray"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_circle_little_gray"
+
+            android:text="身份证号 : "
+            android:paddingLeft="10dp"
+            android:textColor="@color/black"
+            android:gravity="center_vertical"
+             />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/main_Bottom_height"
+            android:layout_weight="4"
+            android:hint="请输入身份证号"
+            android:background="@drawable/button_circle_little_gray"
+
+            android:id="@+id/id"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/button_circle_little_gray"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_circle_little_gray"
+
+            android:text="所属学校 : "
+            android:paddingLeft="10dp"
+            android:textColor="@color/black"
+            android:gravity="center_vertical"
+            android:id="@+id/textView5" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/main_Bottom_height"
+            android:layout_weight="4"
+            android:hint="请选择所属校区"
+            android:background="@drawable/button_circle_little_gray"
+            android:id="@+id/school"/>
+
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/choice_school"/>
+    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/grayTextStyle"
+        android:text="@string/infor_reminder"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/getSrc"
+            android:text="获取"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/Login_button"
+            android:textColor="@color/baseColor"
+            android:textSize="@dimen/text_size_content"
+            android:background="@drawable/renzheng"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            />
+    </RelativeLayout>
+
+</LinearLayout>
