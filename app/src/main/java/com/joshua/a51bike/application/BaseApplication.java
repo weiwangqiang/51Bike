@@ -3,6 +3,7 @@ package com.joshua.a51bike.application;
 import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 
 import org.xutils.x;
 
@@ -33,6 +34,7 @@ public class BaseApplication extends Application {
         application=this;
         mainTid = android.os.Process.myTid();
         handler=new Handler();
+        Log.e("BaseApplication","hand is created");
     }
     public static Context getApplication() {
         return application;
@@ -41,6 +43,9 @@ public class BaseApplication extends Application {
         return mainTid;
     }
     public static Handler getHandler() {
+        if(null == handler){
+            handler = new Handler();
+        }
         return handler;
     }
 

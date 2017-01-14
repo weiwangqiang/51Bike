@@ -22,7 +22,7 @@ import android.content.SharedPreferences;
 public class PrefUtils {
 
 	private static final String PREF_NAME = "config";
-private static SharedPreferences sp;
+	private static SharedPreferences sp;
 
 	public static boolean getBoolean(Context ctx, String key,
 			boolean defaultValue) {
@@ -59,4 +59,5 @@ private static SharedPreferences sp;
 		}
 		sp.edit().clear().apply();
 	}
+
 }

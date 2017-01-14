@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.amap.api.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        </com.amap.api.maps.MapView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/main_Bottom_height"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="@dimen/main_Bottom_height"
+                android:layout_height="match_parent"
+                android:id="@+id/main_location"
+                android:background="@drawable/location"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+
+                />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:id="@+id/rent"
+                android:background="@drawable/buttonbg"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/saoma"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/main_Bottom_height"
+                    android:text="@string/saoma"
+                    style="@style/whiteBigTextStyle"
+                    android:gravity="center_vertical"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/textView7" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="@dimen/main_Bottom_height"
+                android:layout_height="@dimen/main_Bottom_height"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/view" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>
