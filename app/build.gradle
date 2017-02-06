@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '25.0.1'
+    buildToolsVersion '23.0.1'
     defaultConfig {
         applicationId "com.joshua.a51bike"
         minSdkVersion 16
@@ -29,7 +29,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile files('libs/AMap_Location_V3.2.0_20161205.jar')
     compile 'com.android.support:design:24.1.0'
-    compile group: 'org.xutils', name: 'xutils', version: '3.3.40'
-
+    compile 'org.xutils:xutils:3.3.40'
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
+    compile files('libs/alipaySdk-20161222.jar')
 }

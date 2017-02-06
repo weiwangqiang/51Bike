@@ -28,7 +28,6 @@ public class BikeControl extends BaseActivity {
     private void init() {
         userControl = UserControl.getUserControl();
         findid();
-        findid();
 
         setLister();
     }
