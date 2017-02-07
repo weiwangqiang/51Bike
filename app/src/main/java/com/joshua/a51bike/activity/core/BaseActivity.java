@@ -5,7 +5,6 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.joshua.a51bike.receiver.ExitReceiver;
@@ -35,9 +34,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e(TAG,"------>> onResume<<<<<-------------");
-
-        Log.w("base","--->>this is " + mBaseActivity.toString());
         Boolean b = UiUtils.getBackstage();
 //        if(b){
 //            UiUtils.setBackstage(false);
@@ -49,7 +45,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onStop() {
         super.onStop();
-        Log.e(TAG,"------>> onStop<<<<<-------------");
 
 //        if (!isFinished) {
 //            //括号内部的代码请单独提成一个方法  我这里是为了视觉 懒了
@@ -67,7 +62,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     @Override
     public void finish() {
         super.finish();
-        Log.e(TAG,"------>> onFinish <<<<<-------------");
         isFinished = true;
     }
 

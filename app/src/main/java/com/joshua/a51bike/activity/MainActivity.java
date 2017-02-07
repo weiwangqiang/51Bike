@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -34,6 +36,7 @@ import com.joshua.a51bike.activity.control.UserControl;
 import com.joshua.a51bike.activity.core.BaseMap;
 import com.joshua.a51bike.activity.dialog.GPSAlerDialog;
 import com.joshua.a51bike.activity.dialog.LocateProgress;
+import com.joshua.a51bike.activity.dialog.MarginAlerDialog;
 import com.joshua.a51bike.activity.presenter.locatePresenter;
 import com.joshua.a51bike.activity.presenter.mapPresenter;
 import com.joshua.a51bike.activity.view.CircleImageView;
@@ -80,6 +83,8 @@ public class MainActivity extends BaseMap {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        initLeftMain();
         //实现左右滑动
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -87,6 +92,21 @@ public class MainActivity extends BaseMap {
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+    }
+
+    /**
+     * 初始化侧滑view的高宽
+     */
+    private void initLeftMain() {
+        DisplayMetrics metric = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metric);
+        int windowsWight = metric.widthPixels;
+//        int windowsHeight = metric.heightPixels;
+        View leftMenu = findViewById(R.id.leftMain);
+        ViewGroup.LayoutParams leftParams = leftMenu.getLayoutParams();
+//        leftParams.height = windowsHeight;
+        leftParams.width = windowsWight;
+        leftMenu.setLayoutParams(leftParams);
     }
 
     public void init() {
@@ -153,7 +173,11 @@ public class MainActivity extends BaseMap {
                 getLocation();
                 break;
             case R.id.rent:
-                userControl.saoma(MainActivity.this);
+                dialogControl.setDialog(new
+                        MarginAlerDialog(MainActivity.this,
+                        "保证金提示","请先充值保证金"));
+                dialogControl.show();
+//                userControl.saoma(MainActivity.this);
                 break;
             case R.id.main_user_icn:
                 userControl.toChoice(MainActivity.this);

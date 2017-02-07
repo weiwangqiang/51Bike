@@ -14,7 +14,7 @@ public interface UserState {
     void getUserIcn(Context context);
     void account(Activity activity);
     void saoma(Activity activity);
-    void toBikeMes(Activity activity);
+    void toBikeMes(Activity activity,String url);
     void rent(Activity activity);
     void service(Activity activity);
     void share(Activity activity);

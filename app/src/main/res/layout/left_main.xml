@@ -4,10 +4,19 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
-
-  <include
-      layout="@layout/top_layout"/>
-<ScrollView
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        card_view:cardElevation="15dp"
+        card_view:cardPreventCornerOverlap="true"
+        card_view:cardUseCompatPadding="false"
+        android:layout_height="wrap_content">
+    <include
+        layout="@layout/top_layout"/>
+</android.support.v7.widget.CardView>
+    <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="none">
@@ -15,16 +24,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="170dp"
-            android:background="@color/baseColor">
+            android:background="@drawable/default_bg">
 
             <com.joshua.a51bike.activity.view.CircleImageView
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:id="@+id/main_user_icn"
-                android:src="@drawable/usericn"
+                android:src="@drawable/default_icn"
                 android:layout_marginTop="20dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true" />
@@ -36,40 +46,115 @@
                 android:layout_below="@+id/main_user_icn"
                 android:layout_centerHorizontal="true" />
         </RelativeLayout>
-
-        <RelativeLayout
+        <include
+            layout="@layout/progress"/>
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                style="@style/grayTextStyle"
-                android:text="账户余额"
-                android:layout_toRightOf="@+id/user_account"
-                android:id="@+id/textView" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <TextView
-                style="@style/grayTextStyle"
-                android:textSize="30sp"
-                android:textColor="@color/baseColor"
-                android:layout_below="@+id/textView"
-                android:layout_margin="15dp"
-                android:text="18 元"
-                android:layout_alignTop="@+id/textView"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="12dp"
-                android:layout_marginStart="12dp"
-                android:id="@+id/user_account" />
-            <ImageView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/user_account"
-                android:background="@drawable/gray_divider"/>
-        </RelativeLayout>
+                android:orientation="vertical"
+
+                android:layout_weight="1">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="账户余额"
+                android:textColor="@color/gray"
+                android:textSize="@dimen/text_size_title"
+                android:layout_marginLeft="18dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="18dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/money"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="100"
+                        android:textSize="@dimen/text_size_Big"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/baseColor"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="元"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/gray"
+/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:src="@drawable/y_divider"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_title"
+                    android:textColor="@color/gray"
+
+                    android:text="保证金"
+                    android:layout_marginLeft="18dp"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="18dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/money"
+                     />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="100"
+                        android:textSize="@dimen/text_size_Big"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/baseColor"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="元"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/gray"
+/>
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -77,56 +162,35 @@
                 android:text="我的钱包"
                 android:id="@+id/account"
                 android:background="@color/white"/>
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/user_account"
-                android:background="@drawable/gray_divider"/>
-            <Button
+         <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/listButtonStyle"
                 android:text="我的行程"
                 android:id="@+id/trip"
                 android:background="@color/white"/>
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/gray_divider"/>
-            <Button
+             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/listButtonStyle"
                 android:text="联系客服"
                 android:id="@+id/service"
                 android:background="@color/white"/>
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/gray_divider"/>
-            <Button
+             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/listButtonStyle"
                 android:text="分享"
                 android:id="@+id/share"
                 android:background="@color/white"/>
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/gray_divider"/>
-            <Button
+             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/listButtonStyle"
                 android:text="设置"
                 android:id="@+id/main_setting"
                 android:background="@color/white"/>
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/gray_divider"/>
-        </LinearLayout>
+            </LinearLayout>
     </LinearLayout>
 </ScrollView>
 

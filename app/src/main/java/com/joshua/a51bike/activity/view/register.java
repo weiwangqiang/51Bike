@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
+import com.joshua.a51bike.util.AppUtil;
 
 import org.xutils.view.annotation.ContentView;
 
@@ -18,6 +19,8 @@ import org.xutils.view.annotation.ContentView;
  */
 @ContentView(R.layout.login_fast)
 public class register extends BaseActivity {
+    private String url = AppUtil.BaseUrl +"/insertUser";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

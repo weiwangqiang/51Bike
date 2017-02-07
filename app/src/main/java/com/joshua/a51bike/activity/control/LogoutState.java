@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import com.joshua.a51bike.Interface.UserState;
 import com.joshua.a51bike.activity.view.Login;
+import com.joshua.a51bike.activity.view.ScanActivity;
 import com.joshua.a51bike.activity.view.register;
 import com.joshua.a51bike.activity.view.registerOrLogin;
 
@@ -45,12 +46,12 @@ public class LogoutState implements UserState {
 
     @Override
     public void saoma(Activity activity) {
-        Choice(activity);
-
+        Intent intent = new Intent(activity, ScanActivity.class);
+        activity.startActivity(intent);
     }
 
     @Override
-    public void toBikeMes(Activity activity) {
+    public void toBikeMes(Activity activity,String url) {
         Choice(activity);
 
 

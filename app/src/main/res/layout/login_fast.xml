@@ -31,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/OrangeTextStyle"
+            android:lines="1"
             android:id="@+id/login_fast_admin"
             android:hint="请输入手机号"
             />
@@ -53,6 +54,7 @@
                 android:layout_height="wrap_content"
                 style="@style/OrangeTextStyle"
                 android:id="@+id/main_login_name"
+                android:lines="1"
                 android:hint="请输验证码"
                 />
         </android.support.design.widget.TextInputLayout>

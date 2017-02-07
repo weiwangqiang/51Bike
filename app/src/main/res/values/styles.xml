@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/baseColor</item>
         <item name="colorPrimaryDark">@color/baseColor</item>
         <item name="colorAccent">@color/baseColor</item>
+        <item name="android:clipToPadding">true</item>
+        <item name="android:fitsSystemWindows">true</item>
     </style>
     //welcome的style
     <style name="StartAppTheme" parent="@style/AppTheme">
@@ -37,7 +39,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:drawableEnd">@drawable/gray_next</item>
-        <item name="android:paddingRight">18dp</item>
+        <item name="android:paddingRight">20dp</item>
         <item name="android:paddingLeft">18dp</item>
     </style>
     <!--内容text的基本 Style-->
@@ -99,6 +101,13 @@
 
     <style name="backStyle" >
         <item name="android:src">@drawable/white_back</item>
+        <item name="android:background">@color/baseColor</item>
+        <item name="android:layout_width">@dimen/top_height</item>
+        <item name="android:layout_height">@dimen/top_height</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+    <style name="backArrowShortStyle" >
+        <item name="android:src">@drawable/back_arrow_short</item>
         <item name="android:background">@color/baseColor</item>
         <item name="android:layout_width">@dimen/top_height</item>
         <item name="android:layout_height">@dimen/top_height</item>

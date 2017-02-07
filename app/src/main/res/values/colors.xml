@@ -3,7 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="baseColor">#FD8E57</color>
+    <color name="baseColor">#ff893b</color>
+    <color name="topBaseColor">#cc6e2f</color>
+
     <color name="orange">#FD8739</color>
     <color name="white">#FFFFFF</color>
     <color name="gray">#40000000</color>
@@ -12,4 +14,9 @@
     <color name="blue">#4c90f9</color>
     <color name="transparent">#00000000</color>
     <color name="black">#000000</color>
+
+
+    <color name="result_view">#b0000000</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="possible_result_points">#c0ffff00</color>
 </resources>

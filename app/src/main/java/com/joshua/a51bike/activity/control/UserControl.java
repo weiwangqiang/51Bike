@@ -5,6 +5,7 @@ import android.content.Context;
 
 
 import com.joshua.a51bike.Interface.UserState;
+import com.joshua.a51bike.entity.User;
 
 /**
  * Created by wangqiang on 2017/1/9.
@@ -12,7 +13,20 @@ import com.joshua.a51bike.Interface.UserState;
 
 public class UserControl implements UserState {
     private  static UserControl userControl = new UserControl();
-    private  UserState userState = new LoginState();
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    private  UserState userState = new LogoutState();
+
+
+
+    private User user = null;
     public static UserControl getUserControl(){
         return  userControl;
     }
@@ -51,8 +65,8 @@ public class UserControl implements UserState {
     }
 
     @Override
-    public void toBikeMes(Activity activity) {
-        userState.toBikeMes(activity);
+    public void toBikeMes(Activity activity,String url) {
+        userState.toBikeMes(activity,url);
 
     }
 

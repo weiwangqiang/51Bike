@@ -121,7 +121,7 @@ public class UiUtils {
             topActivityName = localRunningTaskInfo.topActivity.getPackageName();
 //            info.topActivityName = localRunningTaskInfo.topActivity.getClassName();
         }
-        Log.e("UiUtils","topActivityName is "+topActivityName);
+        Log.i("UiUtils","topActivityName is "+topActivityName);
         return topActivityName;
     }
 }

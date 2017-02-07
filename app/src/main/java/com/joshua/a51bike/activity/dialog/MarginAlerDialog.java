@@ -66,7 +66,7 @@ public class MarginAlerDialog extends MyAlerDialog implements View.OnClickListen
             case R.id.dialog_sure:
                 Log.w(TAG,"----------->> dialog is sure !!!");
                 UserControl u = UserControl.getUserControl();
-                u.toBikeMes(context);
+                u.saoma(context);
                 cancel();
                 break;
         }
