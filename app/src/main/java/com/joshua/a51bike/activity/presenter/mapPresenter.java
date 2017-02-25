@@ -70,6 +70,7 @@ public class mapPresenter implements mapInterface {
                     });
                 } else if (r != null && r.getPaths() == null) {
                     ToastUtil.show(activitty, "对不起，没有搜索到相关数据！");
+
                 }
             } else {
                 ToastUtil.show(activitty,"对不起，没有搜索到相关数据！");

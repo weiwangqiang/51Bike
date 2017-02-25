@@ -2,9 +2,11 @@ package com.joshua.a51bike.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
@@ -42,7 +45,6 @@ import com.joshua.a51bike.activity.presenter.mapPresenter;
 import com.joshua.a51bike.activity.view.CircleImageView;
 import com.joshua.a51bike.activity.view.Config;
 import com.joshua.a51bike.util.AMapUtil;
-import com.joshua.a51bike.util.ToastUtil;
 
 import org.xutils.view.annotation.ContentView;
 
@@ -51,6 +53,7 @@ import org.xutils.view.annotation.ContentView;
 public class MainActivity extends BaseMap {
     public String TAG = "MainActivity";
     private CircleImageView userIcn;
+    private TextView userName,userMoney,userCash;
     private DrawerLayout drawer;
     private MapView mapView;
     private Context mContext;
@@ -107,6 +110,11 @@ public class MainActivity extends BaseMap {
 //        leftParams.height = windowsHeight;
         leftParams.width = windowsWight;
         leftMenu.setLayoutParams(leftParams);
+        if (Build.VERSION.SDK_INT >= 21) {
+            Log.i(TAG, "initLeftMain: setCarViewElevation !");
+            CardView carView = (CardView) findViewById(R.id.card_view);
+            carView.setCardElevation(15.2f);
+        }
     }
 
     public void init() {
@@ -135,13 +143,9 @@ public class MainActivity extends BaseMap {
         location = (Button) findViewById(R.id.main_location);
 
         userIcn = (CircleImageView) findViewById(R.id.main_user_icn);
-    }
-
-    private void test() {
-        for(int i = 0;i <10 ; i++){
-            new String("test");
-
-        }
+        userName = (TextView) findViewById(R.id.main_user_name);
+        userMoney = (TextView) findViewById(R.id.money);
+        userCash = (TextView) findViewById(R.id.cash);
     }
 
 
@@ -248,7 +252,7 @@ public class MainActivity extends BaseMap {
     public void onBackPressed() {
         long mNowTime = System.currentTimeMillis();//获取第一次按键时间
         if ((mNowTime - mPressedTime) > 2000) {//比较两次按键时间差
-            Toast.makeText(mBaseActivity, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            uiUtils.showToast("再按一次退出程序");
             mPressedTime = mNowTime;
         } else {//退出程序
             Intent intent = new Intent("com.joshua.exit");
@@ -301,11 +305,11 @@ public class MainActivity extends BaseMap {
      */
     public void searchRouteResult(int routeType, int mode) {
         if (mStartPoint == null) {
-            ToastUtil.show(mContext, "定位中，稍后再试...");
+            uiUtils.showToast("定位中，稍后再试...");
             return;
         }
         if (mEndPoint == null) {
-            ToastUtil.show(mContext, "终点未设置");
+            uiUtils.showToast("终点未设置");
         }
 
         dialogControl.setDialog(new LocateProgress(MainActivity.this, "正在搜索......"));
@@ -347,6 +351,30 @@ public class MainActivity extends BaseMap {
                     changeLatLng(new LatLng(mStartPoint.getLatitude(),
                             mStartPoint.getLongitude())));
         }
+        if(null != userControl.getUser()){
+            initUserMessage();
+        }
+        else
+            initLogOut();
+    }
+
+    /**
+     * 未登录状态
+     */
+    private void initLogOut() {
+        userName.setText("未登录");
+
+        userMoney.setText("0");
+        userCash.setText("0");
+    }
+
+    /**
+     * 初始化用户信息
+     */
+    private void initUserMessage() {
+        userName.setText(userControl.getUser().getUsername());
+        userMoney.setText(userControl.getUser().getUsermoney()+"");
+        userCash.setText(userControl.getUser().getUsermoney()+"");
     }
 
     /**

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item >
+        <shape
+            android:shape="rectangle"
+            android:dither="true"
+            >
+            <corners android:radius="10dp"/>
+            <solid android:color="#ccc"/>
+        </shape>
+    </item>
+
+
+    //此处设置底部阴影效果，同时也可以设置top,left,right。
+    <item android:bottom="4dp">
+        <shape
+            android:shape="rectangle"
+            android:dither="true"
+            >
+            <corners android:radius="10dp"/>
+            <stroke android:width="2dp" android:color="@color/gray"/>
+            <solid android:color="@color/baseColor"/>
+        </shape>
+    </item>
+
+</layer-list>

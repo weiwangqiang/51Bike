@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.joshua.a51bike.application.BaseApplication;
 
@@ -31,6 +32,10 @@ import java.util.List;
 
 public class UiUtils {
     public static Boolean backstage = true;
+    public static Toast toast ;
+    public UiUtils(Context context){
+        toast = Toast.makeText(context,"",Toast.LENGTH_SHORT);
+    }
     /**
      * 获取到字符数组
      * @param tabNames  字符数组的id
@@ -96,6 +101,13 @@ public class UiUtils {
      */
     public static void cancel(Runnable auToRunTask) {
         BaseApplication.getHandler().removeCallbacks(auToRunTask);
+    }
+
+    public static void showToast(String content){
+        toast.setText(content);
+//        toast.setDuration(Toast.LENGTH_SHORT);
+//        toast.setGravity(View.TEXT_ALIGNMENT_CENTER,0,0);
+        toast.show();
     }
 
     public static void setBackstage(Boolean b){

@@ -10,16 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
-import com.android.volley.toolbox.Volley;
 import com.joshua.a51bike.R;
-import com.joshua.a51bike.activity.control.DialogControl;
-import com.joshua.a51bike.activity.control.UserControl;
+import com.joshua.a51bike.activity.control.LoginState;
 import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.activity.dialog.WaitProgress;
 import com.joshua.a51bike.entity.User;
@@ -27,18 +19,11 @@ import com.joshua.a51bike.util.AppUtil;
 import com.joshua.a51bike.util.JsonUtil;
 import com.joshua.a51bike.util.MyTools;
 
-import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.ex.HttpException;
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.x;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-
 
 
 /**
@@ -50,20 +35,21 @@ import java.util.Map;
  * @since 2017-01-10
  */
 @ContentView(R.layout.login)
-public class Login extends BaseActivity {
+public class Login extends BaseActivity{
     private String TAG = "Login";
-    private UserControl userControl;
     private String url = AppUtil.BaseUrl + "/user/login";
     private EditText getName, getPass;
     private Button login;
-    private RequestQueue requestQueue;
-    private DialogControl dialogControl;
-    private final int SEND_DIALOG = 0x1;
 
     private Handler handler = new Handler() {
         public void handleMessage(Message mes){
             switch (mes.what){
-                case SEND_DIALOG:
+                case NET_SUCCESS:
+                    uiUtils.showToast("成功登陆！");
+                    dialogControl.cancel();
+                    break;
+                case NET_ERROR:
+                    uiUtils.showToast("登陆失败！");
                     dialogControl.cancel();
                     break;
                 default:
@@ -79,9 +65,6 @@ public class Login extends BaseActivity {
     }
 
     public void init() {
-        userControl = UserControl.getUserControl();
-        requestQueue = Volley.newRequestQueue(Login.this);
-        dialogControl = DialogControl.getDialogControl();
         findId();
         setLister();
     }
@@ -125,35 +108,45 @@ public class Login extends BaseActivity {
         }
         String name = getName.getText().toString();
         String pass = getPass.getText().toString();
+
         User user = new User();
         user.setUserpass(pass);
         user.setUsername(name);
-        JSONObject jsonObject = JsonUtil.getJSONObject(user);
-        dialogControl.setDialog(new WaitProgress(this));
-        dialogControl.show();
-        if(null != jsonObject){
-            postjson(jsonObject);
-        }
-    }
-
-    public void post(){
         RequestParams params = new RequestParams(url);
 
-        Callback.Cancelable cancelable
-                = x.http().get(params,  new Callback.CommonCallback<List<RequestParams>>() {
+        params.addBodyParameter("username",name);
+        params.addBodyParameter("userpass",pass);
+        post(params);
+//        postJson(params);
+
+        dialogControl.setDialog(new WaitProgress(this));
+        dialogControl.show();
+    }
+
+    private void postJson( RequestParams params){
+        Log.d(TAG, "postJson: begin to post json");
+          Callback.Cancelable cancelable
+                = x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
-            public void onSuccess(List<RequestParams> result) {
-                Toast.makeText(x.app(), result.get(0).toString(), Toast.LENGTH_LONG).show();
+            public void onSuccess(String result) {
+                Log.d(TAG, "onSuccess: result is"+result );
+                Toast.makeText(x.app(), result.toString(), Toast.LENGTH_LONG).show();
+                dialogControl.cancel();
+
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                dialogControl.cancel();
+                Log.e(TAG, "onError: error !!!", null);
+                ex.printStackTrace();
+//                Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_LONG).show();
                 if (ex instanceof HttpException) { // 网络错误
                     HttpException httpEx = (HttpException) ex;
                     int responseCode = httpEx.getCode();
                     String responseMsg = httpEx.getMessage();
                     String errorResult = httpEx.getResult();
+                    Log.e(TAG, "onError: mes is "+responseMsg +" error "+errorResult, null);
                     // ...
                 } else { // 其他错误
                     // ...
@@ -162,7 +155,61 @@ public class Login extends BaseActivity {
 
             @Override
             public void onCancelled(CancelledException cex) {
+                dialogControl.cancel();
+
                 Toast.makeText(x.app(), "cancelled", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFinished() {
+                dialogControl.cancel();
+
+            }
+        });
+    }
+    private void post(RequestParams params){
+        Log.d(TAG, "post: post by xutils------>>");
+
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Log.e(TAG, "login come from Manager response is " + result.toString());
+                User user = JsonUtil.getUserObject(result.toString());
+                if(null != user){
+                    userControl.setUser(user);
+                    uiUtils.showToast("登陆成功！");
+                    userControl.setUserState(new LoginState());
+                    setResult(AppUtil.INTENT_RESPONSE);
+                    finish();
+                }else
+                    uiUtils.showToast("登陆失败！");
+                dialogControl.cancel();
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+//              handler.sendEmptyMessage(NET_ERROR);
+                Log.e(TAG, "onError: onError", null);
+                uiUtils.showToast("登陆失败！");
+                dialogControl.cancel();
+
+                ex.printStackTrace();
+//                Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                if (ex instanceof HttpException) { // 网络错误
+                    HttpException httpEx = (HttpException) ex;
+                    int responseCode = httpEx.getCode();
+                    String responseMsg = httpEx.getMessage();
+                    String errorResult = httpEx.getResult();
+                    Log.e(TAG, "onError: mes is " + responseMsg + " error " + errorResult, null);
+                }
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                Log.e(TAG, "onCancelled: cancel", null);
+                Toast.makeText(x.app(), "cancelled", Toast.LENGTH_LONG).show();
+                dialogControl.cancel();
+
             }
 
             @Override
@@ -170,35 +217,6 @@ public class Login extends BaseActivity {
 
             }
         });
-    }
-
-
-    private void postjson(JSONObject object) {
-        JsonRequest<JSONObject> jsonResquest =
-                new JsonObjectRequest(Request.Method.POST, url, object,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject object) {
-                        Log.e("login", "login response is " + object.toString());
-                        handler.sendEmptyMessage(SEND_DIALOG);
-                    }
-                },
-                        new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                Log.e("error", "login Error is " + volleyError);
-                handler.sendEmptyMessage(SEND_DIALOG);
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("dat    aType", "json");
-                headers.put("ContentType", "application/json; charset=UTF-8");
-                return headers;
-            }
-        };
-        requestQueue.add(jsonResquest);
     }
 
     @Override

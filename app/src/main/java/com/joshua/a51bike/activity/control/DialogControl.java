@@ -1,7 +1,5 @@
 package com.joshua.a51bike.activity.control;
 
-import android.util.Log;
-
 import com.joshua.a51bike.Interface.DialogInterface;
 
 /**
@@ -34,6 +32,6 @@ public class DialogControl {
 
     public void cancel() {
         dialog.myCancel();
-        Log.e(TAG, "dialogInterface is be cancel and is  null ? " + (dialog.getClass()));
+//        Log.e(TAG, "dialogInterface is be cancel and is  null ? " + (dialog.getClass()));
     }
 }

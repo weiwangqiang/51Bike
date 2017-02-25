@@ -14,7 +14,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Button;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
@@ -29,7 +28,14 @@ import com.joshua.a51bike.zxing.view.ViewfinderView;
 import java.io.IOException;
 import java.util.Vector;
 
-
+/**
+ * class description here
+ *	扫码
+ * @version 1.0.0
+ * @outher wangqiang
+ * @project 51Bike
+ * @since 2017-01-10
+ */
 public class ScanActivity extends BaseActivity implements Callback {
 	private String TAG = "ScanActivity";
 	private CaptureActivityHandler handler;
@@ -53,7 +59,7 @@ public class ScanActivity extends BaseActivity implements Callback {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_scan);
-		initTextView();
+//		initTextView();
 		CameraManager.init(getApplication());
 		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
 		findViewById(R.id.left_back).setOnClickListener(this);
@@ -61,18 +67,6 @@ public class ScanActivity extends BaseActivity implements Callback {
 		inactivityTimer = new InactivityTimer(this);
 	}
 
-	private void initTextView() {
-		Button btn_title= (Button) findViewById(R.id.btn_title);
-		switch (getIntent().getIntExtra("comeFrom",FETCH_PACKAGE_CODE)){
-			case FETCH_PACKAGE_CODE:
-				btn_title.setText("取件扫码");
-				break;
-			case DELIVER_PACKAGE_CODE:
-				btn_title.setText("派件扫码");
-				break;
-		}
-
-	}
 
 	@Override
 	protected void onResume() {
@@ -128,8 +122,6 @@ public class ScanActivity extends BaseActivity implements Callback {
 		}else {
 			resultIntent.putExtra("url",resultString);
 //			setResult(RESULT_CODE_OK, resultIntent);
-
-
 
 			userControl.toBikeMes(this,resultString);
 		}

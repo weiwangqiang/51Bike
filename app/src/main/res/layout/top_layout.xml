@@ -6,7 +6,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/top_height"
-            android:background="@color/baseColor">
+            android:background="@color/baseColor"
+           >
             <ImageButton
                 style="@style/backArrowShortStyle"
                 android:id="@+id/left_back"

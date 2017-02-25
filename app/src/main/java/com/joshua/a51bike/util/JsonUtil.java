@@ -1,8 +1,7 @@
 package com.joshua.a51bike.util;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
+import com.joshua.a51bike.entity.Car;
 import com.joshua.a51bike.entity.User;
 
 import org.json.JSONException;
@@ -30,20 +29,41 @@ public class JsonUtil {
         JSONObject jsonObject = null;
         try{
             jsonObject = new JSONObject(json);
-            Log.d(TAG, "Login: json is "+ jsonObject.toString());
         }catch (JSONException e){
             e.printStackTrace();
         }
         return jsonObject;
     }
 
+    public static String getJson(Object object){
+        return  gson.toJson(object);
+    }
     /**
      * 由json获取user对象
      * @param json
      * @return
      */
     public static User getUserObject(String json){
-        return gson.fromJson(json,User.class);
-    }
+        User user = null;
+        try{
+            user = gson.fromJson(json,User.class);
+        }catch(Exception e){
 
+        }
+        return user;
+    }
+    /**
+     * 由json获取car对象
+     * @param json
+     * @return
+     */
+    public static Car getCarObject(String json){
+        Car car = null;
+        try{
+            car = gson.fromJson(json,Car.class);
+        }catch(Exception e){
+
+        }
+        return car;
+    }
 }

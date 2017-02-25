@@ -8,8 +8,18 @@ import android.widget.Button;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.control.UserControl;
 import com.joshua.a51bike.activity.core.BaseActivity;
+import com.joshua.a51bike.activity.dialog.OutControlDialog;
+import com.joshua.a51bike.activity.dialog.WaitProgress;
+import com.joshua.a51bike.entity.User;
+import com.joshua.a51bike.util.AppUtil;
 
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
+import org.xutils.x;
+
+import java.sql.Time;
+import java.text.SimpleDateFormat;
 
 /**
  * Created by wangqiang on 2017/1/9.
@@ -18,6 +28,7 @@ import org.xutils.view.annotation.ContentView;
 public class BikeControl extends BaseActivity {
     private UserControl userControl;
     private String TAG = "BikeControl";
+    private String rbUrl = AppUtil.BaseUrl+"/user/huanche";
     private Button rechange ,reback,start,lock;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +81,17 @@ public class BikeControl extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.left_back:
-                finish();
+//                finish();
+                dialogControl.setDialog(new OutControlDialog(this,
+                        "提示",
+                        "确定退出当前控制界面？"));
+                dialogControl.show();
                 break;
             case R.id.bike_control_recharge:
               userControl.reCharge(BikeControl.this);
                 break;
             case R.id.bike_control_return:
-                userControl.returnBike(BikeControl.this);
+                reback();
                 break;
             case R.id.bike_control_lock:
                 userControl.lockBike(BikeControl.this);
@@ -87,5 +102,70 @@ public class BikeControl extends BaseActivity {
             default:
                 break;
         }
+    }
+
+    private void reback() {
+        long t = System.currentTimeMillis();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//        String time =  format.format(t);
+        Time time = new Time(t);
+        RequestParams params = new RequestParams(rbUrl);
+        User user = userControl.getUser();
+        params.addBodyParameter("userId",user.getUserid()+"");
+
+        params.addBodyParameter("carId","1");
+        params.addBodyParameter("useHour",time.toString());
+        params.addBodyParameter("useMoney","20");
+        params.addBodyParameter("useEndTime",""+t);
+        params.addBodyParameter("useStartTime",""+t);
+        params.addBodyParameter("useTime",""+t);
+
+        post(params);
+        dialogControl.setDialog(new WaitProgress(this));
+        dialogControl.show();
+    }
+    private void post(RequestParams params){
+        Log.d(TAG, "post: post by xutils------>>");
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                dialogControl.cancel();
+
+                if(result.equals("ok")){
+                    uiUtils.showToast("还车成功！");
+                    userControl.returnBike(BikeControl.this);
+                }else
+                    uiUtils.showToast("还车失败！");
+
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+//              handler.sendEmptyMessage(NET_ERROR);
+                Log.e(TAG, "onError: onError", null);
+                uiUtils.showToast("还车失败！");
+                dialogControl.cancel();
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                Log.e(TAG, "onCancelled: cancel", null);
+                dialogControl.cancel();
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
+    @Override
+    public void onBackPressed() {
+        dialogControl.setDialog(new OutControlDialog(BikeControl.this,
+                "提示",
+                "确定退出当前控制界面？"));
+        dialogControl.show();
+
     }
 }

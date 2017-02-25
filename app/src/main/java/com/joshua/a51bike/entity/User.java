@@ -43,5 +43,9 @@ public class User {
 	public void setUserpic(String userpic) {
 		this.userpic = userpic;
 	}
-	   
+	public String toString(){
+		return "username : "+ username +
+				"\n userpass : "+userpass +
+				" \n userid : "+userid;
+	}
 }

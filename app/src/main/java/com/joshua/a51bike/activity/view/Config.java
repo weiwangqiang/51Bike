@@ -2,7 +2,6 @@ package com.joshua.a51bike.activity.view;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.control.LogoutState;
@@ -58,7 +57,8 @@ public class Config extends BaseActivity {
                 break;
             case R.id.Logout:
                 userControl.setUserState(new LogoutState());
-                Toast.makeText(this, "注销成功！", Toast.LENGTH_SHORT).show();
+                userControl.setUser(null);
+                uiUtils.showToast("注销成功！");
                 break;
             default:
                 break;

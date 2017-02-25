@@ -1,11 +1,14 @@
 package com.joshua.a51bike.activity.view;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.control.UserControl;
 import com.joshua.a51bike.activity.core.BaseActivity;
+import com.joshua.a51bike.util.AppUtil;
 
 import org.xutils.view.annotation.ContentView;
 
@@ -61,6 +64,24 @@ public class registerOrLogin extends BaseActivity {
                 break;
             default:
                 break;
+        }
+    }
+    @Override
+    protected void onActivityResult (int requestCode,
+                                     int resultCode,
+                                     Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+        if(requestCode == AppUtil.INTENT_REQUSET ){
+            switch (resultCode){
+                case  AppUtil.INTENT_RESPONSE:
+                    finish();
+                    break;
+                case RESULT_CANCELED :
+                    Log.i(TAG, "onActivityResult: fail");
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

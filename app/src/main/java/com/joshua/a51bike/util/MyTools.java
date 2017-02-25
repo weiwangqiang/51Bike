@@ -15,4 +15,5 @@ public class MyTools {
     public static Boolean EditTextIsNull(EditText editText){
         return editText.getText().toString().length() == 0;
     }
+
 }

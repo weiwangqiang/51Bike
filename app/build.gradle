@@ -25,7 +25,10 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'org.xutils:xutils:3.3.36'
+//    compile 'org.xutils:xutils:3.3.36'
+    // https://mvnrepository.com/artifact/org.xutils/xutils
+    compile group: 'org.xutils', name: 'xutils', version: '3.3.40'
+
     testCompile 'junit:junit:4.12'
     compile files('libs/AMap_Location_V3.2.0_20161205.jar')
     compile 'com.android.support:design:24.1.0'

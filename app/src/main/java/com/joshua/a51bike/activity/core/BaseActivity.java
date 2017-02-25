@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.joshua.a51bike.activity.control.CarControl;
+import com.joshua.a51bike.activity.control.DialogControl;
+import com.joshua.a51bike.activity.control.UserControl;
 import com.joshua.a51bike.receiver.ExitReceiver;
 import com.joshua.a51bike.utils.UiUtils;
 
@@ -18,6 +21,12 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     private ExitReceiver exitReceiver;
     public static String EXIT_APP_ACTION = "com.joshua.exit";
     private Boolean isFinished = false;
+    public UiUtils uiUtils;
+    public UserControl userControl;
+    public DialogControl dialogControl;
+    public CarControl carControl;
+    public final int NET_SUCCESS = 0x1;
+    public final int NET_ERROR = 0x2;
     private String TAG = "BaseActivity";
     public BaseActivity(){
         mBaseActivity=this;
@@ -26,6 +35,10 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        uiUtils = new UiUtils(getApplicationContext());
+        userControl = UserControl.getUserControl();
+        dialogControl = DialogControl.getDialogControl();
+        carControl = new CarControl();
         initScreen();
         initXUtils();
         initReceiver();
@@ -77,6 +90,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      */
     private void initXUtils() {
         x.view().inject(this);
+        x.Ext.init(getApplication());
     }
 
     /**

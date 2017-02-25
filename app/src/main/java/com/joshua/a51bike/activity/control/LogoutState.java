@@ -6,9 +6,9 @@ import android.content.Intent;
 
 import com.joshua.a51bike.Interface.UserState;
 import com.joshua.a51bike.activity.view.Login;
-import com.joshua.a51bike.activity.view.ScanActivity;
 import com.joshua.a51bike.activity.view.register;
 import com.joshua.a51bike.activity.view.registerOrLogin;
+import com.joshua.a51bike.util.AppUtil;
 
 /**
  * Created by wangqiang on 2017/1/9.
@@ -24,13 +24,14 @@ public class LogoutState implements UserState {
     @Override
     public void login(Activity activity) {
         Intent intent = new Intent(activity, Login.class);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, AppUtil.INTENT_REQUSET);
     }
 
     @Override
     public void register(Activity activity) {
         Intent intent = new Intent(activity, register.class);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, AppUtil.INTENT_REQUSET);
+
     }
 
     @Override
@@ -46,8 +47,7 @@ public class LogoutState implements UserState {
 
     @Override
     public void saoma(Activity activity) {
-        Intent intent = new Intent(activity, ScanActivity.class);
-        activity.startActivity(intent);
+        Choice(activity);
     }
 
     @Override
@@ -109,6 +109,8 @@ public class LogoutState implements UserState {
 
     private void Choice(Activity activity){
         Intent intent = new Intent(activity, registerOrLogin.class);
+//        Intent intent = new Intent(activity, aaa.class);
+
         activity.startActivity(intent);
     }
 }

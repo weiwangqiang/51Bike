@@ -16,6 +16,7 @@ import org.xutils.view.annotation.ContentView;
  * @project 51Bike
  * @since 2017-01-10
  */
+
 @ContentView(R.layout.user_infor)
 public class UserInfor extends BaseActivity {
     @Override

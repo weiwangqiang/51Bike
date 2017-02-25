@@ -1,13 +1,24 @@
 package com.joshua.a51bike.activity.view;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.joshua.a51bike.R;
+import com.joshua.a51bike.activity.control.LoginState;
 import com.joshua.a51bike.activity.core.BaseActivity;
+import com.joshua.a51bike.activity.dialog.WaitProgress;
+import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.util.AppUtil;
+import com.joshua.a51bike.util.MyTools;
+import com.joshua.a51bike.util.VolleyUtil;
 
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
+import org.xutils.x;
 
 /**
  * class description here
@@ -19,8 +30,11 @@ import org.xutils.view.annotation.ContentView;
  */
 @ContentView(R.layout.login_fast)
 public class register extends BaseActivity {
-    private String url = AppUtil.BaseUrl +"/insertUser";
-
+    private String TAG = "register";
+    private String url = AppUtil.BaseUrl +"/user/insertUser";
+    private EditText getName, getCode;
+    private VolleyUtil volleyUtil;
+    private   User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,16 +42,21 @@ public class register extends BaseActivity {
     }
 
     public void init() {
+        volleyUtil = new VolleyUtil(this);
+
         findId();
         setLister();
     }
 
     public void findId() {
-
+        getName = (EditText) findViewById(R.id.login_fast_admin);
+        getCode = (EditText) findViewById(R.id.login_fast_code);
+        getName.setText("123456");
+        getCode.setText("666666");
     }
 
     public void setLister() {
-//        findViewById(R.id.left_back).setOnClickListener(this);
+        findViewById(R.id.button_fast_login).setOnClickListener(this);
     }
 
     /**
@@ -48,11 +67,68 @@ public class register extends BaseActivity {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.left_back:
-                finish();
+            case R.id.button_fast_login:
+                login();
                 break;
             default:
                 break;
         }
     }
+    private void login(){
+        if (MyTools.EditTextIsNull(getName) || MyTools.EditTextIsNull(getCode)) {
+            return;
+        }
+        String name = getName.getText().toString();
+        String code = getCode.getText().toString();
+        RequestParams params = new RequestParams(url);
+        params.addBodyParameter("username",name);
+        params.addBodyParameter("userpass",code);
+         user = new User();
+        user.setUsername(name);
+        user.setUserpass(code);
+        post(params);
+        dialogControl.setDialog(new WaitProgress(this));
+        dialogControl.show();
+    }
+
+    private void post(RequestParams params){
+        Log.d(TAG, "post: post by xutils------>>");
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Log.d(TAG, "success: object is "+ result.toString());
+                dialogControl.cancel();
+
+                if(result.equals("true")){
+                    uiUtils.showToast("注册成功！");
+                    userControl.setUser(user);
+                    userControl.setUserState(new LoginState());
+                    setResult(AppUtil.INTENT_RESPONSE);
+                    finish();
+                }else   uiUtils.showToast("注册失败！");
+
+
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                uiUtils.showToast("注册失败！");
+                dialogControl.cancel();
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                Toast.makeText(x.app(), "cancelled", Toast.LENGTH_LONG).show();
+                dialogControl.cancel();
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
+
+
 }

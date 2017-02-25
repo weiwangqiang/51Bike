@@ -9,9 +9,9 @@ import com.joshua.a51bike.activity.dialog.GetIcnAlerDialog;
 import com.joshua.a51bike.activity.dialog.LocateProgress;
 import com.joshua.a51bike.activity.view.BikeControl;
 import com.joshua.a51bike.activity.view.BikeMessage;
-import com.joshua.a51bike.activity.view.BlueTooth;
 import com.joshua.a51bike.activity.view.Pay;
 import com.joshua.a51bike.activity.view.Recharge;
+import com.joshua.a51bike.activity.view.ScanActivity;
 import com.joshua.a51bike.activity.view.register;
 import com.joshua.a51bike.activity.view.renzheng;
 
@@ -57,8 +57,8 @@ public class LoginState implements UserState {
 
     @Override
     public void saoma(Activity activity) {
-//        Intent intent = new Intent(activity, ScanActivity.class);
-        Intent intent = new Intent(activity, BlueTooth.class);
+        Intent intent = new Intent(activity, ScanActivity.class);
+//        Intent intent = new Intent(activity, BlueTooth.class);
 
         activity.startActivity(intent);
 //        dialogControl.setDialog(new MarginAlerDialog(activity,"保证金提示","请先充值保证金"));
@@ -71,7 +71,7 @@ public class LoginState implements UserState {
         Intent intent = new Intent(activity, BikeMessage.class);
         intent.putExtra("url",url);
         activity.startActivity(intent);
-        activity.finish();
+//        activity.finish();
     }
 
     @Override

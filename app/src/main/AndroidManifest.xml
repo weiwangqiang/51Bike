@@ -44,7 +44,7 @@
         <activity android:name=".activity.view.BikeControl"/>
         <activity android:name=".activity.view.Recharge"/>
         <activity android:name=".activity.view.Pay"/>
-        <activity android:name=".activity.view.Login"/>
+        <activity android:name=".activity.view.Login"  />
         <activity android:name=".activity.view.register"/>
         <activity android:name=".activity.view.UserInfor"/>
         <activity android:name=".activity.view.Config"/>
