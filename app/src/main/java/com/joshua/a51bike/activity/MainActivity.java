@@ -2,10 +2,11 @@ package com.joshua.a51bike.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -109,21 +110,11 @@ public class MainActivity extends BaseMap {
 //        leftParams.height = windowsHeight;
         leftParams.width = windowsWight;
         leftMenu.setLayoutParams(leftParams);
-//        if (Build.VERSION.SDK_INT >= 21) {
-//            Log.i(TAG, "initLeftMain: setCarViewElevation !");
-//            CardView carView = (CardView) findViewById(R.id.card_view);
-//            carView.setCardElevation(15.2f);
-//        }
-        initActionBar();
-    }
-
-    public  void initActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        //在使用v7包的时候显示icon和标题需指定一下属性。
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setLogo(R.drawable.back_arrow_short);
-        actionBar.setDisplayUseLogoEnabled(true);
-//        setContentView(R.layout.activity_main);
+        if (Build.VERSION.SDK_INT >= 21) {
+            Log.i(TAG, "initLeftMain: setCarViewElevation !");
+            CardView carView = (CardView) findViewById(R.id.card_view);
+            carView.setCardElevation(15.2f);
+        }
     }
 
     public void init() {
@@ -132,7 +123,6 @@ public class MainActivity extends BaseMap {
         dialogControl = DialogControl.getDialogControl();
         findid();
         initmap();
-        registerListener();
     }
 
     private void initmap() {
@@ -145,6 +135,7 @@ public class MainActivity extends BaseMap {
         mUiSettings.setZoomControlsEnabled(false);
         locatepresener = locatePresenter.getlocation();
         mappresenter = mapPresenter.getmapPresenter();
+        registerListener();
     }
 
     public void findid() {
@@ -186,7 +177,11 @@ public class MainActivity extends BaseMap {
                 getLocation();
                 break;
             case R.id.rent:
-                rent();
+                dialogControl.setDialog(new
+                        MarginAlerDialog(MainActivity.this,
+                        "保证金提示","请先充值保证金"));
+                dialogControl.show();
+//                userControl.saoma(MainActivity.this);
                 break;
             case R.id.main_user_icn:
                 userControl.toChoice(MainActivity.this);
@@ -198,13 +193,6 @@ public class MainActivity extends BaseMap {
             default:
                 break;
         }
-    }
-
-    private void rent() {
-        dialogControl.setDialog(new
-                MarginAlerDialog(MainActivity.this,
-                "保证金提示","请先充值保证金"));
-        dialogControl.show();
     }
 
     /**
@@ -239,6 +227,7 @@ public class MainActivity extends BaseMap {
         menuInflater.inflate(R.menu.main, menu);
         return true;
     }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         Log.w(TAG, "--->>>success code is " + resultCode);
