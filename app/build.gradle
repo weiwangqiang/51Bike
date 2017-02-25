@@ -28,7 +28,7 @@ dependencies {
 //    compile 'org.xutils:xutils:3.3.36'
     // https://mvnrepository.com/artifact/org.xutils/xutils
     compile group: 'org.xutils', name: 'xutils', version: '3.3.40'
-
+    compile 'com.lovedise:permissiongen:0.0.6'
     testCompile 'junit:junit:4.12'
     compile files('libs/AMap_Location_V3.2.0_20161205.jar')
     compile 'com.android.support:design:24.1.0'
@@ -38,4 +38,5 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'org.json:json:20160810'
     compile files('libs/zxing.jar')
+
 }

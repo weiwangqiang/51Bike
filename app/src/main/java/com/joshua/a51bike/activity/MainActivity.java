@@ -1,9 +1,11 @@
 package com.joshua.a51bike.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.CardView;
@@ -48,12 +50,16 @@ import com.joshua.a51bike.util.AMapUtil;
 
 import org.xutils.view.annotation.ContentView;
 
+import kr.co.namee.permissiongen.PermissionFail;
+import kr.co.namee.permissiongen.PermissionGen;
+import kr.co.namee.permissiongen.PermissionSuccess;
+
 
 @ContentView(R.layout.activity_main)
 public class MainActivity extends BaseMap {
     public String TAG = "MainActivity";
     private CircleImageView userIcn;
-    private TextView userName,userMoney,userCash;
+    private TextView userName, userMoney, userCash;
     private DrawerLayout drawer;
     private MapView mapView;
     private Context mContext;
@@ -67,7 +73,11 @@ public class MainActivity extends BaseMap {
     public LatLonPoint point2 = new LatLonPoint(32.19794016630354, 119.51738834381104);
     public LatLonPoint point3 = new LatLonPoint(32.20268375393801, 119.51433062553406);
     public LatLonPoint[] points = new LatLonPoint[]{point1, point2, point3};
-
+    //动态权限管理
+    //获取地理位置权限
+    private static final int REQUEST_LOCATION_PERMISSION = 101;
+    //获取相机权限
+    private static final int REQUEST_CAMERA_PERMISSION = 100;
 
     //    latitude is 32.1979265479926 longitude is 119.51321482658388
 //latitude is 32.19794016630354 longitude is 119.51738834381104
@@ -78,6 +88,26 @@ public class MainActivity extends BaseMap {
         init();
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         initDrawer();
+        requestLocationPermission();
+
+    }
+
+    private void requestLocationPermission() {
+        PermissionGen.with(MainActivity.this)
+                .addRequestCode(REQUEST_LOCATION_PERMISSION)
+                .permissions(
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                )
+                .request();
+    }
+    @PermissionSuccess(requestCode = REQUEST_LOCATION_PERMISSION)
+    public void successLocationPermission() {
+        locatepresener.setcurrentLocation(this);//开始定位
+
+    }
+    @PermissionFail(requestCode = REQUEST_LOCATION_PERMISSION)
+    public void failedLocationPermission() {
     }
 
     private void initDrawer() {
@@ -177,11 +207,13 @@ public class MainActivity extends BaseMap {
                 getLocation();
                 break;
             case R.id.rent:
-                dialogControl.setDialog(new
-                        MarginAlerDialog(MainActivity.this,
-                        "保证金提示","请先充值保证金"));
-                dialogControl.show();
-//                userControl.saoma(MainActivity.this);
+                PermissionGen.with(MainActivity.this)
+                        .addRequestCode(REQUEST_CAMERA_PERMISSION)
+                        .permissions(
+                                Manifest.permission.CAMERA
+                        )
+                        .request();
+
                 break;
             case R.id.main_user_icn:
                 userControl.toChoice(MainActivity.this);
@@ -193,6 +225,30 @@ public class MainActivity extends BaseMap {
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+    }
+
+    @PermissionSuccess(requestCode = REQUEST_CAMERA_PERMISSION)
+    public void successCameraPermission() {
+        dialogControl.setDialog(new
+                MarginAlerDialog(MainActivity.this,
+                "保证金提示", "请先充值保证金"));
+        dialogControl.show();
+//                userControl.saoma(MainActivity.this);
+    }
+
+    @PermissionFail(requestCode = REQUEST_CAMERA_PERMISSION)
+    public void failedCameraPermission() {
+        dialogControl.setDialog(new
+                MarginAlerDialog(MainActivity.this,
+                "保证金提示", "请先充值保证金"));
+        dialogControl.show();
+//                userControl.saoma(MainActivity.this);
     }
 
     /**
@@ -345,16 +401,15 @@ public class MainActivity extends BaseMap {
     protected void onResume() {
         super.onResume();
         mapView.onResume();
-        if(null != mStartPoint){
+        if (null != mStartPoint) {
             aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
             aMap.moveCamera(CameraUpdateFactory.
                     changeLatLng(new LatLng(mStartPoint.getLatitude(),
                             mStartPoint.getLongitude())));
         }
-        if(null != userControl.getUser()){
+        if (null != userControl.getUser()) {
             initUserMessage();
-        }
-        else
+        } else
             initLogOut();
     }
 
@@ -373,8 +428,8 @@ public class MainActivity extends BaseMap {
      */
     private void initUserMessage() {
         userName.setText(userControl.getUser().getUsername());
-        userMoney.setText(userControl.getUser().getUsermoney()+"");
-        userCash.setText(userControl.getUser().getUsermoney()+"");
+        userMoney.setText(userControl.getUser().getUsermoney() + "");
+        userCash.setText(userControl.getUser().getUsermoney() + "");
     }
 
     /**
