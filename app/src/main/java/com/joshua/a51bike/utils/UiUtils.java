@@ -105,8 +105,6 @@ public class UiUtils {
 
     public static void showToast(String content){
         toast.setText(content);
-//        toast.setDuration(Toast.LENGTH_SHORT);
-//        toast.setGravity(View.TEXT_ALIGNMENT_CENTER,0,0);
         toast.show();
     }
 

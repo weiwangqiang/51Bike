@@ -25,6 +25,8 @@ import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.x;
 
+import static com.joshua.a51bike.R.layout.login;
+
 
 /**
  * class description here
@@ -34,11 +36,12 @@ import org.xutils.x;
  * @project 51Bike
  * @since 2017-01-10
  */
-@ContentView(R.layout.login)
+@ContentView(login)
 public class Login extends BaseActivity{
     private String TAG = "Login";
     private String url = AppUtil.BaseUrl + "/user/login";
     private EditText getName, getPass;
+    private Button back;
     private Button login;
 
     private Handler handler = new Handler() {
@@ -101,7 +104,6 @@ public class Login extends BaseActivity{
                 break;
         }
     }
-
     private void Login(){
         if (MyTools.EditTextIsNull(getName) || MyTools.EditTextIsNull(getPass)) {
             return;

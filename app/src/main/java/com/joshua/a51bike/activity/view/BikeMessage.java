@@ -44,6 +44,8 @@ public class BikeMessage extends BaseActivity {
     private String rentUrl = AppUtil.BaseUrl +"/user/zuche";
     private String CarMesUrl = AppUtil.BaseUrl +"/car/getCarById";
 
+    private static int GET_BIKEMESSAGE = 1;
+    private static int RENT_BIKE = 2;
     private TextView price,account;
     private MapView mapView;
     private AMap aMap;
@@ -60,14 +62,24 @@ public class BikeMessage extends BaseActivity {
         findid();
         initmap();
         setLister();
+        getCarMes();
     }
 
     private void getUrl() {
        Intent inetnt =  getIntent();
         String url =inetnt.getStringExtra("url");
         Log.i(TAG, "getUrl: "+url);
-    }
 
+    }
+    /*获取车辆信息*/
+    private void getCarMes() {
+        Log.d(TAG, "getCarMes: begin to getCarMes");
+        RequestParams params = new RequestParams(CarMesUrl);
+        params.addBodyParameter("carId","1");
+        post(params,GET_BIKEMESSAGE);
+        dialogControl.setDialog(new WaitProgress(this));
+        dialogControl.show();
+    }
     private void setLister() {
         rent.setOnClickListener(this);
         findViewById(R.id.left_back).setOnClickListener(this);
@@ -131,31 +143,33 @@ public class BikeMessage extends BaseActivity {
         RequestParams params = new RequestParams(rentUrl);
         User user = userControl.getUser();
         params.addBodyParameter("userid",user.getUserid()+"");
-        params.addBodyParameter("carState","0");
+//        params.addBodyParameter("carState","0");
 
         params.addBodyParameter("carId","1");
         params.addBodyParameter("carName","one");
         params.addBodyParameter("carPrice","20");
 
-        post(params,2);
+        post(params,RENT_BIKE);
         dialogControl.setDialog(new WaitProgress(this));
         dialogControl.show();
     }
-
-    private void post(final RequestParams params, final int kind){
+    /*上传数据
+    * */
+     private void post(final RequestParams params, final int kind){
         Log.d(TAG, "post: post by xutils------>>");
+
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.d(TAG, "onSuccess: result is "+result);
-                if(kind==1){
+                Log.d(TAG, "onSuccess: king is "+kind+"result is "+result);
+                if(kind==GET_BIKEMESSAGE){
                     parseCar(result);
                 }else
                 {
                     parseRent(result);
-
                 }
                 dialogControl.cancel();
+                Log.i(TAG, "onSuccess: cancel");
             }
 
             @Override
@@ -183,19 +197,23 @@ public class BikeMessage extends BaseActivity {
     }
     private void parseCar(String result) {
         Car car = JsonUtil.getCarObject(result);
+        Log.i(TAG, "parseCar: car is "+car.getCarName());
         if(null != car){
             carControl.setCar(car);
             upCarView();
         }
     }
-
+    /*更新车辆信息到UI*/
     private void upCarView() {
-        uiUtils.showToast("获取信息成功! ");
-        price.setText(carControl.getCar().getCarPrice());
-        account.setText(userControl.getUser().getUsermoney());
+//        uiUtils.showToast("获取信息成功! ");
+        Toast.makeText(BikeMessage.this,"获取信息成功!",Toast.LENGTH_SHORT).show();
+        Log.i(TAG, "upCarView: upCarView");
+        price.setText(carControl.getCar().getCarPrice()+"");
+        account.setText(userControl.getUser().getUsermoney()+"");
     }
 
     private void parseRent(String result) {
+        Log.i(TAG, "parseRent: "+result);
         if(result.equals("ok")){
             uiUtils.showToast("租车成功！");
             userControl.rent(BikeMessage.this);
@@ -210,18 +228,8 @@ public class BikeMessage extends BaseActivity {
     protected void onResume() {
         super.onResume();
         mapView.onResume();
-        getCarMes();
-
     }
 
-    private void getCarMes() {
-        Log.d(TAG, "getCarMes: begin to getCarMes");
-        RequestParams params = new RequestParams(CarMesUrl);
-        params.addBodyParameter("carId","1");
-        post(params,1);
-        dialogControl.setDialog(new WaitProgress(this));
-        dialogControl.show();
-    }
 
     /**
      * 方法必须重写

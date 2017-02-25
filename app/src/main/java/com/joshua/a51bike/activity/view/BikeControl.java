@@ -18,7 +18,6 @@ import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.x;
 
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 
 /**
@@ -103,32 +102,37 @@ public class BikeControl extends BaseActivity {
                 break;
         }
     }
-
+    /*还车*/
     private void reback() {
         long t = System.currentTimeMillis();
+//        Timestamp    timestamp = new Timestamp(t);
+//        Log.i(TAG, "reback: timestamp is "+timestamp);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-//        String time =  format.format(t);
-        Time time = new Time(t);
+        String time =  format.format(t);
+//        long time = System.currentTimeMillis();
         RequestParams params = new RequestParams(rbUrl);
         User user = userControl.getUser();
         params.addBodyParameter("userId",user.getUserid()+"");
+        params.addHeader("Content-Type","application/json");
 
         params.addBodyParameter("carId","1");
-        params.addBodyParameter("useHour",time.toString());
+        params.addBodyParameter("useHour",time+"");
         params.addBodyParameter("useMoney","20");
-        params.addBodyParameter("useEndTime",""+t);
-        params.addBodyParameter("useStartTime",""+t);
-        params.addBodyParameter("useTime",""+t);
-
+        params.addBodyParameter("useEndTime",time+"");
+        params.addBodyParameter("useStartTime",time+"");
+        params.addBodyParameter("useTime",time+"");
+        Log.i(TAG, "reback: params is "+params.toString());
         post(params);
         dialogControl.setDialog(new WaitProgress(this));
         dialogControl.show();
     }
+    /*发送请求*/
     private void post(RequestParams params){
         Log.d(TAG, "post: post by xutils------>>");
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
+                Log.i(TAG, "onSuccess: result is "+result);
                 dialogControl.cancel();
 
                 if(result.equals("ok")){
@@ -141,8 +145,9 @@ public class BikeControl extends BaseActivity {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-//              handler.sendEmptyMessage(NET_ERROR);
+//              1handler.sendEmptyMessage(NET_ERROR);
                 Log.e(TAG, "onError: onError", null);
+                ex.printStackTrace();
                 uiUtils.showToast("还车失败！");
                 dialogControl.cancel();
             }

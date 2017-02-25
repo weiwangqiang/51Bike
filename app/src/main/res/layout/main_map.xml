@@ -25,7 +25,7 @@
                 android:background="@drawable/location"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-
+                android:onClick="getLocation"
                 />
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -33,6 +33,7 @@
                 android:gravity="center"
                 android:layout_weight="1"
                 android:id="@+id/rent"
+                android:onClick="rent"
                 android:background="@drawable/buttonbg"
                 android:orientation="horizontal">
                 <ImageView
