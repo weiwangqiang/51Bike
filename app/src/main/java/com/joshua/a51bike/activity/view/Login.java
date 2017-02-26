@@ -66,7 +66,6 @@ public class Login extends BaseActivity{
         super.onCreate(savedInstanceState);
         init();
     }
-
     public void init() {
         findId();
         setLister();

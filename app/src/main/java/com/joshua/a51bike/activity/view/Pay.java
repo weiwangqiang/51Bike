@@ -7,12 +7,15 @@ import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.util.AppUtil;
 
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 import org.xutils.view.annotation.ContentView;
 
 /**
  * Created by wangqiang on 2017/1/9.
  */
 @ContentView(R.layout.pay)
+@RunWith(RobolectricTestRunner.class)
 public class Pay extends BaseActivity {
     private String url = AppUtil.BaseUrl +"/user/insertCharge";
     @Override

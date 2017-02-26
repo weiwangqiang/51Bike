@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -111,9 +110,9 @@ public class MainActivity extends BaseMap {
         leftParams.width = windowsWight;
         leftMenu.setLayoutParams(leftParams);
         if (Build.VERSION.SDK_INT >= 21) {
-            Log.i(TAG, "initLeftMain: setCarViewElevation !");
-            CardView carView = (CardView) findViewById(R.id.card_view);
-            carView.setCardElevation(15.2f);
+//            Log.i(TAG, "initLeftMain: setCarViewElevation !");
+//            CardView carView = (CardView) findViewById(R.id.card_view);
+//            carView.setCardElevation(15.2f);
         }
     }
 

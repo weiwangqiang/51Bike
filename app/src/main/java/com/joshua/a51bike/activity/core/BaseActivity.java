@@ -11,7 +11,7 @@ import com.joshua.a51bike.activity.control.CarControl;
 import com.joshua.a51bike.activity.control.DialogControl;
 import com.joshua.a51bike.activity.control.UserControl;
 import com.joshua.a51bike.receiver.ExitReceiver;
-import com.joshua.a51bike.utils.UiUtils;
+import com.joshua.a51bike.util.UiUtils;
 
 import org.xutils.x;
 

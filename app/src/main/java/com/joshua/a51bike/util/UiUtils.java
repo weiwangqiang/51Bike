@@ -1,4 +1,4 @@
-package com.joshua.a51bike.utils;
+package com.joshua.a51bike.util;
 
 import android.app.ActivityManager;
 import android.content.Context;
