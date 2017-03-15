@@ -144,7 +144,29 @@
 
 
     </style>
+    <style name="BcolorButtonStyle">
+        <item name="android:background">@drawable/border_button</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">50dp</item>
+        <item name="android:layout_marginRight">50dp</item>
+        <item name="android:textColor">@color/baseColor</item>
 
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+    <!-- 支付的radioButton style-->
+    <style name="payRadioButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:button">@null</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:drawablePadding">15dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:background">@color/white</item>
+
+    </style>
 
     <style name="DIY.SlideClose.Transparent.Theme" parent="AppTheme">
         <item name="android:windowBackground">@android:color/transparent</item>

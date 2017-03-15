@@ -42,7 +42,6 @@ public class renzheng extends BaseActivity {
     //拍照和图库的Intent请求码
     public final int TAKE_PHOTO_WITH_DATE = 200;
     public final int TAKE_PHOTO_FROM_IMAGE = 201;
-    private UserControl userControl ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

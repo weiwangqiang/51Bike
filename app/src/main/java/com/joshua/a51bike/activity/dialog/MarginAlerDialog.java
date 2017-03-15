@@ -60,11 +60,9 @@ public class MarginAlerDialog extends MyAlerDialog implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.dialog_cancel:
-                Log.w(TAG,"----------->> dialog is cancel !!!");
                 cancel();
                 break;
             case R.id.dialog_sure:
-                Log.w(TAG,"----------->> dialog is sure !!!");
                 UserControl u = UserControl.getUserControl();
                 u.saoma(context);
                 cancel();

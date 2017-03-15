@@ -29,7 +29,6 @@ public class GPSAlerDialog extends MyAlerDialog implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_gps);
         getWindow().setBackgroundDrawable(new ColorDrawable());
-
         findViewById(R.id.dialog_cancel).setOnClickListener(this);
         findViewById(R.id.dialog_sure).setOnClickListener(this);
     }

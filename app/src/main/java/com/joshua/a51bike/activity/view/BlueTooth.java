@@ -2,10 +2,19 @@ package com.joshua.a51bike.activity.view;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothProfile;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,12 +31,12 @@ import com.joshua.a51bike.receiver.BlueToothReceiver;
 
 import org.xutils.view.annotation.ContentView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
+
+import static com.joshua.a51bike.R.layout.bluetooth;
 
 /**
  * class description here
@@ -37,19 +46,19 @@ import java.util.UUID;
  * @project 51Bike
  * @since 2017-01-26
  */
-@ContentView(R.layout.bluetooth)
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+@ContentView(bluetooth)
 public class BlueTooth extends BaseActivity
         implements  View.OnClickListener,ListView.OnItemClickListener, BlueToothLister {
     private String TAG = "BlueTooth" ;
     private Set<BluetoothDevice> bluetoothDevices ;
     private TextView textView;
     private BluetoothDevice bluetoothDevice;
-    private List<BluetoothDevice> list = new ArrayList<>();
 
 
     private Button search;
     private ListView listView;
-    private BluetoothAdapter bluetoothAdapter;
+    private BluetoothAdapter mBluetoothAdapter;
     private BlueToothReceiver receiver;
     private int REQUEST_ENABLE_BT = 200;
 
@@ -67,7 +76,6 @@ public class BlueTooth extends BaseActivity
     protected void onResume(){
         super.onResume();
         initBlueTooth();
-
     }
     private void init() {
         findid();
@@ -94,44 +102,151 @@ public class BlueTooth extends BaseActivity
         listView.setOnItemClickListener(this);
     }
     private void initBlueTooth() {
-        bluetoothAdapter =  BluetoothAdapter.getDefaultAdapter ();
-        Log.i(TAG, "initBlueTooth: local address is " + bluetoothAdapter.getAddress() );
-        My_Address = bluetoothAdapter.getAddress();
-//        adapter.setName("51get");
-        receiver = new BlueToothReceiver(this);
-        //检查是否支持蓝牙
-        if(null == bluetoothAdapter){
-            // Device does not support Bluetooth
-            Toast.makeText(this,"手机不支持蓝牙！",Toast.LENGTH_SHORT).show();
-            return ;
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Toast.makeText(this,"not support !", Toast.LENGTH_SHORT).show();
+            finish();
         }
-        //检查蓝牙是否可用
-        if (!bluetoothAdapter.isEnabled()) {
-            //不可用，就发送intent 请求
-            search.setText("蓝牙还没打开，现在打开？");
-            return ;
+        final BluetoothManager bluetoothManager =
+                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        if (Build.VERSION.SDK_INT >= 18) {
+            mBluetoothAdapter = bluetoothManager.getAdapter();
         }
-        startDiscovery();
+        if(mBluetoothAdapter == null ) return;
+        if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
+//        scanLeDevice(mBluetoothAdapter.isEnabled());
     }
 
     /**
      * 打开蓝牙搜索
      */
-    private void startDiscovery() {
-        //指示是否已成功启动发现操作
-        Boolean b = bluetoothAdapter.startDiscovery();
-        Log.i(TAG, "getBlueToothMes: begin to start ? "+b);
-        if(b){
-            bindBroadCast();
+    private Handler mHandler = new Handler();
+    // Stops scanning after 10 seconds.
+    private static final long SCAN_PERIOD = 10000;
+
+    private void scanLeDevice(final boolean enable) {
+        Log.i(TAG, "scanLeDevice: is "+enable);
+        if (enable) {
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (Build.VERSION.SDK_INT >= 18) {
+//                        mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                    }
+                }
+            }, SCAN_PERIOD);
+            if (Build.VERSION.SDK_INT >= 18) {
+                mBluetoothAdapter.startLeScan(mLeScanCallback);
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= 18) {
+                mBluetoothAdapter.stopLeScan(mLeScanCallback);
+
+            }
         }
-        Set<BluetoothDevice> bluetoothDevices = bluetoothAdapter.getBondedDevices();
-//        adapter.listenUsingRfcommWithServiceRecord(String+"", bluetoothDevices.);
+    }
+    private List<BluetoothDevice> list = new ArrayList<>();
+    private BluetoothGatt mBluetoothGatt;
+    private static final int STATE_DISCONNECTED = 0;
+    private static final int STATE_CONNECTING = 1;
+    private static final int STATE_CONNECTED = 2;
+//    public final static UUID UUID_HEART_RATE_MEASUREMENT =
+//            UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
+    private boolean isConnect = false;
+    private BluetoothAdapter.LeScanCallback mLeScanCallback =
+            new BluetoothAdapter.LeScanCallback() {
+                @Override
+                public void onLeScan(final BluetoothDevice device, int rssi,
+                                     byte[] scanRecord) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.i(TAG, "run: result is "+device.toString());
+                            if(!isConnect){
+                                Log.i(TAG, "run: connect");
+                                mBluetoothGatt =
+                                        device.connectGatt(BlueTooth.this, false, bluetoothGattCallback);
+                            }
+                            list.add(device);
+                            if (Build.VERSION.SDK_INT >= 18) {
+                                mBluetoothAdapter.stopLeScan(mLeScanCallback);
+
+                            }
+                        }
+                    });
+                }
+            };
+    /*蓝牙连接回调
+    * */
+    private BluetoothGattCallback bluetoothGattCallback = new BluetoothGattCallback(){
+        @Override
+       public void onServicesDiscovered (BluetoothGatt gatt,
+                                   int status){
+            Log.i(TAG, "onServicesDiscovered: status is "+status);
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+//                broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
+            }
+        }
+        @Override
+       public  void onConnectionStateChange (BluetoothGatt gatt,
+                                      int status,
+                                      int newState){
+            Log.i(TAG, "onConnectionStateChange: newState "+newState);
+            String intentAction;
+            if (newState == BluetoothProfile.STATE_CONNECTED) {
+//                intentAction = ACTION_GATT_CONNECTED;
+//                mConnectionState = STATE_CONNECTED;
+//                broadcastUpdate(intentAction);
+                Log.i(TAG, "Connected to GATT server.");
+                Log.i(TAG, "Attempting to start service discovery:" +
+                        mBluetoothGatt.discoverServices());
+
+            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+//                intentAction = ACTION_GATT_DISCONNECTED;
+//                mConnectionState = STATE_DISCONNECTED;
+                Log.i(TAG, "Disconnected from GATT server.");
+//                broadcastUpdate(intentAction);
+            }
+        }
+        @Override
+        // Result of a characteristic read operation
+        public void onCharacteristicRead(BluetoothGatt gatt,
+                                         BluetoothGattCharacteristic characteristic,
+                                         int status) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+//                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+            }
+        }
+
+
+        @Override
+// Characteristic notification
+        public void onCharacteristicChanged(BluetoothGatt gatt,
+                                            BluetoothGattCharacteristic characteristic) {
+//            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+        }
+    };
+
+
+
+    public void close() {
+        Log.i(TAG, "close: ");
+        if (mBluetoothGatt == null) {
+            return;
+        }
+        mBluetoothGatt.close();
+        mBluetoothGatt = null;
+        mBluetoothAdapter.stopLeScan(mLeScanCallback);
     }
 
     /**
+     *
      * 绑定蓝牙时间广播
      */
     private void bindBroadCast() {
+        Log.i(TAG, "bindBroadCast: ");
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(receiver, filter); // Don't forget to unregister during onDestroy
     }
@@ -151,7 +266,8 @@ public class BlueTooth extends BaseActivity
                 finish();
                 break;
             case R.id.search:
-                searchDevice();
+                scanLeDevice(mBluetoothAdapter.isEnabled());
+
                 break;
             default:
                 break;
@@ -160,21 +276,21 @@ public class BlueTooth extends BaseActivity
 
     private void searchDevice() {
         //检查蓝牙是否可用
-        if (!bluetoothAdapter.isEnabled()) {
+        if (!mBluetoothAdapter.isEnabled()) {
             //不可用，就发送intent 请求
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             enableBtIntent.putExtra(BluetoothAdapter.EXTRA_LOCAL_NAME,"51get");
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }else
         {
-            startDiscovery();
+//            startDiscovery();
         }
 
     }
 
     private void Connect() {
         String text = textView.getText().toString();
-        bluetoothAdapter.getRemoteDevice(bluetoothDevice.getAddress());
+        mBluetoothAdapter.getRemoteDevice(bluetoothDevice.getAddress());
 
     }
 
@@ -182,8 +298,18 @@ public class BlueTooth extends BaseActivity
     protected void onDestroy() {
         super.onDestroy();
         try{
-            if (bluetoothAdapter != null) {
-                bluetoothAdapter.cancelDiscovery();
+
+            if (Build.VERSION.SDK_INT >= 18) {
+                mBluetoothAdapter.stopLeScan(mLeScanCallback);
+
+            }
+
+            if (mBluetoothAdapter != null) {
+                if (Build.VERSION.SDK_INT >= 18) {
+                    close();
+
+                }
+
             }
                 unregisterReceiver(receiver);
             }catch(Exception e){
@@ -201,7 +327,8 @@ public class BlueTooth extends BaseActivity
                 case  RESULT_OK:
                     Log.i(TAG, "onActivityResult: ok ");
                     search.setText("正在给母猪配对。。。");
-                    startDiscovery();
+                    scanLeDevice(mBluetoothAdapter.isEnabled());
+
                     break;
                 case RESULT_CANCELED :
                     Log.i(TAG, "onActivityResult: fail");
@@ -214,11 +341,16 @@ public class BlueTooth extends BaseActivity
 
     @Override
     public void getDate(BluetoothDevice bluetoothDevice) {
-        HashMap<String,String> map = new HashMap<>();
+        Log.i(TAG, "getDate: ");
+        Set<BluetoothDevice> bluetoothDevices = mBluetoothAdapter.getBondedDevices();
+        for(BluetoothDevice b : bluetoothDevices){
 
-        map.put(Name,bluetoothDevice.getName());
-        map.put(Address,bluetoothDevice.getAddress());
-        data.add(map);
+            HashMap<String,String> map = new HashMap<>();
+            map.put(Name,b.getName());
+            map.put(Address,b.getAddress());
+            data.add(map);
+
+        }
         adapter.notifyDataSetChanged();
     }
 
@@ -238,55 +370,8 @@ public class BlueTooth extends BaseActivity
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
        final  String address = data.get(position).get(Address);
-       final  BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
-        bluetoothAdapter.cancelDiscovery();
-        new ConnectThread(device).start();
-    }
-
-
-    private class ConnectThread extends Thread {
-        private final BluetoothSocket mmSocket;
-        private final BluetoothDevice mmDevice;
-
-        public ConnectThread(BluetoothDevice device) {
-            // Use a temporary object that is later assigned to mmSocket,
-            // because mmSocket is final
-            BluetoothSocket tmp = null;
-            mmDevice = device;
-
-            // Get a BluetoothSocket to connect with the given BluetoothDevice
-            try {
-                // MY_UUID is the app's UUID string, also used by the server code
-                tmp = device.createRfcommSocketToServiceRecord(UUID.fromString(My_Address));
-            } catch (IOException e) { }
-            mmSocket = tmp;
-        }
-
-        public void run() {
-            // Cancel discovery because it will slow down the connection
-            bluetoothAdapter.cancelDiscovery();
-
-            try {
-                // Connect the device through the socket. This will block
-                // until it succeeds or throws an exception
-                mmSocket.connect();
-            } catch (IOException connectException) {
-                // Unable to connect; close the socket and get out
-                try {
-                    mmSocket.close();
-                } catch (IOException closeException) { }
-                return;
-            }
-
-            // Do work to manage the connection (in a separate thread)
-//            manageConnectedSocket(mmSocket);
-        }
-
-        /** Will cancel an in-progress connection, and close the socket */
-        public void cancel() {
-            try {
-                mmSocket.close();
-            } catch (IOException e) { }
-        }
+       final  BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+        mBluetoothAdapter.cancelDiscovery();
+//        new ConnectThread(device).start();
     }
 }

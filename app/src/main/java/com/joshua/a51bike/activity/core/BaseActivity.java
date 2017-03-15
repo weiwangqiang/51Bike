@@ -38,7 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         uiUtils = new UiUtils(getApplicationContext());
         userControl = UserControl.getUserControl();
         dialogControl = DialogControl.getDialogControl();
-        carControl = new CarControl();
+        carControl = CarControl.getCarControl();
         initScreen();
         initXUtils();
         initReceiver();

@@ -1,5 +1,6 @@
 package com.joshua.a51bike.Interface;
 
+import com.amap.api.location.AMapLocation;
 import com.amap.api.services.core.LatLonPoint;
 
 /**获取start end点的latLonPoint接口
@@ -7,6 +8,7 @@ import com.amap.api.services.core.LatLonPoint;
  */
 
 public interface latLonPointInterface {
-    void getstartlatLonPoint(LatLonPoint point);
+//    void getstartlatLonPoint(LatLonPoint point);
+    void getstartlatLonPoint(AMapLocation aMapLocation);
     void getEndlatLonPoint(LatLonPoint point);
 }

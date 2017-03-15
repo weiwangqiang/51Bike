@@ -12,12 +12,15 @@ import com.joshua.a51bike.entity.Car;
  */
 public class CarControl {
     private String TAG = "CarControl";
-    private Car car = null;
-    public CarControl() {
+    public static Car car = null;
+    public static CarControl carControl = new CarControl();
+    private CarControl() {
     }
-
+    public static CarControl getCarControl(){
+        return carControl;
+    }
     public Car getCar() {
-        return car;
+        return this.car;
     }
 
     public void setCar(Car car) {

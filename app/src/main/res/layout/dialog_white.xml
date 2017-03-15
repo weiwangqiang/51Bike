@@ -5,8 +5,9 @@
     android:layout_marginRight="@dimen/dialog_bg_margin"
     android:layout_marginLeft="@dimen/dialog_bg_margin"
     android:gravity="center_horizontal"
+    android:background="@drawable/button_circle_white"
     android:orientation="vertical"
-    android:background="@drawable/button_circle_white">
+    android:baselineAligned="false">
     <TextView
             style="@style/blackTextStyle"
             android:id="@+id/dialog_title"

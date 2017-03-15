@@ -24,22 +24,18 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testCompile 'junit:junit:4.10'
-    testCompile 'org.robolectric:robolectric:3.0'
-    testCompile "org.mockito:mockito-core:1.+"
+    compile 'com.android.support:appcompat-v7:24.0.0'
 
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile group: 'org.xutils', name: 'xutils', version: '3.3.40'
+    compile 'org.xutils:xutils:3.3.40'
     compile 'com.lovedise:permissiongen:0.0.6'
     testCompile 'junit:junit:4.12'
     compile files('libs/AMap_Location_V3.2.0_20161205.jar')
-    compile 'com.android.support:design:24.1.0'
+    compile 'com.android.support:design:24.0.0'
     compile 'com.android.support:cardview-v7:24.0.+'
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'org.json:json:20160810'
     compile files('libs/zxing.jar')
-
-    compile 'org.robolectric:robolectric:3.0'
+    compile 'ch.tutti.android.bottomsheet:library:1.0'
 }

@@ -10,6 +10,7 @@ import com.joshua.a51bike.activity.control.UserControl;
 import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.activity.dialog.OutControlDialog;
 import com.joshua.a51bike.activity.dialog.WaitProgress;
+import com.joshua.a51bike.entity.Car;
 import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.util.AppUtil;
 
@@ -106,21 +107,20 @@ public class BikeControl extends BaseActivity {
     private void reback() {
         long t = System.currentTimeMillis();
 //        Timestamp    timestamp = new Timestamp(t);
-//        Log.i(TAG, "reback: timestamp is "+timestamp);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String time =  format.format(t);
 //        long time = System.currentTimeMillis();
         RequestParams params = new RequestParams(rbUrl);
         User user = userControl.getUser();
         params.addBodyParameter("userId",user.getUserid()+"");
-        params.addHeader("Content-Type","application/json");
-
-        params.addBodyParameter("carId","1");
-        params.addBodyParameter("useHour",time+"");
-        params.addBodyParameter("useMoney","20");
-        params.addBodyParameter("useEndTime",time+"");
-        params.addBodyParameter("useStartTime",time+"");
-        params.addBodyParameter("useTime",time+"");
+//        params.addHeader("Content-Type","application/json");
+        Car car = carControl.getCar();
+        params.addBodyParameter("carId",car.getCarId()+"");
+//        params.addBodyParameter("useHour",time+"");
+//        params.addBodyParameter("useMoney","20");
+//        params.addBodyParameter("useEndTime",time+"");
+//        params.addBodyParameter("useStartTime",time+"");
+//        params.addBodyParameter("useTime",time+"");
         Log.i(TAG, "reback: params is "+params.toString());
         post(params);
         dialogControl.setDialog(new WaitProgress(this));

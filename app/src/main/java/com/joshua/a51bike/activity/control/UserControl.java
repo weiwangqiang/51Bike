@@ -3,7 +3,6 @@ package com.joshua.a51bike.activity.control;
 import android.app.Activity;
 import android.content.Context;
 
-
 import com.joshua.a51bike.Interface.UserState;
 import com.joshua.a51bike.entity.User;
 
@@ -22,11 +21,14 @@ public class UserControl implements UserState {
         this.user = user;
     }
 
-    private  UserState userState = new LogoutState();
-
-
-
-    private User user = null;
+    private  UserState userState = new LoginState();
+    private User user ;
+    {
+        user =  new User();
+        user.setUserid(5);
+        user.setUsername("aerd");
+        user.setUsermoney(456);
+    }
     public static UserControl getUserControl(){
         return  userControl;
     }
@@ -57,6 +59,22 @@ public class UserControl implements UserState {
     @Override
     public void account(Activity activity) {
         userState.account(activity);
+    }
+
+    @Override
+    public void accountMiXi(Activity activity) {
+        userState.accountMiXi(activity);
+
+    }
+
+    @Override
+    public void accountRecharge(Activity activity) {
+        userState.accountRecharge(activity);
+    }
+
+    @Override
+    public void accountYaJin(Activity activity) {
+        userState.accountYaJin(activity);
     }
 
     @Override
@@ -108,5 +126,40 @@ public class UserControl implements UserState {
     @Override
     public void pay(Activity activity) {
         userState.pay(activity);
+    }
+
+    @Override
+    public void config(Activity activity) {
+        userState.config(activity);
+    }
+
+    @Override
+    public void configSuggest(Activity activity) {
+        userState.configSuggest(activity);
+    }
+
+    @Override
+    public void configAbout(Activity activity) {
+        userState.configAbout(activity);
+    }
+
+    @Override
+    public void userRoute(Activity activity) {
+        userState.userRoute(activity);
+    }
+
+    @Override
+    public void userInfor(Activity activity) {
+        userState.userInfor(activity);
+    }
+
+    @Override
+    public void renZheng(Activity activity) {
+        userState.renZheng(activity);
+    }
+
+    @Override
+    public void userInforPhoneBefor(Activity activity) {
+        userState.userInforPhoneBefor(activity);
     }
 }

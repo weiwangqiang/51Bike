@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -21,6 +20,12 @@
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+
+    <uses-feature android:name="android.hardware.location.gps" />
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
+
+
 
     <application
         android:allowBackup="true"
@@ -37,9 +42,9 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        </intent-filter>
         </activity>
-        <activity android:name=".activity.view.RideRouteDetailActivity"/>
+        <activity android:name=".activity.view.RideRouteDetailActivity" />
         <activity android:name=".activity.view.BikeMessage"/>
         <activity android:name=".activity.view.BikeControl"/>
         <activity android:name=".activity.view.Recharge"/>
@@ -47,11 +52,59 @@
         <activity android:name=".activity.view.Login"  />
         <activity android:name=".activity.view.register"/>
         <activity android:name=".activity.view.UserInfor"/>
-        <activity android:name=".activity.view.Config"/>
+        <activity android:name=".activity.view.UserInforPhoneBefor">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.view.Config" />
+        </activity>
+        <activity android:name=".activity.view.Config">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.view.Config" />
+            </activity>
+        <activity android:name=".activity.view.share">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.view.Config" />
+        </activity>
+        <activity android:name=".activity.view.about">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.view.Config" />
+        </activity>
+        <activity android:name=".activity.view.Suggest">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.view.Config" />
+        </activity>
+        <activity android:name=".activity.view.account">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.view.Config" />
+        </activity>
+
+        <activity android:name=".activity.view.accountRecharge">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.view.Config" />
+        </activity>
+        <activity android:name=".activity.view.accountMingxi">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.view.Config" />
+        </activity>
+        <activity android:name=".activity.view.AccountYaJin">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.view.Config" />
+        </activity>
         <activity android:name=".activity.view.registerOrLogin"/>
         <activity android:name=".activity.view.renzheng"/>
         <activity android:name=".activity.view.ScanActivity"/>
         <activity android:name=".activity.view.BlueTooth"/>
+        <activity android:name=".activity.view.UserRoute"/>
+        <activity android:name=".activity.view.UserRouteMes"/>
+
 
         <activity android:name=".activity.view.WelCome" android:theme="@style/StartAppTheme"/>
         <!--支付宝-->
@@ -67,6 +120,10 @@
             android:exported="false"
             android:screenOrientation="behind">
         </activity>
+
+        <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
+        <service android:name="com.amap.api.location.APSService" />
+
     </application>
 
 

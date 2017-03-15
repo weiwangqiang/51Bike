@@ -83,7 +83,6 @@ public class BikeMessage extends BaseActivity {
     private void setLister() {
         rent.setOnClickListener(this);
         findViewById(R.id.left_back).setOnClickListener(this);
-
     }
 
     private void findid() {
@@ -200,6 +199,7 @@ public class BikeMessage extends BaseActivity {
         Log.i(TAG, "parseCar: car is "+car.getCarName());
         if(null != car){
             carControl.setCar(car);
+            Car car1 = carControl.getCar();
             upCarView();
         }
     }

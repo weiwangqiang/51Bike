@@ -13,7 +13,6 @@ import com.joshua.a51bike.activity.dialog.WaitProgress;
 import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.util.AppUtil;
 import com.joshua.a51bike.util.MyTools;
-import com.joshua.a51bike.util.VolleyUtil;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -32,8 +31,9 @@ import org.xutils.x;
 public class register extends BaseActivity {
     private String TAG = "register";
     private String url = AppUtil.BaseUrl +"/user/insertUser";
+    private String mesUrl = AppUtil.BaseUrl +"/user/getCode";
+
     private EditText getName, getCode;
-    private VolleyUtil volleyUtil;
     private   User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,6 @@ public class register extends BaseActivity {
     }
 
     public void init() {
-        volleyUtil = new VolleyUtil(this);
 
         findId();
         setLister();
@@ -51,12 +50,15 @@ public class register extends BaseActivity {
     public void findId() {
         getName = (EditText) findViewById(R.id.login_fast_admin);
         getCode = (EditText) findViewById(R.id.login_fast_code);
-        getName.setText("123456");
+        getName.setText("18852852276");
         getCode.setText("666666");
     }
 
     public void setLister() {
         findViewById(R.id.button_fast_login).setOnClickListener(this);
+        findViewById(R.id.get_code).setOnClickListener(this);
+
+
     }
 
     /**
@@ -70,11 +72,30 @@ public class register extends BaseActivity {
             case R.id.button_fast_login:
                 login();
                 break;
+            case R.id.get_code:
+                getCode();
+                break;
             default:
                 break;
         }
     }
+    public void getCode ( ){
+        Log.i(TAG, "getCode: ");
+        if(MyTools.EditTextIsNull(getName))
+            return ;
+        if(!MyTools.isMobileNO(getName.getText().toString())){
+            Log.i(TAG, "getCode: error!");
+            return;
+        }
+
+        RequestParams params = new RequestParams(mesUrl);
+        params.addBodyParameter("phoneNumber",getName.getText().toString());
+        Log.i(TAG, "getCode: url code is "+params.toString());
+        post(params);
+
+    }
     private void login(){
+
         if (MyTools.EditTextIsNull(getName) || MyTools.EditTextIsNull(getCode)) {
             return;
         }
@@ -112,6 +133,7 @@ public class register extends BaseActivity {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
                 uiUtils.showToast("注册失败！");
                 dialogControl.cancel();
             }

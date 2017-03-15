@@ -25,13 +25,12 @@ import java.util.List;
 public class locatePresenter implements AMapLocationListener,
         GeocodeSearch.OnGeocodeSearchListener {
         String TAG = "location";
-    public AMapLocationClient mLocationClient = null;
     public AMapLocationClientOption mLocationOption = null;
     private latLonPointInterface res;
     private static locatePresenter l = new locatePresenter();
     private locatePresenter(){}
 
-    public static locatePresenter getlocation(){
+    public static locatePresenter Instance(){
         return l;
     }
 
@@ -51,12 +50,12 @@ public class locatePresenter implements AMapLocationListener,
     }
 
     /**
-     * 地理位置改变
-     * @param activity
+     * 获取当前地理位置
+     * @param mLocationClient
      */
-    public void setcurrentLocation( final Activity activity){
-        mLocationClient = new AMapLocationClient(activity);
-
+    public void getcurrentLocation(AMapLocationClient mLocationClient){
+        Log.i(TAG, "getcurrentLocation: ");
+        if(null == mLocationClient) return;
         // 设置定位回调监听，这里要实现AMapLocationListener接口，
         // AMapLocationListener接口只有onLocationChanged方法可以实现，
         // 用于接收异步返回的定位结果，参数是AMapLocation类型。
@@ -79,19 +78,23 @@ public class locatePresenter implements AMapLocationListener,
         mLocationClient.setLocationOption(mLocationOption);
         //启动定位
         mLocationClient.startLocation();
+        Log.i(TAG, "getcurrentLocation: start location");
     }
-
+    /**
+     * 定位成功后回调函数
+     */
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
+        Log.i(TAG, "onLocationChanged: "+aMapLocation.getErrorCode());
         if (aMapLocation != null) {
             if (aMapLocation.getErrorCode() == 0) {
                 //定位成功回调信息，设置相关消息
-                aMapLocation.getLatitude();//获取纬度
-                aMapLocation.getLongitude();//获取经度
+//                aMapLocation.getLatitude();//获取纬度
+//                aMapLocation.getLongitude();//获取经度
                 //获取当前位置
-                LatLonPoint mStartPoint = new LatLonPoint(aMapLocation.getLatitude(),
-                        aMapLocation.getLongitude());
-                res.getstartlatLonPoint(mStartPoint);
+//                LatLonPoint mStartPoint = new LatLonPoint(aMapLocation.getLatitude(),
+//                        aMapLocation.getLongitude());
+                res.getstartlatLonPoint(aMapLocation);
             }
         }
     }

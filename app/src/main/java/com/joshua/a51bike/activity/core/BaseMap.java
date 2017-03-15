@@ -6,6 +6,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocationClient;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
@@ -22,7 +23,6 @@ public abstract class BaseMap extends BaseActivity implements
         AMap.OnMarkerClickListener,latLonPointInterface,
         AMap.InfoWindowAdapter, RouteSearch.OnRouteSearchListener  {
     public  AMap aMap;
-    public Boolean isFirst = true;
     public String terminal;
     public EditText editText;
     public TextView search;
@@ -37,6 +37,8 @@ public abstract class BaseMap extends BaseActivity implements
     public final int ROUTE_TYPE_RIDE = 4;
     public UiSettings mUiSettings;
     public RelativeLayout mBottomLayout, mHeadLayout;
+    protected AMapLocationClient mlocationClient;
+
     public TextView mRotueTimeDes, mRouteDetailDes;
     public  final int GPS_REQUESTCODE = 1 ;
 

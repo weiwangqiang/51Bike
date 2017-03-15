@@ -162,7 +162,7 @@
                 android:layout_height="wrap_content"
                 style="@style/listButtonStyle"
                 android:text="我的行程"
-                android:id="@+id/trip"
+                android:id="@+id/user_route"
                 android:background="@color/white"/>
              <Button
                 android:layout_width="match_parent"

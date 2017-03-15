@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/baseColor"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="充值"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_title" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:text="我的余额（元）"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_Big"
+        android:gravity="center"
+        android:text="100.0"/>
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:text="充值金额"
+    android:padding="10dp"
+    android:background="@color/gray_little"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radio1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:button="@null"
+            android:padding="10dp"
+            android:gravity="center_horizontal"
+            android:text="充值100\n得到100"
+            android:background="@drawable/account_recharge_button_bg"
+            android:layout_margin="10dp"
+
+            android:textColor="@color/baseColor" />
+
+        <RadioButton
+            android:id="@+id/radio2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:padding="10dp"
+
+            android:gravity="center_horizontal"
+            android:text="充值100\n得到100"
+            android:background="@drawable/account_recharge_button_bg"
+            android:layout_margin="10dp"
+
+            android:textColor="@color/baseColor" />
+
+        <RadioButton
+            android:id="@+id/radio3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:padding="10dp"
+
+            android:background="@drawable/account_recharge_button_bg"
+            android:button="@null"
+            android:gravity="center_horizontal"
+            android:text="充值100\n得到100"
+            android:textColor="@color/baseColor" />
+    </RadioGroup>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="选择支付方式"
+        android:padding="10dp"
+        android:background="@color/gray_little"/>
+<RadioGroup
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RadioButton
+        android:id="@+id/pay_zhifubao"
+        style="@style/payRadioButton"
+        android:checked="true"
+        android:drawableLeft="@drawable/zhifubao"
+        android:drawableRight="@drawable/radio_red_circular"
+        android:text="支付宝支付"
+        android:textSize="20sp" />
+
+    <RadioButton
+        android:id="@+id/pay_weixin"
+        style="@style/payRadioButton"
+        android:drawableLeft="@drawable/weixin"
+        android:drawableRight="@drawable/radio_red_circular"
+        android:text="微信支付" />
+</RadioGroup>
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="立即支付"
+        android:textColor="@color/white"
+        android:background="@drawable/button_circle_bcolor"/>
+</LinearLayout>

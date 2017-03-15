@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:gravity="center_horizontal"
+    android:background="@color/gray_little"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/account_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/baseColor"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:textSize="@dimen/text_size_title"
+            android:text="钱包" />
+    </android.support.v7.widget.Toolbar>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:text="我的余额（元）"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_Big"
+        android:gravity="center"
+        android:text="1000.0"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/account_minxi"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:text="查看交易明细"
+        android:textColor="@color/gray"
+        android:background="@drawable/border_gray_edit"
+        />
+
+    <Button
+        android:id="@+id/account_recharge"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/account_button_bg"
+        android:text="充值"
+        android:textColor="@color/white" />
+
+    <com.joshua.a51bike.tools.MyButton
+        xmlns:button="http://schemas.android.com/apk/res/com.joshua.a51bike"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/account_yajin"
+        button:leftText="我的保证金"
+        button:leftTextColor="@color/black"
+        button:leftTextSize="15sp"
+        button:rightText="未缴纳，点击缴纳"
+        button:rightImage="@drawable/gray_next"
+        button:rightTextColor="@color/baseColor"
+        button:rightTextSize="15sp">
+    </com.joshua.a51bike.tools.MyButton>
+</LinearLayout>

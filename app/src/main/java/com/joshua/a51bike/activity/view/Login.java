@@ -123,55 +123,13 @@ public class Login extends BaseActivity{
         dialogControl.setDialog(new WaitProgress(this));
         dialogControl.show();
     }
-
-    private void postJson( RequestParams params){
-        Log.d(TAG, "postJson: begin to post json");
-          Callback.Cancelable cancelable
-                = x.http().post(params, new Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                Log.d(TAG, "onSuccess: result is"+result );
-                Toast.makeText(x.app(), result.toString(), Toast.LENGTH_LONG).show();
-                dialogControl.cancel();
-
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                dialogControl.cancel();
-                Log.e(TAG, "onError: error !!!", null);
-                ex.printStackTrace();
-//                Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                if (ex instanceof HttpException) { // 网络错误
-                    HttpException httpEx = (HttpException) ex;
-                    int responseCode = httpEx.getCode();
-                    String responseMsg = httpEx.getMessage();
-                    String errorResult = httpEx.getResult();
-                    Log.e(TAG, "onError: mes is "+responseMsg +" error "+errorResult, null);
-                    // ...
-                } else { // 其他错误
-                    // ...
-                }
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-                dialogControl.cancel();
-
-                Toast.makeText(x.app(), "cancelled", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onFinished() {
-                dialogControl.cancel();
-
-            }
-        });
-    }
+    private  Callback.Cancelable cancelable;
     private void post(RequestParams params){
         Log.d(TAG, "post: post by xutils------>>");
 
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        cancelable =
+                x.http().post(params,
+                        new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 Log.e(TAG, "login come from Manager response is " + result.toString());
@@ -189,13 +147,11 @@ public class Login extends BaseActivity{
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-//              handler.sendEmptyMessage(NET_ERROR);
                 Log.e(TAG, "onError: onError", null);
                 uiUtils.showToast("登陆失败！");
                 dialogControl.cancel();
 
                 ex.printStackTrace();
-//                Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_LONG).show();
                 if (ex instanceof HttpException) { // 网络错误
                     HttpException httpEx = (HttpException) ex;
                     int responseCode = httpEx.getCode();
@@ -219,7 +175,17 @@ public class Login extends BaseActivity{
             }
         });
     }
-
+    @Override
+    public void onBackPressed() {
+        if((cancelable != null) && (!cancelable.isCancelled())){
+            cancelable.cancel();
+            Log.i(TAG, "onBackPressed: be cancel");
+        }
+        else{
+            finish();
+            Log.i(TAG, "onBackPressed: finish");
+        }
+    }
     @Override
     public void onStart() {
         super.onStart();

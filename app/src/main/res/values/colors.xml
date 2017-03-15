@@ -4,12 +4,16 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="baseColor">#ff893b</color>
+    <color name="baseTransColor">#66ff893b</color>
+
     <color name="topBaseColor">#cc6e2f</color>
 
     <color name="orange">#FD8739</color>
     <color name="white">#FFFFFF</color>
     <color name="gray">#40000000</color>
     <color name="gray_little">#F2F2F2</color>
+
+    <color name="graybg">#66CCCCCC</color>
 
     <color name="blue">#4c90f9</color>
     <color name="transparent">#00000000</color>

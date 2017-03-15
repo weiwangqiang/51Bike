@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <stroke
+                android:width="0.5dp"
+                android:color="@color/baseColor" />
+        </shape>
+    </item>
+    <!--stroke 设置剩余部分的宽度，颜色，solid设置本体的颜色 -->
+</layer-list>
