@@ -87,4 +87,13 @@ public class about extends BaseActivity {
                                     Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    /**
+     * Take care of popping the fragment back stack or finishing the activity
+     * as appropriate.
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

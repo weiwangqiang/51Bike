@@ -6,8 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +29,6 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
-import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
@@ -54,16 +54,19 @@ import com.joshua.a51bike.activity.dialog.GPSAlerDialog;
 import com.joshua.a51bike.activity.dialog.LocateProgress;
 import com.joshua.a51bike.activity.dialog.MarginAlerDialog;
 import com.joshua.a51bike.activity.presenter.locatePresenter;
-import com.joshua.a51bike.activity.presenter.mapPresenter;
-import com.joshua.a51bike.activity.view.CircleImageView;
+import com.joshua.a51bike.activity.view.searchBike;
+import com.joshua.a51bike.customview.CircleImageView;
+import com.joshua.a51bike.customview.progress;
+import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.util.AMapUtil;
 import com.joshua.a51bike.util.SensorEventHelper;
+import com.joshua.a51bike.util.imageUtil.ImageManager;
 
 import org.xutils.view.annotation.ContentView;
 
 
 @ContentView(R.layout.activity_main)
-public class MainActivity extends BaseMap implements LocationSource {
+public class MainActivity extends BaseMap {
     public String TAG = "MainActivity";
     private CircleImageView userIcn;
     private TextView userName,userMoney,userCash;
@@ -71,34 +74,40 @@ public class MainActivity extends BaseMap implements LocationSource {
     private Context mContext;
     private Button location;
     public LatLng LastPoint;
-    private double x;
-    private double y;
-    private Boolean isFirst = true;
-
+    //canGetPos 是否可以更新当前位置
+    private Boolean canGetPos = true,canShow = false;
+    private progress myProgress;
     private Marker mLocMarker;
     private SensorEventHelper mSensorHelper;
-    private OnLocationChangedListener mListener;//定位监听
     private Circle mCircle;
-
+    private  Toolbar toolbar ;
     public LatLonPoint point1 = new LatLonPoint(32.1979265479926, 119.51321482658388);
     public LatLonPoint point2 = new LatLonPoint(32.19794016630354, 119.51738834381104);
     public LatLonPoint point3 = new LatLonPoint(32.20268375393801, 119.51433062553406);
     public LatLonPoint[] points = new LatLonPoint[]{point1, point2, point3};
+    private  MapView mapView;
+    private  AMap aMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-         init();
+        Log.i(TAG, "onCreate: task id is "+getTaskId());
+        init();
         if(savedInstanceState == null)
-        {
-            dialogControl.setDialog(new GPSAlerDialog(MainActivity.this));
-            dialogControl.show();
-        }
+            canShow = true;
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         initDrawer();
     }
 
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);//must store the new intent unless getIntent() will return the old one
+    }
     private void initDrawer() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
@@ -121,17 +130,12 @@ public class MainActivity extends BaseMap implements LocationSource {
         DisplayMetrics metric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metric);
         int windowsWight = metric.widthPixels;
-//        int windowsHeight = metric.heightPixels;
         View leftMenu = findViewById(R.id.leftMain);
         ViewGroup.LayoutParams leftParams = leftMenu.getLayoutParams();
-//        leftParams.height = windowsHeight;
         leftParams.width = windowsWight;
         leftMenu.setLayoutParams(leftParams);
-        if (Build.VERSION.SDK_INT >= 21) {
-//            Log.i(TAG, "initLeftMain: setCarViewElevation !");
-//            CardView carView = (CardView) findViewById(R.id.card_view);
-//            carView.setCardElevation(15.2f);
-        }
+        progress p = (progress) findViewById(R.id.main_progress_view);
+        p.setPoistion(3);
     }
 
     public void init() {
@@ -145,7 +149,6 @@ public class MainActivity extends BaseMap implements LocationSource {
     }
     /*初始化map*/
     private void initmap() {
-        Log.i(TAG, "initmap: ");
         if (aMap == null) {
             aMap = mapView.getMap();
             // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
@@ -158,28 +161,38 @@ public class MainActivity extends BaseMap implements LocationSource {
             mSensorHelper.registerSensorListener();
         }
         mlocationClient = new AMapLocationClient(this);
-        mappresenter = mapPresenter.getmapPresenter();
 
     }
 //************************ 中间的marker *******************************************
-
+    /**
+     * 记录中心点移动前后的位置
+     */
+    private LatLng lastPosition = null;
+    private LatLng nowPosition = null ;
     private void addCenterMarker() {
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition position) {
-                Log.i(TAG, "onCameraChange: ");
             }
 
             @Override
             public void onCameraChangeFinish(CameraPosition postion) {
-                Log.i(TAG, "onCameraChangeFinish: ");
                 //屏幕中心的Marker跳动
-                startJumpAnimation();
+                nowPosition = postion.target;
+                if(lastPosition != null)
+                {
+                    float x = Math.abs((float)(nowPosition.latitude - lastPosition.latitude));
+                    float y = Math.abs((float)(nowPosition.longitude - lastPosition.longitude));
+                    Log.i(TAG, "onCameraChangeFinish: x "+x+" y "+y);
+                    if(x > 0.005 || y > 0.005){
+                        startJumpAnimation();
+                    }
+                }
+                lastPosition = nowPosition;
+                Log.i(TAG, "onCameraChangeFinish: ");
             }
         });
     }
-
-
     /**
      * 在地图上添加marker
      */
@@ -211,9 +224,9 @@ public class MainActivity extends BaseMap implements LocationSource {
             //根据屏幕距离计算需要移动的目标点
             final LatLng latLng = screenMarker.getPosition();
             Point point =  aMap.getProjection().toScreenLocation(latLng);
-            point.y -= dip2px(this,80);
+            point.y -=  uiUtils.dip2px(80);
+//            dip2px(this,80);
 //            point.y -= UiUtils.dip2px(80);????转换有问题
-            Log.i(TAG, "startJumpAnimation: y is "+point.y);
             LatLng target = aMap.getProjection()
                     .fromScreenLocation(point);
             //使用TranslateAnimation,填写一个需要移动的目标点
@@ -235,9 +248,6 @@ public class MainActivity extends BaseMap implements LocationSource {
             screenMarker.setAnimation(animation);
             //开始动画
             screenMarker.startAnimation();
-            Log.i(TAG, "startJumpAnimation: startAnim");
-        } else {
-            Log.e("ama","screenMarker is null");
         }
     }
     //dip和px转换
@@ -252,7 +262,6 @@ public class MainActivity extends BaseMap implements LocationSource {
      * 设置一些amap的属性
      */
     private void setUpMap() {
-        Log.i(TAG, "setUpMap: ");
 //        aMap.setLocationSource(this);// 设置定位监听
         mUiSettings = aMap.getUiSettings();
         mUiSettings.setZoomControlsEnabled(true);
@@ -271,7 +280,7 @@ public class MainActivity extends BaseMap implements LocationSource {
         userName = (TextView) findViewById(R.id.main_user_name);
         userMoney = (TextView) findViewById(R.id.money);
         userCash = (TextView) findViewById(R.id.cash);
-
+        myProgress = (progress) findViewById(R.id.main_progress);
 
     }
 
@@ -339,14 +348,15 @@ public class MainActivity extends BaseMap implements LocationSource {
      * 获取当前位置
      */
     private void getLocation() {
-        Log.i(TAG, "getLocation: ");
-        isFirst = true;
+        showCurrentPosition();
+        //获取最新地理位置
+        canGetPos = true;
         if(mlocationClient == null) {
             mlocationClient = new AMapLocationClient(this);
         }
         locatepresener.getcurrentLocation(mlocationClient);//开始定位
-        dialogControl.setDialog(new LocateProgress(MainActivity.this, "正在搜索......"));
-        dialogControl.show();
+//        dialogControl.setDialog(new LocateProgress(MainActivity.this, "正在搜索......"));
+//        dialogControl.show();
     }
 //*************** menu相关的方法***********************************
     //引入menu布局
@@ -362,13 +372,20 @@ public class MainActivity extends BaseMap implements LocationSource {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_search:
-                showToast("change");
-                changeCamera(
-                        CameraUpdateFactory.newCameraPosition(new CameraPosition(
-                                LastPoint, 18, 0, 30)), new myCancelableCallback());
+                toSearchActivty();
+
+            case android.R.id.home:
+                Log.i(TAG, "onOptionsItemSelected: home ");
+                if(drawer.isDrawerOpen(GravityCompat.START))
+                    drawer.closeDrawer(GravityCompat.START);
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void toSearchActivty() {
+      startActivity(new Intent(this,searchBike.class));
+
     }
 //**************************************************
 
@@ -378,7 +395,6 @@ public class MainActivity extends BaseMap implements LocationSource {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        Log.w(TAG, "--->>>success code is " + resultCode);
         if (0 == resultCode) {
             switch (requestCode) { //resultCode为回传的标记，我在B中回传的是RESULT_OK
                 case GPS_REQUESTCODE:
@@ -425,14 +441,11 @@ public class MainActivity extends BaseMap implements LocationSource {
     @Override
     public boolean onMarkerClick(Marker marker) {
         // TODO Auto-generated method stub
-        Log.w(TAG, " onMarkerClick is show ? " + marker.isInfoWindowShown());
         if (marker.isInfoWindowShown()) {
             {
-                Log.i(TAG, "onMarkerClick: hide");
                 marker.hideInfoWindow();
             }
         } else {
-            Log.i(TAG, "onMarkerClick: show");
             marker.showInfoWindow();
         }
 
@@ -454,37 +467,8 @@ public class MainActivity extends BaseMap implements LocationSource {
      * 根据动画按钮状态，调用函数animateCamera或moveCamera来改变可视区域
      */
     private void changeCamera(CameraUpdate update, AMap.CancelableCallback callback) {
-        Log.i(TAG, "changeCamera: ");
         aMap.animateCamera(update, 1000, callback);
 
-    }
-    //*************  LocationSource 的回调方法*****************************************************
-
-    /**
-     * 激活定位
-     */
-    @Override
-    public void activate(OnLocationChangedListener listener) {
-        Log.i(TAG, "activate: ");
-        mListener = listener;
-        if (mlocationClient == null) {
-            mlocationClient = new AMapLocationClient(this);
-        }
-        locatepresener.getcurrentLocation(mlocationClient);//开始定位
-
-    }
-    /**
-     * 停止定位
-     */
-    @Override
-    public void deactivate() {
-        Log.i(TAG, "deactivate: ");
-        mListener = null;
-        if (mlocationClient != null) {
-            mlocationClient.stopLocation();
-            mlocationClient.onDestroy();
-        }
-        mlocationClient = null;
     }
     //******************************************************************
 
@@ -535,8 +519,7 @@ public class MainActivity extends BaseMap implements LocationSource {
     public void onRideRouteSearched(RideRouteResult result, int errorCode) {
         dialogControl.cancel();
         aMap.clear();// 清理地图上的所有覆盖物
-        mRouteDetailDes.setVisibility(View.GONE);
-        mappresenter.showRideRoute(result, this, mRotueTimeDes, mBottomLayout
+        mappresenter.showRideRoute(result, this
                 , errorCode, aMap, FAT);
     }
 
@@ -554,7 +537,17 @@ public class MainActivity extends BaseMap implements LocationSource {
     public void onWalkRouteSearched(WalkRouteResult result, int errorCode) {
 
     }
-    //******************************************************************
+    //***********************生命周期*******************************************
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i(TAG, "onRestart()");
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart: ");
+    }
 
     /**
      * 方法必须重写
@@ -566,8 +559,68 @@ public class MainActivity extends BaseMap implements LocationSource {
         showCurrentPosition();
         SensorHelper();
         initUI();
+        if(canShow){
+            showDialog();
+            canShow = false;
+        }
+
     }
-    //*****************  onResume相关方法  ********************************
+    private void showDialog() {
+        Log.i(TAG, "onCreate: saveInstanceState is null");
+        dialogControl.setDialog(new GPSAlerDialog(MainActivity.this));
+        dialogControl.show();
+    }
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView.onPause();
+        Log.i(TAG, "onPause: ");
+        if (mSensorHelper != null) {
+            mSensorHelper.unRegisterSensorListener();
+            mSensorHelper.setCurrentMarker(null);
+            mSensorHelper = null;
+        }
+        mapView.onPause();
+        canGetPos = true;
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop: ");
+    }
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+        Log.i(TAG, "onDestroy: ");
+    }
+//*******************异常退出保留数据方法*******************************
+    /** 异常退出保留数据
+     *
+     * 方法必须重写
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.i(TAG, "onSaveInstanceState: ");
+        mapView.onSaveInstanceState(outState);
+        outState.putInt("IntTest", 0);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.i(TAG, "onRestoreInstanceState: ");
+        int IntTest = savedInstanceState.getInt("IntTest");
+    }
+
+    //***************** g更新ui  ********************************
     /*显示当前位置*/
     private void showCurrentPosition() {
         if(null != mStartPoint){
@@ -581,7 +634,7 @@ public class MainActivity extends BaseMap implements LocationSource {
     private void initUI() {
         if(null != userControl.getUser()){
             initUserMessage();
-        }
+    }
         else
             initLogOut();
     }
@@ -589,10 +642,26 @@ public class MainActivity extends BaseMap implements LocationSource {
     /**
      * 初始化用户信息
      */
+    String pre_image_path = Environment.getExternalStorageDirectory()+"/51get";
+
     private void initUserMessage() {
+//        String  after_image_path = pre_image_path +"/"+userControl.getUser().getUsername()+".jpg";
+        User user = userControl.getUser();
+        String after_image_path = "";
+
+
         userName.setText(userControl.getUser().getUsername());
         userMoney.setText(userControl.getUser().getUsermoney()+"");
         userCash.setText(userControl.getUser().getUsermoney()+"");
+        if(after_image_path == null )
+            return;
+        after_image_path = pre_image_path +"/"+userControl.getUser().getUsername()+".jpg";
+        Log.i(TAG, "initUserMessage: afte_image_uri"+after_image_path);
+        ImageManager manager = new  ImageManager();
+        if(userControl.getUser().getUserpic() != null){
+            manager.bindImageWithBitmap(userIcn,
+                    after_image_path);
+        }
     }
     /**
      * 未登录状态
@@ -601,7 +670,12 @@ public class MainActivity extends BaseMap implements LocationSource {
         userName.setText("未登录");
         userMoney.setText("0");
         userCash.setText("0");
+//        userIcn.setImageResource(ResourcesCompat
+//                .getDrawable(this.getResources(),
+//                        R.drawable.default_icn,null));
+        userIcn.setImageResource(R.drawable.default_icn);
     }
+
     private void SensorHelper() {
         if (mSensorHelper != null) {
             mSensorHelper.registerSensorListener();
@@ -615,51 +689,9 @@ public class MainActivity extends BaseMap implements LocationSource {
             }
         }
     }
-    //******************************************************************
-    /**
-     * 方法必须重写
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mapView.onPause();
-        if (mSensorHelper != null) {
-            mSensorHelper.unRegisterSensorListener();
-            mSensorHelper.setCurrentMarker(null);
-            mSensorHelper = null;
-        }
-        mapView.onPause();
-        deactivate();
-        isFirst = true;
-    }
-//*******************异常退出保留数据方法*******************************
-    /** 异常退出保留数据
-     *
-     * 方法必须重写
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
-        outState.putInt("IntTest", 0);
-    }
 
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        int IntTest = savedInstanceState.getInt("IntTest");
-    }
+
 //**************************************************
-
-    /**
-     * 方法必须重写
-     */
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-    }
-
 
     /**
      * 定位成功的回调
@@ -670,11 +702,10 @@ public class MainActivity extends BaseMap implements LocationSource {
     public void getstartlatLonPoint(AMapLocation aMapLocation) {
         mStartPoint = new LatLonPoint(aMapLocation.getLatitude(), aMapLocation.getLongitude());
         Boolean b = dialogControl.getDialog() instanceof LocateProgress;
-        Log.i(TAG, "getstartlatLonPoint: is LocateProgress ? " + b +" is first ? "+isFirst);
         if (b) dialogControl.cancel();
 //        避免重复定位
-        if (isFirst) {
-            isFirst = false;
+        if (canGetPos) {
+            canGetPos = false;
             LastPoint = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
             aMap.clear();
 
@@ -706,7 +737,6 @@ public class MainActivity extends BaseMap implements LocationSource {
     }
 
     private void addCarMarker() {
-        Log.i(TAG, "addCarMarker: ");
         for (int i = 0; i < points.length; i++) {
             MarkerOptions markerOptions = new MarkerOptions()
 //                       .icon(BitmapDescriptorFactory.fromView(view))
@@ -732,7 +762,6 @@ public class MainActivity extends BaseMap implements LocationSource {
         mCircle = aMap.addCircle(options);
     }
     private void addMarker(LatLng latlng) {
-        Log.i(TAG, "addMarker: ");
         Bitmap bMap = BitmapFactory.decodeResource(this.getResources(),
                 R.drawable.navi_map_gps_locked);
         BitmapDescriptor des = BitmapDescriptorFactory.fromBitmap(bMap);
@@ -762,14 +791,4 @@ public class MainActivity extends BaseMap implements LocationSource {
         searchRouteResult(ROUTE_TYPE_RIDE, RouteSearch.RidingDefault);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-    }
 }

@@ -54,7 +54,6 @@
             android:hint="请输入真实姓名"
             android:background="@drawable/button_circle_little_gray"
             android:lines="1"
-
             android:id="@+id/name"/>
 
     </LinearLayout>
@@ -127,6 +126,8 @@
         <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/get_pro"
+        android:layout_marginRight="10dp"
         android:background="@drawable/choice_school"/>
     </LinearLayout>
     <TextView
@@ -137,24 +138,21 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
+
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/getSrc"
-            android:text="获取"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/upDate"
-            android:textColor="@color/baseColor"
-            android:textSize="@dimen/text_size_content"
-            android:background="@drawable/renzheng"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
-            />
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/buttonbg"
+            android:text="认 证"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_content" />
     </RelativeLayout>
 
 </LinearLayout>

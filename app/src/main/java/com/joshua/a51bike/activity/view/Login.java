@@ -2,11 +2,8 @@ package com.joshua.a51bike.activity.view;
 
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -20,12 +17,9 @@ import com.joshua.a51bike.util.JsonUtil;
 import com.joshua.a51bike.util.MyTools;
 
 import org.xutils.common.Callback;
-import org.xutils.ex.HttpException;
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.x;
-
-import static com.joshua.a51bike.R.layout.login;
 
 
 /**
@@ -36,30 +30,18 @@ import static com.joshua.a51bike.R.layout.login;
  * @project 51Bike
  * @since 2017-01-10
  */
-@ContentView(login)
+@ContentView(R.layout.login_fast)
 public class Login extends BaseActivity{
-    private String TAG = "Login";
-    private String url = AppUtil.BaseUrl + "/user/login";
-    private EditText getName, getPass;
-    private Button back;
-    private Button login;
+    private String TAG = "register";
+    private String url = AppUtil.BaseUrl +"/user/login";
+    private String mesUrl = AppUtil.BaseUrl +"/user/getCode";
+    private String resultCode = "";
+    private int type = 0;
+    private static final int GET_CODE = 1;
+    private static final int LOGIN = 2;
+    private EditText getName, getCode;
+    private   User user;
 
-    private Handler handler = new Handler() {
-        public void handleMessage(Message mes){
-            switch (mes.what){
-                case NET_SUCCESS:
-                    uiUtils.showToast("成功登陆！");
-                    dialogControl.cancel();
-                    break;
-                case NET_ERROR:
-                    uiUtils.showToast("登陆失败！");
-                    dialogControl.cancel();
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,19 +53,20 @@ public class Login extends BaseActivity{
         setLister();
     }
 
+
     public void findId() {
-        getName = (EditText) findViewById(R.id.login_Admin);
-        getPass = (EditText) findViewById(R.id.login_Pass);
-        login = (Button) findViewById(R.id.login_button);
-        getName.setText("wei");
-        getPass.setText("123456");
+        getName = (EditText) findViewById(R.id.login_fast_admin);
+        getCode = (EditText) findViewById(R.id.login_fast_code);
+        getName.setText("18852852276");
+//        getCode.setText("666666");
     }
 
     public void setLister() {
-        findViewById(R.id.left_back).setOnClickListener(this);
-//        findViewById(R.id.Login_register).setOnClickListener(this);
-        login.setOnClickListener(this);
+        findViewById(R.id.button_fast_login).setOnClickListener(this);
+        findViewById(R.id.get_code).setOnClickListener(this);
+
     }
+
 
     /**
      * Called when a view has been clicked.
@@ -93,77 +76,80 @@ public class Login extends BaseActivity{
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.left_back:
-                finish();
+            case R.id.button_fast_login:
+                login();
                 break;
-            case R.id.login_button:
-                Login();
+            case R.id.get_code:
+
+                getCode();
                 break;
             default:
                 break;
         }
     }
-    private void Login(){
-        if (MyTools.EditTextIsNull(getName) || MyTools.EditTextIsNull(getPass)) {
-            return;
-        }
-        String name = getName.getText().toString();
-        String pass = getPass.getText().toString();
-
-        User user = new User();
-        user.setUserpass(pass);
-        user.setUsername(name);
-        RequestParams params = new RequestParams(url);
-
-        params.addBodyParameter("username",name);
-        params.addBodyParameter("userpass",pass);
+    public void getCode ( ){
+        if(MyTools.EditTextIsNull(getName))
+            return ;
+//        if(!MyTools.isMobileNO(getName.getText().toString())){
+//            ToastUtil.show(Login.this,"请输入正确的手机号");
+//            return;
+//        }
+        type = GET_CODE;
+        RequestParams params = new RequestParams(mesUrl);
+        params.addBodyParameter("phoneNumber",getName.getText().toString());
+        Log.i(TAG, "getCode: url code is "+params.toString());
+        dialogControl.setDialog(new WaitProgress(this));
+        dialogControl.show();
         post(params);
-//        postJson(params);
 
+    }
+    private void login(){
+//        if (MyTools.EditTextIsNull(getName) || MyTools.EditTextIsNull(getCode)) {
+//            ToastUtil.show(Login.this,"手机号或验证码不能为空~");
+//            return;
+//        }
+        type = LOGIN;
+        String name = getName.getText().toString();
+        String code = getCode.getText().toString();
+//        if(!code.equals(resultCode)){
+//            ToastUtil.show(Login.this,"验证码出错了~");
+//            return;
+//        }
+        RequestParams params = new RequestParams(url);
+        params.addBodyParameter("username",name);
+        user = new User();
+        user.setUsername(name);
+        post(params);
         dialogControl.setDialog(new WaitProgress(this));
         dialogControl.show();
     }
-    private  Callback.Cancelable cancelable;
+    private   Callback.Cancelable cancelable;
     private void post(RequestParams params){
-        Log.d(TAG, "post: post by xutils------>>");
-
-        cancelable =
-                x.http().post(params,
-                        new Callback.CommonCallback<String>() {
+         cancelable =  x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.e(TAG, "login come from Manager response is " + result.toString());
-                User user = JsonUtil.getUserObject(result.toString());
-                if(null != user){
-                    userControl.setUser(user);
-                    uiUtils.showToast("登陆成功！");
-                    userControl.setUserState(new LoginState());
-                    setResult(AppUtil.INTENT_RESPONSE);
-                    finish();
-                }else
-                    uiUtils.showToast("登陆失败！");
+//                Log.d(TAG, "success: object is "+ result.toString());
                 dialogControl.cancel();
+                switch (type){
+                    case GET_CODE:
+                        getCodeSuccess(result);
+                        break;
+                    case LOGIN:
+                        loginSuccess(result);
+                        break;
+                }
+
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                Log.e(TAG, "onError: onError", null);
-                uiUtils.showToast("登陆失败！");
-                dialogControl.cancel();
-
                 ex.printStackTrace();
-                if (ex instanceof HttpException) { // 网络错误
-                    HttpException httpEx = (HttpException) ex;
-                    int responseCode = httpEx.getCode();
-                    String responseMsg = httpEx.getMessage();
-                    String errorResult = httpEx.getResult();
-                    Log.e(TAG, "onError: mes is " + responseMsg + " error " + errorResult, null);
-                }
+                uiUtils.showToast("失败！");
+                dialogControl.cancel();
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
-                Log.e(TAG, "onCancelled: cancel", null);
                 Toast.makeText(x.app(), "cancelled", Toast.LENGTH_LONG).show();
                 dialogControl.cancel();
 
@@ -175,6 +161,26 @@ public class Login extends BaseActivity{
             }
         });
     }
+    //登陆成功
+    private void loginSuccess(String result) {
+        Log.i(TAG, "loginSuccess: userima"+result);
+        User user = JsonUtil.getUserObject(result);
+        if(user != null){
+            uiUtils.showToast("成功！");
+            userControl.setUser(user);
+            userControl.setUserState(new LoginState());
+            setResult(AppUtil.INTENT_RESPONSE);
+            finish();
+        }else   uiUtils.showToast("失败！");
+    }
+    //获取验证码成功
+    private void getCodeSuccess(String result) {
+        if(result.length() == 6 ){
+            resultCode = result;
+            uiUtils.showToast("已发送验证码，请注意查收");
+        }else   uiUtils.showToast("获取验证码失败");
+    }
+
     @Override
     public void onBackPressed() {
         if((cancelable != null) && (!cancelable.isCancelled())){

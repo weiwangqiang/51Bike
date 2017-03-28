@@ -9,7 +9,6 @@ import com.joshua.a51bike.activity.view.Config;
 import com.joshua.a51bike.activity.view.Login;
 import com.joshua.a51bike.activity.view.UserRoute;
 import com.joshua.a51bike.activity.view.about;
-import com.joshua.a51bike.activity.view.register;
 import com.joshua.a51bike.activity.view.registerOrLogin;
 import com.joshua.a51bike.util.AppUtil;
 
@@ -31,14 +30,7 @@ public class LogoutState implements UserState {
     }
 
     @Override
-    public void register(Activity activity) {
-        Intent intent = new Intent(activity, register.class);
-        activity.startActivityForResult(intent, AppUtil.INTENT_REQUSET);
-
-    }
-
-    @Override
-    public void getUserIcn(Context context) {
+    public void getUserIcn(Context context,String filePath) {
 
     }
 

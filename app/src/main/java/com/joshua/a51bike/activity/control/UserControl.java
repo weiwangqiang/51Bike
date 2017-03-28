@@ -21,14 +21,8 @@ public class UserControl implements UserState {
         this.user = user;
     }
 
-    private  UserState userState = new LoginState();
-    private User user ;
-    {
-        user =  new User();
-        user.setUserid(5);
-        user.setUsername("aerd");
-        user.setUsermoney(456);
-    }
+    private  UserState userState = new LogoutState();
+    private User user = null ;
     public static UserControl getUserControl(){
         return  userControl;
     }
@@ -46,14 +40,10 @@ public class UserControl implements UserState {
         userState.login(activity);
     }
 
-    @Override
-    public void register(Activity activity) {
-        userState.register(activity);
-    }
 
     @Override
-    public void getUserIcn(Context context) {
-        userState.getUserIcn(context);
+    public void getUserIcn(Context context,String filePath) {
+        userState.getUserIcn(context,filePath);
     }
 
     @Override

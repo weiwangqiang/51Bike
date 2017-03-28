@@ -10,8 +10,7 @@ import android.content.Context;
 public interface UserState {
     void toChoice(Activity activity);
     void login(Activity activity);
-    void register(Activity activity);
-    void getUserIcn(Context context);
+    void getUserIcn(Context context,String filePath);
 
     void saoma(Activity activity);
     void toBikeMes(Activity activity,String url);

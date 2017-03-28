@@ -18,7 +18,7 @@ import org.xutils.view.annotation.ContentView;
  * @project 51Bike
  * @since 2017-03-11
  */
-@ContentView(R.layout.activity_main)
+@ContentView(R.layout.update)
 public class UpDate extends BaseActivity {
     private static final String TAG = "UpDate";
 

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -27,7 +28,7 @@ import java.io.File;
 
 public class GetIcnAlerDialog extends MyAlerDialog implements View.OnClickListener{
     String TAG ="MarginAlerDialog";
-    String filePath = Environment.getExternalStorageDirectory()+"/51get";
+    String filePath;
 
     //拍照和图库的Intent请求码
     public final int TAKE_PHOTO_WITH_DATE = 200;
@@ -38,9 +39,10 @@ public class GetIcnAlerDialog extends MyAlerDialog implements View.OnClickListen
 
 
     private Context context;
-    public GetIcnAlerDialog(Context context) {
+    public GetIcnAlerDialog(Context context,String filePath) {
         super(context);
         this.context = context;
+        this.filePath = filePath;
 
     }
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class GetIcnAlerDialog extends MyAlerDialog implements View.OnClickListen
         WindowManager.LayoutParams wlp = window.getAttributes();
         wlp.gravity = Gravity.BOTTOM;
         wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        window.setWindowAnimations(R.style.popWindow_animation);
     }
     @Override
     protected  void onStart(){
@@ -82,9 +85,16 @@ public class GetIcnAlerDialog extends MyAlerDialog implements View.OnClickListen
                 cancel();
                 break;
             case R.id.dialog_camera:
+                cancel();
                 String SDState = Environment.getExternalStorageState();
                 if (SDState.equals(Environment.MEDIA_MOUNTED)) {
-                    Log.i(TAG,"-->进入拍照");
+                    File localFile = new File( Environment.getExternalStorageDirectory()+"/51get/");
+                    if (localFile.exists()) {
+                        Log.i(TAG, "onClick: "+" 存在该路径 file : "+localFile);
+                        localFile.delete();
+                    }
+                    localFile.mkdir();
+                    Log.i(TAG,"-->进入拍照 存放 ："+filePath);
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     Uri imageUri = Uri.fromFile(new File(filePath));
                     //设置输出路径
@@ -96,10 +106,15 @@ public class GetIcnAlerDialog extends MyAlerDialog implements View.OnClickListen
                     ((Activity)context).startActivityForResult(intent, TAKE_PHOTO_WITH_DATE);
 
                 }
-                cancel();
                 break;
             case R.id.dialog_picture:
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                Intent intent ;
+                if (Build.VERSION.SDK_INT >= 19 ) {
+                    intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                }else
+                    intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
                 intent.putExtra("return_data", true);
                 ((Activity)context).startActivityForResult(intent, TAKE_PHOTO_FROM_IMAGE);

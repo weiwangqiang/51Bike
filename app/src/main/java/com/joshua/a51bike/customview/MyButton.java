@@ -1,4 +1,4 @@
-package com.joshua.a51bike.tools;
+package com.joshua.a51bike.customview;
 
 import android.content.Context;
 import android.content.res.TypedArray;

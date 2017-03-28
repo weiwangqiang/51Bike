@@ -6,8 +6,7 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <include
-        layout="@layout/top_layout"/>
+    <include layout="@layout/top_layout" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,15 +14,15 @@
         android:scrollbars="none">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="170dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/default_bg">
 
-            <com.joshua.a51bike.activity.view.CircleImageView
+            <com.joshua.a51bike.customview.CircleImageView
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:id="@+id/main_user_icn"
@@ -39,18 +38,22 @@
                 android:layout_below="@+id/main_user_icn"
                 android:layout_centerHorizontal="true" />
         </RelativeLayout>
-        <include
-            layout="@layout/progress"/>
+<include
+    layout="@layout/left_main_progress"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/main_progress"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-
                 android:layout_weight="1">
             <TextView
                 android:layout_width="wrap_content"
@@ -94,9 +97,9 @@
             </LinearLayout>
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="1dp"
                 android:layout_height="100dp"
-                android:src="@drawable/y_divider"/>
+                android:background="@drawable/y_divider"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

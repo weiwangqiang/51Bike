@@ -42,8 +42,6 @@ public class registerOrLogin extends BaseActivity {
     }
 
     public void setLister() {
-//        findViewById(R.id.left_back).setOnClickListener(this);
-        findViewById(R.id.Register_button).setOnClickListener(this);
         findViewById(R.id.Login_button).setOnClickListener(this);
 
     }
@@ -58,9 +56,6 @@ public class registerOrLogin extends BaseActivity {
         switch (v.getId()) {
             case R.id.Login_button:
                 userControl.login(registerOrLogin.this);
-                break;
-            case R.id.Register_button:
-                userControl.register(registerOrLogin.this);
                 break;
             default:
                 break;
@@ -84,4 +79,48 @@ public class registerOrLogin extends BaseActivity {
             }
         }
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i(TAG, "onRestart()");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart: ");
+    }
+
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume: ");
+    }
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause: ");
+
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop: ");
+    }
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy: ");
+    }
+
 }

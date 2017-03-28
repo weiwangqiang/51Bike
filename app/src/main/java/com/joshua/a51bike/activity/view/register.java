@@ -50,8 +50,8 @@ public class register extends BaseActivity {
     public void findId() {
         getName = (EditText) findViewById(R.id.login_fast_admin);
         getCode = (EditText) findViewById(R.id.login_fast_code);
-        getName.setText("18852852276");
-        getCode.setText("666666");
+//        getName.setText("18852852276");
+//        getCode.setText("666666");
     }
 
     public void setLister() {
@@ -73,6 +73,7 @@ public class register extends BaseActivity {
                 login();
                 break;
             case R.id.get_code:
+
                 getCode();
                 break;
             default:
@@ -80,6 +81,10 @@ public class register extends BaseActivity {
         }
     }
     public void getCode ( ){
+
+        dialogControl.setDialog(new WaitProgress(this));
+        dialogControl.show();
+
         Log.i(TAG, "getCode: ");
         if(MyTools.EditTextIsNull(getName))
             return ;

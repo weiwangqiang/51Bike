@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.CheckBox;
 
 import com.amap.api.location.AMapLocation;
+import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
@@ -21,9 +22,11 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.route.BusRouteResult;
 import com.amap.api.services.route.DriveRouteResult;
 import com.amap.api.services.route.RideRouteResult;
+import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkRouteResult;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseMap;
+import com.joshua.a51bike.activity.dialog.WaitProgress;
 import com.joshua.a51bike.util.AMapUtil;
 
 import org.xutils.view.annotation.ContentView;
@@ -46,16 +49,34 @@ public class UserRouteMes extends BaseMap {
     private CheckBox checkBox;
     private View blackView;
     private   BottomSheetBehavior behavior;
+    private  MapView mapView;
+    private  AMap aMap;
+    private boolean isfirst = true;
+    private LatLonPoint mStartPoint ;
+    private LatLonPoint mEndPoint;
+    private final int ROUTE_TYPE_RIDE = 4;
+    private  RouteSearch.FromAndTo FAT;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mStartPoint = new LatLonPoint(32.1979265479926, 119.51321482658388);
+        mEndPoint =new LatLonPoint(32.19794016630354, 119.51738834381104);
         init();
+        mapView.onCreate(savedInstanceState); // 此方法必须重写
+
+        searchRouteResult(ROUTE_TYPE_RIDE, RouteSearch.RidingDefault);
+
     }
 
     public void init() {
         findId();
         setLister();
         initmap();
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+        aMap.moveCamera(CameraUpdateFactory.
+                changeLatLng(new LatLng(mStartPoint.getLatitude(),
+                        mStartPoint.getLongitude())));
     }
 
     public void findId() {
@@ -73,7 +94,9 @@ public class UserRouteMes extends BaseMap {
 
 
     public void setLister() {
+
         findViewById(R.id.left_back).setOnClickListener(this);
+        findViewById(R.id.see_ChargingRule).setOnClickListener(this);
         behavior = BottomSheetBehavior.from(findViewById(R.id.scroll));
         behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -81,15 +104,14 @@ public class UserRouteMes extends BaseMap {
                 Log.i(TAG, "onStateChanged: newState"+ newState +" "+STATE_HIDDEN +" "+STATE_EXPANDED);
                 if(newState == STATE_COLLAPSED){//被隐藏
                     {
-//                        getWindow().setBackgroundDrawableResource(R.color.white);
+                        getWindow().setBackgroundDrawableResource(R.color.white);
                         blackView.setVisibility(View.GONE);
-
                         checkBox.setChecked(false);
 
                     }
                 }else if(newState == STATE_EXPANDED)//显示出来
                 {
-//                    getWindow().setBackgroundDrawableResource(R.color.gray);
+                    getWindow().setBackgroundDrawableResource(R.color.gray);
                     blackView.setVisibility(View.VISIBLE);
                     checkBox.setChecked(true);
                 }
@@ -112,7 +134,11 @@ public class UserRouteMes extends BaseMap {
         aMap.clear();
         mUiSettings = aMap.getUiSettings();
         mUiSettings.setZoomControlsEnabled(false);
-        addMarker();
+
+        mRouteSearch = new RouteSearch(this);
+        mRouteSearch.setRouteSearchListener(this);
+
+//        addMarker();
     }
 
     private void addMarker() {
@@ -128,6 +154,33 @@ public class UserRouteMes extends BaseMap {
         aMap.moveCamera(CameraUpdateFactory.
                 changeLatLng(new LatLng(point1.getLatitude(),
                         point1.getLongitude())));
+        Log.i(TAG, "addMarker: -------------------");
+    }
+
+
+
+    /**
+     * 开始搜索路径规划方案
+     */
+    public void searchRouteResult(int routeType, int mode) {
+        Log.i(TAG, "searchRouteResult: ");
+        if (mStartPoint == null) {
+            uiUtils.showToast( "定位中，稍后再试...");
+            dialogControl.cancel();
+            return;
+        }
+        if (mEndPoint == null) {
+            dialogControl.cancel();
+            uiUtils.showToast( "终点未设置");
+        }
+        final RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(
+                mStartPoint, mEndPoint);
+        FAT = fromAndTo;
+        if (routeType == ROUTE_TYPE_RIDE) {// 骑行路径规划
+            Log.i(TAG, "searchRouteResult: start search route ");
+            RouteSearch.RideRouteQuery query = new RouteSearch.RideRouteQuery(fromAndTo, mode);
+            mRouteSearch.calculateRideRouteAsyn(query);// 异步路径规划骑行模式查询
+        }
     }
     /**
      * Called when a view has been clicked.
@@ -139,6 +192,10 @@ public class UserRouteMes extends BaseMap {
         switch (v.getId()) {
             case R.id.left_back:
                 finish();
+                break;
+            case  R.id.see_ChargingRule:
+                Intent intent = new Intent(this,ChargingRule.class);
+                startActivity(intent);
                 break;
             default:
                 break;
@@ -184,12 +241,21 @@ public class UserRouteMes extends BaseMap {
     public void onWalkRouteSearched(WalkRouteResult walkRouteResult, int i) {
 
     }
-
+    /**
+     * 骑行路径结果回调
+     * @param result
+     * @param errorCode
+     */
     @Override
-    public void onRideRouteSearched(RideRouteResult rideRouteResult, int i) {
+    public void onRideRouteSearched(RideRouteResult result, int errorCode) {
+        Log.i(TAG, "onRideRouteSearched: ");
+        dialogControl.cancel();
+        isfirst = false;
+        aMap.clear();// 清理地图上的所有覆盖物
+        mappresenter.showRideRoute(result,UserRouteMes.this
+                ,errorCode,aMap,FAT);
 
     }
-
 
     @Override
     public void getstartlatLonPoint(AMapLocation aMapLocation) {
@@ -200,6 +266,8 @@ public class UserRouteMes extends BaseMap {
     public void getEndlatLonPoint(LatLonPoint point) {
 
     }
+
+
     /**
      * 方法必须重写
      */
@@ -212,6 +280,10 @@ public class UserRouteMes extends BaseMap {
     protected void onResume() {
         super.onResume();
         mapView.onResume();
+        if(isfirst){
+            dialogControl.setDialog(new WaitProgress(this));
+            dialogControl.show();
+        }
     }
     /**
      * 方法必须重写

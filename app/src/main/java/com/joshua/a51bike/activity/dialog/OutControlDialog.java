@@ -66,8 +66,8 @@ public class OutControlDialog extends MyAlerDialog implements View.OnClickListen
                 break;
             case R.id.dialog_sure:
                 Log.w(TAG,"----------->> dialog is sure !!! context is "+context.getClass());
-                context.finish();
                 cancel();
+                context.finish();
                 break;
         }
     }

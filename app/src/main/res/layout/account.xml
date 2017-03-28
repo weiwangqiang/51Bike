@@ -55,7 +55,7 @@
         android:text="充值"
         android:textColor="@color/white" />
 
-    <com.joshua.a51bike.tools.MyButton
+    <com.joshua.a51bike.customview.MyButton
         xmlns:button="http://schemas.android.com/apk/res/com.joshua.a51bike"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
@@ -68,5 +68,5 @@
         button:rightImage="@drawable/gray_next"
         button:rightTextColor="@color/baseColor"
         button:rightTextSize="15sp">
-    </com.joshua.a51bike.tools.MyButton>
+    </com.joshua.a51bike.customview.MyButton>
 </LinearLayout>

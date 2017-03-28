@@ -17,16 +17,29 @@
     <TextView
         style="@style/grayTextStyle"
             android:text="@string/reback_money"/>
-
-    <CheckBox
+    <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:button="@null"
-        android:layout_margin="20dp"
-        android:background="@color/white"
-        android:drawableLeft="@drawable/zhifubao"
-        android:drawableRight="@drawable/check_button_bcolor"
-        android:id="@+id/checkBox" />
+        android:layout_margin="15dp"
+        >
+
+        <RadioButton
+            android:id="@+id/pay_zhifubao"
+            style="@style/payRadioButton"
+            android:checked="true"
+            android:drawableLeft="@drawable/zhifubao"
+            android:drawableRight="@drawable/radio_red_circular"
+            android:text="支付宝支付"
+            android:textSize="20sp" />
+
+        <RadioButton
+            android:id="@+id/pay_weixin"
+            style="@style/payRadioButton"
+            android:drawableLeft="@drawable/weixin"
+            android:drawableRight="@drawable/radio_red_circular"
+            android:text="微信支付" />
+    </RadioGroup>
+
 
     <RelativeLayout
         android:layout_width="match_parent"

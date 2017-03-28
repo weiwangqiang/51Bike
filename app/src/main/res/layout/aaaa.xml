@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_height"
+        android:id="@+id/relayout"
+        android:background="@color/baseColor">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/left_title"
+            style="@style/titleStyle"
+            android:text="@string/user_route_mes_title"/>
+
+        <ImageButton
+            style="@style/backArrowShortStyle"
+            android:id="@+id/left_back"
+            />
+    </RelativeLayout>
+    <com.amap.api.maps.MapView
+        android:id="@+id/route_mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+    </com.amap.api.maps.MapView>
 </LinearLayout>

@@ -3,10 +3,14 @@ package com.joshua.a51bike.entity;
 public class User {
     private  int userid;
 	private  String username;
+	private String realName = "韦王强";
 	private  int usermoney;
 	private  int userstate;  // 0 可租 1不可租 2 正在租
 	private  String userpass;
 	private  String userpic;
+	public String getRealName(){
+		return realName;
+	}
 	public int getUserid() {
 		return userid;
 	}

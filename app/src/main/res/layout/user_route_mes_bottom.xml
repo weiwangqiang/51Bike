@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="250dp"
     android:orientation="vertical">
-
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:background="@drawable/route_mes_bg"
+        android:layout_height="130dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        android:background="@drawable/route_mes_bg"
         android:layout_alignParentStart="true">
 
         <CheckBox
@@ -31,8 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal">
+            android:layout_alignParentBottom="true">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -93,10 +90,11 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="150dp"
-        android:background="@drawable/route_mes_bg2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@drawable/route_mes_bg1"
         android:id="@+id/view2" >
 
         <LinearLayout
@@ -107,16 +105,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/whiteTextStyle"
+                style="@style/whiteTextNoPaddingStyle"
                 android:layout_weight="1"
-                android:text="时长费（21.2）"/>
+                android:layout_marginTop="10dp"
+
+                android:gravity="start"
+                android:text="时长费（21.2min）"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-
-                style="@style/whiteTextStyle"
+                android:layout_marginTop="10dp"
+                style="@style/whiteTextNoPaddingStyle"
                 android:layout_alignParentRight="true"
                 android:text="1.0元"/>
 
@@ -133,7 +134,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-
+                android:gravity="start"
                 style="@style/BColorTextStyle"
                 android:text="使用抵扣券2.0元"
                 android:layout_alignParentTop="true"
@@ -150,5 +151,15 @@
                 style="@style/BColorTextStyle"
                 android:text="-1.0元"/>
         </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/white"
+            android:drawableRight="@drawable/next_white"
+            android:drawablePadding="10dp"
+            android:id="@+id/see_ChargingRule"
+            android:text="查看计费规则"/>
     </LinearLayout>
 </LinearLayout>

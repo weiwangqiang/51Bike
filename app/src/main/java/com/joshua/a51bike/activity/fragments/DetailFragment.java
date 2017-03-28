@@ -130,7 +130,6 @@ public class DetailFragment extends Fragment {
         adapter.RefreshDate(map);
         adapter.RefreshDate(map);
         mRecyclerView.scrollToPosition(0);
-
     }
     @Override
     public void onPause(){

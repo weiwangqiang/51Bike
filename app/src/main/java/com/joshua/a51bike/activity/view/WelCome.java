@@ -1,11 +1,16 @@
 package com.joshua.a51bike.activity.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
 
 import com.joshua.a51bike.R;
+import com.joshua.a51bike.activity.MainActivity;
+import com.joshua.a51bike.util.PrefUtils;
+
+import org.xutils.view.annotation.ContentView;
 
 /**
  * class description here
@@ -15,7 +20,7 @@ import com.joshua.a51bike.R;
  * @project 51Bike
  * @since 2017-01-11
  */
-//@ContentView(R.layout.activity_main)
+@ContentView(R.layout.welcome)
 public class WelCome extends Activity {
     private String TAG = "WelCome";
 
@@ -38,16 +43,30 @@ public class WelCome extends Activity {
             public void run() {
                 try{
                     Thread.sleep(3000);
-                    ToMainActivity();
+                    if(isFirst())
+                         toFirstView();
+                    else
+                         ToMainActivity();
+
                 }catch(Exception e){
                     e.printStackTrace();
                 }
             }
         }).start();
     }
+    public boolean isFirst(){
+        Log.i(TAG, "isFirst: ");
+        return PrefUtils.getBoolean(this,"isFirst",true);
+    }
+    public void toFirstView(){
+        startActivity(new Intent(this,FirstClick.class));
+        finish();
+        PrefUtils.setBoolean(this,"isFirst",false);
+    }
     //跳转到主界面
     public void ToMainActivity(){
-            finish();
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
 
     }
     public void findId() {

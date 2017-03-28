@@ -43,7 +43,14 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         initXUtils();
         initReceiver();
     }
-
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -98,6 +105,10 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     private void initReceiver() {
         exitReceiver = new ExitReceiver();
         registerExitReceiver();
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override

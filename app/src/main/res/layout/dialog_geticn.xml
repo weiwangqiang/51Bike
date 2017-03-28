@@ -9,7 +9,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="@dimen/dialog_button_height"
-        android:background="@drawable/button_circle_white"
+        android:background="@color/white"
         android:text="拍照"
         android:layout_marginTop="10dp"
         android:textSize="@dimen/text_size_content"
@@ -18,9 +18,9 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="@dimen/dialog_button_height"
-        android:background="@drawable/button_circle_white"
+        android:background="@color/white"
+        android:layout_marginTop="1dp"
         android:text="图库"
-        android:layout_marginTop="10dp"
 
 
         android:textSize="@dimen/text_size_content"
@@ -28,9 +28,10 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="@dimen/dialog_button_height"
-        android:background="@drawable/button_circle_white"
-        android:text="取消"
+        android:background="@color/white"
         android:layout_marginTop="10dp"
+
+        android:text="取消"
 
         android:textSize="@dimen/text_size_content"
         android:id="@+id/dialog_cancel" />

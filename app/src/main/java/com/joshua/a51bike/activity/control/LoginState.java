@@ -3,17 +3,20 @@ package com.joshua.a51bike.activity.control;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
+import com.joshua.a51bike.Interface.DialogCallBack;
 import com.joshua.a51bike.Interface.UserState;
+import com.joshua.a51bike.activity.dialog.CurrencyAlerDialog;
 import com.joshua.a51bike.activity.dialog.GetIcnAlerDialog;
 import com.joshua.a51bike.activity.dialog.LocateProgress;
 import com.joshua.a51bike.activity.view.AccountYaJin;
 import com.joshua.a51bike.activity.view.BikeControl;
 import com.joshua.a51bike.activity.view.BikeMessage;
-import com.joshua.a51bike.activity.view.BlueTooth;
 import com.joshua.a51bike.activity.view.Config;
 import com.joshua.a51bike.activity.view.Pay;
 import com.joshua.a51bike.activity.view.Recharge;
+import com.joshua.a51bike.activity.view.ScanActivity;
 import com.joshua.a51bike.activity.view.Suggest;
 import com.joshua.a51bike.activity.view.UserInfor;
 import com.joshua.a51bike.activity.view.UserInforPhoneBefor;
@@ -22,10 +25,8 @@ import com.joshua.a51bike.activity.view.about;
 import com.joshua.a51bike.activity.view.account;
 import com.joshua.a51bike.activity.view.accountMingxi;
 import com.joshua.a51bike.activity.view.accountRecharge;
-import com.joshua.a51bike.activity.view.register;
 import com.joshua.a51bike.activity.view.renzheng;
 import com.joshua.a51bike.activity.view.share;
-import com.joshua.a51bike.util.ToastUtil;
 
 /**
  * Created by wangqiang on 2017/1/9.
@@ -50,14 +51,8 @@ public class LoginState implements UserState {
     }
 
     @Override
-    public void register(Activity activity) {
-        Intent intent = new Intent(activity, register.class);
-        activity.startActivity(intent);
-    }
-
-    @Override
-    public void getUserIcn(Context context) {
-        dialogControl.setDialog(new GetIcnAlerDialog(context));
+    public void getUserIcn(Context context,String filePath) {
+        dialogControl.setDialog(new GetIcnAlerDialog(context ,filePath));
         dialogControl.show();
     }
     //钱包
@@ -88,11 +83,11 @@ public class LoginState implements UserState {
 
     @Override
     public void saoma(Activity activity) {
-        toBikeMes(activity,"test url ");
-//        Intent intent = new Intent(activity, ScanActivity.class);
-        Intent intent = new Intent(activity, BlueTooth.class);
+//        toBikeMes(activity,"test url ");
+        Intent intent = new Intent(activity, ScanActivity.class);
+//        Intent intent = new Intent(activity, BlueTooth.class);
 
-//        activity.startActivity(intent);
+        activity.startActivity(intent);
     }
 
     @Override
@@ -101,6 +96,7 @@ public class LoginState implements UserState {
         Intent intent = new Intent(activity, BikeMessage.class);
         intent.putExtra("url",url);
         activity.startActivity(intent);
+        activity.finish();
     }
     //租车
     @Override
@@ -111,8 +107,24 @@ public class LoginState implements UserState {
     }
 
     @Override
-    public void service(Activity activity) {
-        ToastUtil.show(activity,"客服");
+    public void service(final Activity activity) {
+
+        DialogCallBack call = new DialogCallBack(){
+            @Override
+            public void sure() {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                Uri data = Uri.parse("tel:" + "18852852276");
+                intent.setData(data);
+                activity.startActivity(intent);
+            }
+
+            @Override
+            public void cancel() {
+
+            }
+        };
+        CurrencyAlerDialog dialog = new CurrencyAlerDialog(activity,"提示","确定拨打客服电话？",call);
+        dialog.myShow();
     }
 
     @Override

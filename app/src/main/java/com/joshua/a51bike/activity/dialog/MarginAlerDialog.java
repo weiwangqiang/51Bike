@@ -3,7 +3,6 @@ package com.joshua.a51bike.activity.dialog;
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -63,9 +62,9 @@ public class MarginAlerDialog extends MyAlerDialog implements View.OnClickListen
                 cancel();
                 break;
             case R.id.dialog_sure:
+                cancel();
                 UserControl u = UserControl.getUserControl();
                 u.saoma(context);
-                cancel();
                 break;
         }
     }

@@ -146,8 +146,8 @@ public class BikeMessage extends BaseActivity {
 
         params.addBodyParameter("carId","1");
         params.addBodyParameter("carName","one");
-        params.addBodyParameter("carPrice","20");
-
+//        params.addBodyParameter("carPrice","20");
+        Log.i(TAG, "rent: param "+params.toString());
         post(params,RENT_BIKE);
         dialogControl.setDialog(new WaitProgress(this));
         dialogControl.show();
@@ -155,7 +155,7 @@ public class BikeMessage extends BaseActivity {
     /*上传数据
     * */
      private void post(final RequestParams params, final int kind){
-        Log.d(TAG, "post: post by xutils------>>");
+        Log.d(TAG, "post: post by xutils------>> " +rentUrl);
 
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override

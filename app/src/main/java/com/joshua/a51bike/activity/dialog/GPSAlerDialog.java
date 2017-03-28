@@ -3,6 +3,7 @@ package com.joshua.a51bike.activity.dialog;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -45,9 +46,9 @@ public class GPSAlerDialog extends MyAlerDialog implements View.OnClickListener{
                 cancel();
                 break;
             case R.id.dialog_sure:
+                cancel();
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 context.startActivityForResult(intent,1); // 设置完成后返回到原来的界面
-                cancel();
                 break;
         }
     }
@@ -56,7 +57,11 @@ public class GPSAlerDialog extends MyAlerDialog implements View.OnClickListener{
     public void myShow() {
         LocationManager locationManager =
                 (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
+        PackageManager pm = context.getPackageManager();
+        boolean permission = (PackageManager.PERMISSION_GRANTED ==
+                pm.checkPermission("android.hardware.location.gps","com.joshua.a51bike"));
+        System.out.print("GPS ----- permission --------------- "+permission);
+        if (permission && (!locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER))) {
             show();
         }
     }
