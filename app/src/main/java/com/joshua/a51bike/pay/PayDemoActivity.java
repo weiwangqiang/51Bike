@@ -30,7 +30,7 @@ import java.util.Map;
 public class PayDemoActivity extends FragmentActivity {
 	
 	/** 支付宝支付业务：入参app_id */
-	public static final String APPID = "2016073000125976";
+	public static final String APPID = "2017020605540725";
 	
 	/** 支付宝账户登录授权业务：入参pid值 */
 	public static final String PID = "";
@@ -45,7 +45,6 @@ public class PayDemoActivity extends FragmentActivity {
 	/** 工具地址：https://doc.open.alipay.com/docs/doc.htm?treeId=291&articleId=106097&docType=1 */
 	public static final String RSA2_PRIVATE = "";
 	public static final String RSA_PRIVATE = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCkKVm+MBheoapkNK6khUf5IZ/gcu8HQy+yuxSa525lKxsiBpaKqhVSTp0JK+b7V1fpxxhJyS2Y6JM6UhKiCS5q8hotw1B7zGsp4w4rvpMTvwYmhp2hMoMdOxKoagIc8FavDegsjYud7UbZZSHAnefhzC6uMvkarzql6j14XpMRBx7eEQiCaoxsdu0gnY0GTi2MTEwkhEEYVc5YKz/f09ioaavu4RmQRP4YmxfThumWn5eF7T7wkZU85gTwHJpVDl3mDAle33uMHMl1snBN9Q68NbhmLV4uzzOqgtIot0Re0BZUxTrzvd/JN9Hz3TU+0GZY7XGJAcCZnmQfVj9+ZYpLAgMBAAECggEAMVQPmHvBRuZTWisOc3dtSipVbU98DfWdZpqatXVnkdTjIVVTdTVolMP0oiXkEZCMZT4jSUC/h9wTKYox+SjDHvXC8g9nptulM//7aR+p+FwFUBxRT3frOCRhFeRM4D9D/PQz2Pdrhbgf+wFNpCCO5iXBvSyp99/BwsthT0Mz9ABwTviwhMRqvxebjL/0Tp7Qm+Ti9pDAXV2a7rhLdETpL7GbllyLivacjyvN4apzhnwOC5p6IGFu6kCE46B3Y5Ex7ng4XtQ9qLVA+6sFOcRLnosI3ehR95eTmWbX5wKCBR+MgixLf9PopYfxYSnF11wU2AiKQQOpLHV9c+zc2WJAwQKBgQDsRcJT2Ltp0umT4F8bzF4jBlcFzIdkeqsDUSGQSN7tWNHr8n12n1XxO+OVA2iTaGwQvMeElrEQm5tgOw8l0zs28rDOaAUZ2B0smvLFLDZTWB1pm9spdX4XPu7fgueesiPW/Xo2duI5dvCP9AS4U7/I8uBAwC7NFdBx47lJYpvoKwKBgQCx3j65EFD8XI2+R1xxynO14xSUXG/ymLpMMyEb2wR/7URUBmxSSQ5BXsJxYzDlwuHr5o79HlubXs5nqNQP2epFmErnrPFVHsciOxaZCgpEbyzQ01POeHsmKDwKfaMfk3WW0YsVYrKXScgwPZrAyYBHPHYD4HinafqP0igf2My2YQKBgB2frXrHzM+64xBobGRW3mKz08tlVoBxpOl4jaXCjTjjDwbvU23BEox5ftJbKAx7Zjk/AiEMp8y2Reft37tVXbJJAYQPpLwVzaqfDttL7M/MV3u7T+JF2fZeLKMXjaTnHvlAtMcJZtnfoM/bv4/A6GXwlc9oiTWri4QMEloyI+wbAoGBAKl2fXwEt6Q46jMn+kPQB35749eWWnJgYN7It/q6KQdZH4iOthWP1S0jA07UmnnNu0HuYL14dv8IzM6mY6TWkgXMm1EvzJ60vDU45sbYcf/RjHlJXseQsoQgQVQdb5VeAOK4sjKl3lGV0k1j5FVZpgY47Je0/j9DEZ6FNAVjoWcBAoGAUQom3VjnxyVgbERp4I66SLHyNR0EWXq/AeGgyKp3sBf0cPzE01Q0CGJK9jTKluHILDD7e18skueU+ZWtMFhaEvUs45JvyuwQ5LA6MGyxnqfCluTRrl8SaTiI2RwcS8bb4G27IF4edISEIiqOt3Bcn8ol3UelnJMBwBh5byzUADI=";
-	
 	private static final int SDK_PAY_FLAG = 1;
 	private static final int SDK_AUTH_FLAG = 2;
 
