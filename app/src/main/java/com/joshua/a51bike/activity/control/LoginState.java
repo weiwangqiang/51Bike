@@ -15,7 +15,6 @@ import com.joshua.a51bike.activity.view.BikeControl;
 import com.joshua.a51bike.activity.view.BikeMessage;
 import com.joshua.a51bike.activity.view.Config;
 import com.joshua.a51bike.activity.view.Pay;
-import com.joshua.a51bike.activity.view.Recharge;
 import com.joshua.a51bike.activity.view.ScanActivity;
 import com.joshua.a51bike.activity.view.Suggest;
 import com.joshua.a51bike.activity.view.UserInfor;
@@ -135,7 +134,7 @@ public class LoginState implements UserState {
 
     @Override
     public void reCharge(Activity activity) {
-        Intent intent = new Intent(activity, Recharge.class);
+        Intent intent = new Intent(activity, accountRecharge.class);
         activity.startActivity(intent);
     }
 

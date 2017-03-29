@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
+import com.joshua.a51bike.activity.dialog.WaitProgress;
 import com.joshua.a51bike.entity.school.Province;
 import com.joshua.a51bike.entity.school.ProvinceList;
 
@@ -57,8 +58,9 @@ public class ChoiceProvince extends BaseActivity {
         initActionBar();
         findId();
         setLister();
+        dialogControl.setDialog(new WaitProgress(this));
+        dialogControl.show();
         RequestParams params = new RequestParams("http://www.hisihi.com/app.php?s=/school/province");
-        params.addHeader("Content-Type","application/json");
         post(params);
     }
 
@@ -87,6 +89,7 @@ public class ChoiceProvince extends BaseActivity {
                 Log.i(TAG, "onSuccess: result is ");
                 addDataToList(result);
                 initList();
+                dialogControl.cancel();
             }
 
             @Override
@@ -105,7 +108,7 @@ public class ChoiceProvince extends BaseActivity {
 
             @Override
             public void onFinished() {
-
+                dialogControl.cancel();
             }
         });
     }

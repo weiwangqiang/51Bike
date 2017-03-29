@@ -54,6 +54,7 @@ import com.joshua.a51bike.activity.dialog.GPSAlerDialog;
 import com.joshua.a51bike.activity.dialog.LocateProgress;
 import com.joshua.a51bike.activity.dialog.MarginAlerDialog;
 import com.joshua.a51bike.activity.presenter.locatePresenter;
+import com.joshua.a51bike.activity.view.Use_Explain;
 import com.joshua.a51bike.activity.view.searchBike;
 import com.joshua.a51bike.customview.CircleImageView;
 import com.joshua.a51bike.customview.progress;
@@ -63,6 +64,7 @@ import com.joshua.a51bike.util.SensorEventHelper;
 import com.joshua.a51bike.util.imageUtil.ImageManager;
 
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 
 
 @ContentView(R.layout.activity_main)
@@ -88,6 +90,14 @@ public class MainActivity extends BaseMap {
     private  MapView mapView;
     private  AMap aMap;
 
+
+
+    @ViewInject(R.id.main_use_explain)
+    private TextView explain;
+
+
+    @ViewInject(R.id.main_progress_view)
+    private progress useProgress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,8 +144,8 @@ public class MainActivity extends BaseMap {
         ViewGroup.LayoutParams leftParams = leftMenu.getLayoutParams();
         leftParams.width = windowsWight;
         leftMenu.setLayoutParams(leftParams);
-        progress p = (progress) findViewById(R.id.main_progress_view);
-        p.setPoistion(3);
+
+        useProgress.setPoistion(3);
     }
 
     public void init() {
@@ -296,6 +306,7 @@ public class MainActivity extends BaseMap {
         mRouteSearch = new RouteSearch(this);
         mRouteSearch.setRouteSearchListener(this);
         location.setOnClickListener(this);
+        explain.setOnClickListener(this);
         findViewById(R.id.rent).setOnClickListener(this);
         //LeftMain
         userIcn.setOnClickListener(this);
@@ -337,6 +348,9 @@ public class MainActivity extends BaseMap {
                 break;
             case R.id.share:
                 userControl.share(MainActivity.this);
+                break;
+            case R.id.main_use_explain:
+           startActivity(new Intent(this, Use_Explain.class));
                 break;
             default:
                 break;

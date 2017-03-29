@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical">
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -17,7 +18,7 @@
             android:textColor="@color/white"
             android:layout_gravity="center"
             android:textSize="@dimen/text_size_title"
-            android:text="押金缴纳" />
+            android:text="保证金充值" />
 
     </android.support.v7.widget.Toolbar>
     <LinearLayout
@@ -33,7 +34,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="押金"
+                android:text="保证金"
                 android:textSize="20sp"
                 android:layout_weight="1"/>
             <TextView
@@ -60,6 +61,7 @@
         android:textColor="@color/gray"
         android:textSize="13sp"
         />
+
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -72,21 +74,34 @@
             android:drawableRight="@drawable/radio_red_circular"
             android:text="支付宝支付"
             android:textSize="20sp" />
-
+<ImageView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
+    android:background="@drawable/x_divider"/>
         <RadioButton
             android:id="@+id/pay_weixin"
             style="@style/payRadioButton"
             android:drawableLeft="@drawable/weixin"
             android:drawableRight="@drawable/radio_red_circular"
             android:text="微信支付" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/x_divider"/>
     </RadioGroup>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:text="押金充值"
+        android:text="确认充值"
+        android:id="@+id/recharge"
         android:textColor="@color/white"
         android:background="@drawable/button_circle_bcolor"/>
 

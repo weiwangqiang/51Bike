@@ -17,25 +17,28 @@
             android:text="控制车辆"/>
 
         <ImageButton
-            style="@style/backStyle"
+            style="@style/backArrowShortStyle"
             android:id="@+id/left_back"
             />
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
         <include
-            android:layout_height="match_parent"
+            layout="@layout/bike_control_bikemes"
             android:layout_width="match_parent"
-            android:layout_above="@+id/include_bottom"
-            layout="@layout/bike_control_bikemes"/>
-        <include
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_alignParentBottom="true"
+            android:layout_above="@+id/include_bottom" />
+
+        <include
             android:id="@+id/include_bottom"
-            layout="@layout/bike_control_bottom"/>
-    </RelativeLayout>
+            layout="@layout/bike_control_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
+    </LinearLayout>
 
 </LinearLayout>

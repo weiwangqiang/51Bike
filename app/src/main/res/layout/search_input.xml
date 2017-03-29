@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+ >
+
+  <GridLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:columnCount="4"
+      android:orientation="horizontal"
+      android:rowCount="4">
+
+    <Button
+        android:id="@+id/one"
+        android:background="@drawable/search_input_bg"
+
+        android:text="1"
+        android:textSize="@dimen/search_keyBoard_textSize" />
+
+    <Button
+        android:id="@+id/two"
+        android:background="@drawable/search_input_bg"
+
+        android:text="2"
+        android:textSize="@dimen/search_keyBoard_textSize" />
+
+    <Button
+        android:id="@+id/three"
+        android:background="@drawable/search_input_bg"
+        android:text="3"
+
+        android:textSize="@dimen/search_keyBoard_textSize" />
+
+    <ImageButton
+        android:id="@+id/delete"
+        android:layout_gravity="fill"
+        android:layout_rowSpan="2"
+        android:background="@drawable/search_input_bg"
+        android:src="@drawable/search_delete"
+        />
+
+    <Button
+        android:id="@+id/four"
+
+        android:background="@drawable/search_input_bg"
+        android:text="4"
+        android:textSize="@dimen/search_keyBoard_textSize" />
+
+    <Button
+        android:id="@+id/five"
+        android:background="@drawable/search_input_bg"
+        android:text="5"
+        android:textSize="@dimen/search_keyBoard_textSize" />
+
+    <Button
+        android:id="@+id/six"
+        android:background="@drawable/search_input_bg"
+
+        android:text="6"
+
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/seven"
+        android:background="@drawable/search_input_bg"
+
+        android:text="7"
+        android:textSize="@dimen/search_keyBoard_textSize" />
+
+    <Button
+        android:id="@+id/eight"
+        android:background="@drawable/search_input_bg"
+
+        android:text="8"
+        android:textSize="@dimen/search_keyBoard_textSize" />
+
+    <Button
+        android:id="@+id/nine"
+        android:background="@drawable/search_input_bg"
+
+        android:text="9"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/sure"
+        android:layout_gravity="fill"
+        android:layout_rowSpan="2"
+        android:background="@color/gray"
+        android:text="确定"
+        android:textColor="@color/white" />
+
+    <Button
+        android:background="@drawable/search_input_bg"
+        android:textSize="@dimen/search_keyBoard_textSize" />
+
+    <Button
+        android:id="@+id/zero"
+        android:background="@drawable/search_input_bg"
+
+        android:text="0"
+        android:textSize="@dimen/search_keyBoard_textSize" />
+
+    <Button
+        android:background="@drawable/search_input_bg"
+        android:textSize="@dimen/search_keyBoard_textSize" />
+
+
+  </GridLayout>
+
+
+</LinearLayout>

@@ -36,6 +36,7 @@
     <string name="about_1"> 51get共享出行是江苏大学学生创业团队共同研制的共享电动车平台，采用时下流行的分时租赁模式，用户只需要通过app扫描即可实现智能解锁，随取随用</string>
     <string name="about_2">镇江市江苏大学创业孵化基地\n客服电话：18852852276 \n微信公众号：ujs-51get</string>
     <string name="bike_message_text1">租车不满15分钟只需要1元</string>
+    <string name="use_explain">1. 打开51get共享出行APP，在地图上查找符合自己出行里程车辆的位置。\n\n2. 找到车辆后扫码租车。\n\n3. 待蓝牙连接成功后点击解锁按钮。\n\n4. 按照提示长按开锁按钮，待听到“滴”声后即可正常使用车辆。</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

@@ -17,7 +17,7 @@
             android:text="租车信息"/>
 
         <ImageButton
-            style="@style/backStyle"
+            style="@style/backArrowShortStyle"
             android:id="@+id/left_back"
             />
     </RelativeLayout>

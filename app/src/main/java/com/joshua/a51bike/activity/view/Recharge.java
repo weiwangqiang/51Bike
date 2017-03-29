@@ -7,15 +7,13 @@ import android.widget.Toast;
 
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
-import com.joshua.a51bike.activity.dialog.WaitProgress;
+import com.joshua.a51bike.pay.util.PayUtils;
 import com.joshua.a51bike.util.AppUtil;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.x;
-
-import java.text.SimpleDateFormat;
 
 /**
  * Created by wangqiang on 2017/1/9.
@@ -53,20 +51,23 @@ public class Recharge extends BaseActivity {
         }
     }
     private void reChange(){
+        uiUtils.showToast("正在跳转");
+        PayUtils.payV2(this);
 
-        RequestParams params = new RequestParams(url);
-        long t = System.currentTimeMillis();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        String time =  format.format(t);
-//        Time time = new Time(t);
 
-        Log.d(TAG, "Login: time is "+6);
-        params.addBodyParameter("userId",userControl.getUser().getUserid()+"");
-        params.addBodyParameter("userCharge","100");
-//        params.addBodyParameter("userTime",""+t);
-        post(params);
-        dialogControl.setDialog(new WaitProgress(this));
-        dialogControl.show();
+//        RequestParams params = new RequestParams(url);
+//        long t = System.currentTimeMillis();
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//        String time =  format.format(t);
+////        Time time = new Time(t);
+//
+//        Log.d(TAG, "Login: time is "+6);
+//        params.addBodyParameter("userId",userControl.getUser().getUserid()+"");
+//        params.addBodyParameter("userCharge","100");
+////        params.addBodyParameter("userTime",""+t);
+//        post(params);
+//        dialogControl.setDialog(new WaitProgress(this));
+//        dialogControl.show();
     }
 
     private void post(RequestParams params){

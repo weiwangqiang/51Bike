@@ -21,4 +21,45 @@
         android:id="@+id/first_start"
         android:visibility="gone"
         android:background="@drawable/buttonbg"/>
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:layout_margin="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/first_radioGroup"
+        >
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/first_Radio1"
+            android:background="@drawable/radiobutton_back"
+            android:checked="true"
+            android:button="@null"
+            android:clickable="false"
+            android:layout_marginRight="10dp"
+            style="@style/myShowButton"
+            />
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/radiobutton_back"
+            android:layout_marginRight="10dp"
+            android:button="@null"
+            android:clickable="false"
+            style="@style/myShowButton"
+            android:id="@+id/first_Radio2"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/radiobutton_back"
+            android:button="@null"
+            android:clickable="false"
+            android:id="@+id/first_Radio3"
+            style="@style/myShowButton"
+            />
+    </RadioGroup>
 </RelativeLayout>

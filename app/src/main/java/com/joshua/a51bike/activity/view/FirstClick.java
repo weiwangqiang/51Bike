@@ -5,12 +5,13 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.MainActivity;
 import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.adapter.FirstVPAdapter;
-import com.joshua.a51bike.adapter.mytransformer;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -37,6 +38,15 @@ public class FirstClick extends BaseActivity {
     @ViewInject(R.id.first_start)
     private Button start;
 
+    @ViewInject(R.id.first_Radio1)
+    private RadioButton mRadioB1;
+
+    @ViewInject(R.id.first_Radio2)
+    private RadioButton mRadioB2;
+
+    @ViewInject(R.id.first_radioGroup)
+    private RadioGroup mRadioGroup;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,13 +70,18 @@ public class FirstClick extends BaseActivity {
     public void initViewPager(){
 
         pagerList =  new ArrayList<>();
-        pagerList.add(uiUtils.inflate(R.layout.first_click_item));
-        pagerList.add(uiUtils.inflate(R.layout.first_click_item));
-        pagerList.add(uiUtils.inflate(R.layout.first_click_item));
-        pagerList.add(uiUtils.inflate(R.layout.first_click_item));
+        View view1 = uiUtils.inflate(R.layout.first_click_item);
+        View view2 = uiUtils.inflate(R.layout.first_click_item);
+        View view3 = uiUtils.inflate(R.layout.first_click_item);
+        view1.findViewById(R.id.first_item_image).setBackgroundResource(R.drawable.first1);
+        view2.findViewById(R.id.first_item_image).setBackgroundResource(R.drawable.first2);
+        view3.findViewById(R.id.first_item_image).setBackgroundResource(R.drawable.first3);
+        pagerList.add(view1);
+        pagerList.add(view2);
+        pagerList.add(view3);
         viewPager.setAdapter(new FirstVPAdapter(pagerList));
         viewPager.addOnPageChangeListener(new myPagerChanger());
-        viewPager.setPageTransformer(true,new mytransformer());
+//        viewPager.setPageTransformer(true,new mytransformer());
 
     }
 
@@ -75,7 +90,14 @@ public class FirstClick extends BaseActivity {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            if(position ==3 )
+
+        }
+
+
+        @Override
+        public void onPageSelected(int position) {
+            showRadioButton(position);
+            if(position ==2 )
                 start.setVisibility(View.VISIBLE);
             else
                 start.setVisibility(View.GONE);
@@ -83,13 +105,27 @@ public class FirstClick extends BaseActivity {
 
 
         @Override
-        public void onPageSelected(int position) {
+        public void onPageScrollStateChanged(int state) {
 
         }
+    }
 
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
+    public void showRadioButton(int position){
+        if(position == 2){
+            mRadioGroup.setVisibility(View.GONE);
+            return ;
+        }
+        if(mRadioGroup.getVisibility() == View.GONE)
+            mRadioGroup.setVisibility(View.VISIBLE);
+        switch (position){
+            case 0:
+                mRadioB1.setChecked(true);
+                break;
+            case 1:
+                mRadioB2.setChecked(true);
+                break;
+            case 2:
+                break;
 
         }
     }

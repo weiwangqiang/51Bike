@@ -5,14 +5,11 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RadioButton;
 
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
-import com.joshua.a51bike.pay.util.PayUtils;
 
 import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 /**
  * class description here
@@ -20,18 +17,12 @@ import org.xutils.view.annotation.ViewInject;
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike
- * @since 2017-03-10
+ * @since 2017-03-29
  */
-@ContentView(R.layout.account_yajin)
-public class AccountYaJin extends BaseActivity {
-    private static final String TAG = "AccountYaJin";
+@ContentView(R.layout.use_explain)
+public class Use_Explain extends BaseActivity {
+    private static final String TAG = "Use_Explain";
 
-
-    @ViewInject(R.id.pay_zhifubao)
-    private RadioButton zhifubao;
-
-    @ViewInject(R.id.pay_weixin)
-    private RadioButton weixin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +40,7 @@ public class AccountYaJin extends BaseActivity {
         myToolbar.setTitle("");
         myToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.title_back));
         setSupportActionBar(myToolbar);
+
     }
 
     public void findId() {
@@ -56,7 +48,7 @@ public class AccountYaJin extends BaseActivity {
     }
 
     public void setLister() {
-        findViewById(R.id.recharge).setOnClickListener(this);
+
     }
 
     /**
@@ -70,27 +62,12 @@ public class AccountYaJin extends BaseActivity {
             case R.id.left_back:
                 finish();
                 break;
-            case R.id.recharge:
-                reChange();
-                break;
             default:
                 break;
         }
     }
 
-    private void reChange() {
-        if(zhifubao.isChecked()){
-            uiUtils.showToast("正在跳转");
-            PayUtils.payV2(this);
-        }
-        else {
-            uiUtils.showToast("微信支付暂时未开通");
-
-        }
-
-
-    }
-        @Override
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:

@@ -18,7 +18,6 @@ import android.view.View;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.joshua.a51bike.R;
-import com.joshua.a51bike.activity.control.UserControl;
 import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.zxing.camera.CameraManager;
 import com.joshua.a51bike.zxing.decoding.CaptureActivityHandler;
@@ -54,7 +53,7 @@ public class ScanActivity extends BaseActivity implements Callback {
 	private final static int RESULT_CODE_OK = 3;
 	private final static int RESULT_CODE_FAIL = 4;
 	private Intent resultIntent;
-	private UserControl userControl;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,6 +62,8 @@ public class ScanActivity extends BaseActivity implements Callback {
 		CameraManager.init(getApplication());
 		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
 		findViewById(R.id.left_back).setOnClickListener(this);
+		findViewById(R.id.scan_title).setOnClickListener(this);
+
 		hasSurface = false;
 		inactivityTimer = new InactivityTimer(this);
 	}
@@ -115,7 +116,6 @@ public class ScanActivity extends BaseActivity implements Callback {
 		playBeepSoundAndVibrate();
 		String resultString = result.getText();
 		resultIntent = new Intent();
-		userControl = UserControl.getUserControl();
 		if (resultString.equals("")) {
 //			setResult(RESULT_CODE_FAIL, resultIntent);
 			finish();
@@ -185,7 +185,6 @@ public class ScanActivity extends BaseActivity implements Callback {
 
 	public void drawViewfinder() {
 		viewfinderView.drawViewfinder();
-
 	}
 
 	/**
@@ -247,6 +246,9 @@ public class ScanActivity extends BaseActivity implements Callback {
 			switch (v.getId()){
 				case R.id.left_back:
 					finish();
+					break;
+				case R.id.scan_title:
+					userControl.toBikeMes(this,"  ");
 					break;
 				default:
 						break;

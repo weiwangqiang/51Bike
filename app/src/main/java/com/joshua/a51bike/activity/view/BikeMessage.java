@@ -83,6 +83,7 @@ public class BikeMessage extends BaseActivity {
     private void setLister() {
         rent.setOnClickListener(this);
         findViewById(R.id.left_back).setOnClickListener(this);
+        findViewById(R.id.bike_mes_agreement).setOnClickListener(this);
     }
 
     private void findid() {
@@ -132,11 +133,21 @@ public class BikeMessage extends BaseActivity {
             case R.id.bike_mes_rent:
                 rent();
             break;
+            case R.id.bike_mes_agreement:
+                toWebView();
+                break;
             default:
                 break;
         }
     }
 
+    public void toWebView(){
+        Intent intent = new Intent(this,WebView.class);
+        intent.putExtra("title","51get租车服务条款");
+        intent.putExtra("url","51get租车服务条款");
+
+        startActivity(intent);
+    }
     private void rent(){
 
         RequestParams params = new RequestParams(rentUrl);
@@ -208,8 +219,8 @@ public class BikeMessage extends BaseActivity {
 //        uiUtils.showToast("获取信息成功! ");
         Toast.makeText(BikeMessage.this,"获取信息成功!",Toast.LENGTH_SHORT).show();
         Log.i(TAG, "upCarView: upCarView");
-        price.setText(carControl.getCar().getCarPrice()+"");
-        account.setText(userControl.getUser().getUsermoney()+"");
+        price.setText(carControl.getCar().getCarPrice()+"元/小时");
+        account.setText(userControl.getUser().getUsermoney()+"元");
     }
 
     private void parseRent(String result) {

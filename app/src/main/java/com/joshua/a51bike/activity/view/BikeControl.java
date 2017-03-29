@@ -3,7 +3,6 @@ package com.joshua.a51bike.activity.view;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.control.UserControl;
@@ -29,7 +28,7 @@ public class BikeControl extends BaseActivity {
     private UserControl userControl;
     private String TAG = "BikeControl";
     private String rbUrl = AppUtil.BaseUrl+"/user/huanche";
-    private Button rechange ,reback,start,lock;
+    private View rechange ,reback,start,lock;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,11 +43,10 @@ public class BikeControl extends BaseActivity {
     }
 
     private void findid() {
-        rechange = (Button) findViewById(R.id.bike_control_recharge);
-        reback = (Button) findViewById(R.id.bike_control_return);
-
-        start = (Button) findViewById(R.id.bike_control_start);
-        lock = (Button) findViewById(R.id.bike_control_lock);
+        rechange = findViewById(R.id.bike_control_recharge);
+        reback = findViewById(R.id.bike_control_reback);
+        start = findViewById(R.id.bike_control_unlock);
+        lock = findViewById(R.id.bike_control_lock);
 
     }
 
@@ -90,13 +88,13 @@ public class BikeControl extends BaseActivity {
             case R.id.bike_control_recharge:
               userControl.reCharge(BikeControl.this);
                 break;
-            case R.id.bike_control_return:
+            case R.id.bike_control_reback:
                 reback();
                 break;
             case R.id.bike_control_lock:
                 userControl.lockBike(BikeControl.this);
                 break;
-            case  R.id.bike_control_start:
+            case  R.id.bike_control_unlock:
                 userControl.startBike(BikeControl.this);
                 break;
             default:

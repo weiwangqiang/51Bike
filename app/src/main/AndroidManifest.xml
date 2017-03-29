@@ -52,6 +52,8 @@
         <activity android:name=".activity.view.Login"  />
         <activity android:name=".activity.view.register"/>
         <activity android:name=".activity.view.UserInfor"/>
+        <activity android:name=".activity.view.Use_Explain"/>
+        <activity android:name=".activity.view.WebView"/>
         <activity android:name=".activity.view.UserInforPhoneBefor">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

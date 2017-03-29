@@ -2,7 +2,9 @@ package com.joshua.a51bike.activity.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -50,6 +52,13 @@ public class renzheng extends BaseActivity {
         userControl = UserControl.getUserControl();
         findId();
         setLister();
+        initActionBar();
+    }
+    private void initActionBar() {
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitle("");
+        myToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.title_back));
+        setSupportActionBar(myToolbar);
     }
 
     public void findId() {
@@ -62,7 +71,6 @@ public class renzheng extends BaseActivity {
     }
 
     public void setLister() {
-        findViewById(R.id.left_back).setOnClickListener(this);
         findViewById(R.id.upDate).setOnClickListener(this);
         getPro.setOnClickListener(this);
     }
@@ -75,9 +83,6 @@ public class renzheng extends BaseActivity {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.left_back:
-                finish();
-                break;
             case R.id.upDate:
                 update();
                 break;
@@ -89,6 +94,18 @@ public class renzheng extends BaseActivity {
                 break;
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

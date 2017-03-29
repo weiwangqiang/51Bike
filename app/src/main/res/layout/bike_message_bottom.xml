@@ -23,6 +23,7 @@
         </LinearLayout>
 <TextView
     style="@style/blackTextStyle"
+    android:textSize="13sp"
     android:text="@string/bike_message_text1"/>
 
     <RelativeLayout

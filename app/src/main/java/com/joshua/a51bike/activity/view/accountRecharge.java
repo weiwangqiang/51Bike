@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RadioButton;
 
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
+import com.joshua.a51bike.pay.util.PayUtils;
 
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 
 /**
  * class description here
@@ -22,6 +25,12 @@ import org.xutils.view.annotation.ContentView;
 @ContentView(R.layout.account_recharge)
 public class accountRecharge extends BaseActivity {
     private static final String TAG = "accountRecharge";
+
+    @ViewInject(R.id.pay_zhifubao)
+    private RadioButton zhifubao;
+
+    @ViewInject(R.id.pay_weixin)
+    private RadioButton weixin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +61,8 @@ public class accountRecharge extends BaseActivity {
 
     public void setLister() {
 
+        findViewById(R.id.recharge_pay).setOnClickListener(this);
+
     }
 
     /**
@@ -65,9 +76,24 @@ public class accountRecharge extends BaseActivity {
             case R.id.left_back:
                 finish();
                 break;
+            case R.id.recharge_pay:
+                reChange();
+                break;
             default:
                 break;
         }
+    }
+
+    private void reChange() {
+        if(zhifubao.isChecked()){
+            uiUtils.showToast("正在跳转");
+            PayUtils.payV2(this);
+        }
+        else {
+            uiUtils.showToast("微信支付暂时未开通");
+
+        }
+
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -17,11 +18,12 @@ import com.joshua.a51bike.entity.school.SchoolList;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 /**
  * class description here
- *
+ *  效果与扫码一样的
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike
@@ -30,7 +32,10 @@ import org.xutils.x;
 @ContentView(R.layout.search_bike)
 public class searchBike extends BaseActivity {
     private static final String TAG = "searchBike";
+    private StringBuffer sb = new StringBuffer();
 
+    @ViewInject(R.id.search_input_edit)
+    private EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +45,8 @@ public class searchBike extends BaseActivity {
 
     public void init() {
         initActionBar();
-        findId();
         setLister();
-//        RequestParams params = new RequestParams("http://www.hisihi.com/app.php?s=/school/province");
-        RequestParams params = new RequestParams("http://www.hisihi.com/app.php?s=/school/school/provinceid/12");
-        params.addHeader("Content-Type","application/json");
-        post(params);
+
     }
 
     private void initActionBar() {
@@ -89,12 +90,22 @@ public class searchBike extends BaseActivity {
             }
         });
     }
-    public void findId() {
 
-    }
 
     public void setLister() {
-
+        findViewById(R.id.search_button).setOnClickListener(this);
+        findViewById(R.id.one).setOnClickListener(this);
+        findViewById(R.id.two).setOnClickListener(this);
+        findViewById(R.id.three).setOnClickListener(this);
+        findViewById(R.id.four).setOnClickListener(this);
+        findViewById(R.id.five).setOnClickListener(this);
+        findViewById(R.id.six).setOnClickListener(this);
+        findViewById(R.id.seven).setOnClickListener(this);
+        findViewById(R.id.eight).setOnClickListener(this);
+        findViewById(R.id.nine).setOnClickListener(this);
+        findViewById(R.id.zero).setOnClickListener(this);
+        findViewById(R.id.delete).setOnClickListener(this);
+        findViewById(R.id.sure).setOnClickListener(this);
     }
 
     /**
@@ -108,9 +119,76 @@ public class searchBike extends BaseActivity {
             case R.id.left_back:
                 finish();
                 break;
+            case R.id.one:
+                sb.append("1");
+                updataEditView();
+
+                break;
+
+            case R.id.two:
+                sb.append("2");
+                updataEditView();
+                break;
+
+            case R.id.three:
+                sb.append("3");
+                updataEditView();
+                break;
+
+            case R.id.four:
+                sb.append("4");
+                updataEditView();
+                break;
+            case R.id.five:
+                sb.append("5");
+                updataEditView();
+                break;
+
+            case R.id.six:
+                sb.append("6");
+                updataEditView();
+                break;
+
+            case R.id.seven:
+                sb.append("7");
+                updataEditView();
+                break;
+
+            case R.id.eight:
+                sb.append("8");
+                updataEditView();
+                break;
+
+            case R.id.nine:
+                sb.append("9");
+                updataEditView();
+
+                break;
+
+            case R.id.zero:
+                sb.append("0");
+                updataEditView();
+                break;
+
+            case R.id.delete:
+                if(sb.length() == 0 ) break;
+                sb.delete(sb.length()-1,sb.length());
+                updataEditView();
+                break;
+
+            case R.id.sure:
+                RequestParams params = new RequestParams();
+                params.addHeader("Content-Type","application/json");
+                post(params);
+                break;
             default:
                 break;
         }
+    }
+
+    private void updataEditView() {
+        editText.setText(sb.toString());
+        editText.setSelection(sb.length());
     }
 
     @Override

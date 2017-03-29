@@ -10,7 +10,7 @@ import com.joshua.a51bike.Interface.MyAlerDialog;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.control.UserControl;
 
-/**保证金
+/**保证金提示dialog
  * Created by wangqiang on 2017/1/9.
  */
 

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
+import com.joshua.a51bike.activity.dialog.WaitProgress;
 import com.joshua.a51bike.entity.school.School;
 import com.joshua.a51bike.entity.school.SchoolList;
 
@@ -61,12 +62,19 @@ public class ChoiceSchool extends BaseActivity {
         init();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     public void init() {
         initActionBar();
         findId();
         setLister();
+        dialogControl.setDialog(new WaitProgress(this));
+        dialogControl.show();
+
         RequestParams params = new RequestParams(url);
-        params.addHeader("Content-Type","application/json");
         post(params);
     }
 
@@ -96,7 +104,7 @@ public class ChoiceSchool extends BaseActivity {
         cancelable =  x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.i(TAG, "onSuccess: result is ");
+                dialogControl.cancel();
                 addDataToList(result);
                 initList();
             }

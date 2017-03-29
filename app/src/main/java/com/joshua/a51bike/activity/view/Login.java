@@ -1,6 +1,7 @@
 package com.joshua.a51bike.activity.view;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -64,6 +65,7 @@ public class Login extends BaseActivity{
     public void setLister() {
         findViewById(R.id.button_fast_login).setOnClickListener(this);
         findViewById(R.id.get_code).setOnClickListener(this);
+        findViewById(R.id.bike_mes_agreement).setOnClickListener(this);
 
     }
 
@@ -80,13 +82,24 @@ public class Login extends BaseActivity{
                 login();
                 break;
             case R.id.get_code:
-
                 getCode();
+                break;
+            case R.id.bike_mes_agreement:
+                toWebView();
                 break;
             default:
                 break;
         }
     }
+
+    public void toWebView(){
+        Intent intent = new Intent(this,WebView.class);
+        intent.putExtra("title","51get租车服务条款");
+        intent.putExtra("url","51get租车服务条款");
+        startActivity(intent);
+    }
+
+
     public void getCode ( ){
         if(MyTools.EditTextIsNull(getName))
             return ;
@@ -166,6 +179,7 @@ public class Login extends BaseActivity{
         Log.i(TAG, "loginSuccess: userima"+result);
         User user = JsonUtil.getUserObject(result);
         if(user != null){
+            Log.i(TAG, "loginSuccess: id"+user.getUserid());
             uiUtils.showToast("成功！");
             userControl.setUser(user);
             userControl.setUserState(new LoginState());
