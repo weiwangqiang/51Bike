@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center_vertical"
     >
 <TextView
     android:layout_width="wrap_content"
-    android:layout_height="24dp"
-    android:layout_margin="10dp"
+    android:layout_height="wrap_content"
     android:textSize="18sp"
+    android:layout_margin="15dp"
+    android:gravity="center_vertical"
     android:layout_alignParentLeft="true"
     android:text="哈哈哈"
     android:id="@+id/choice_item_text"/>
@@ -16,6 +17,8 @@
         android:layout_width="11.2dp"
         android:layout_height="20dp"
         android:layout_margin="10dp"
-        android:background="@drawable/next_black"
+        android:gravity="center_vertical"
+
+        android:background="@drawable/gray_next"
         android:layout_alignParentRight="true"/>
 </RelativeLayout>

@@ -41,6 +41,7 @@ import java.util.Map;
 @ContentView(R.layout.choice_province)
 public class ChoiceSchool extends BaseActivity {
     private static final String TAG = "ChoiceProvince";
+    private final int GET_PRO_RESULT = 110;
 
     @ViewInject(R.id.choice_listView)
     private ListView listView;
@@ -152,8 +153,8 @@ public class ChoiceSchool extends BaseActivity {
                 Map<String,String> map = list.get(position);
                 String sch_name = map.get("name");
                 Intent intent = new Intent();
-                intent.putExtra("name",sch_name);
-                setResult(110,intent);
+                intent.putExtra("school",sch_name);
+                setResult(GET_PRO_RESULT,intent);
                 finish();
                 Log.i(TAG, "onItemClick: name"+sch_name);
             }

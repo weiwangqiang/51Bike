@@ -52,7 +52,6 @@ import com.joshua.a51bike.activity.control.UserControl;
 import com.joshua.a51bike.activity.core.BaseMap;
 import com.joshua.a51bike.activity.dialog.GPSAlerDialog;
 import com.joshua.a51bike.activity.dialog.LocateProgress;
-import com.joshua.a51bike.activity.dialog.MarginAlerDialog;
 import com.joshua.a51bike.activity.presenter.locatePresenter;
 import com.joshua.a51bike.activity.view.Use_Explain;
 import com.joshua.a51bike.activity.view.searchBike;
@@ -65,6 +64,9 @@ import com.joshua.a51bike.util.imageUtil.ImageManager;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @ContentView(R.layout.activity_main)
@@ -90,11 +92,10 @@ public class MainActivity extends BaseMap {
     private  MapView mapView;
     private  AMap aMap;
 
-
-
     @ViewInject(R.id.main_use_explain)
     private TextView explain;
 
+    private View useProgressParent;
 
     @ViewInject(R.id.main_progress_view)
     private progress useProgress;
@@ -107,14 +108,6 @@ public class MainActivity extends BaseMap {
             canShow = true;
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         initDrawer();
-    }
-
-
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);//must store the new intent unless getIntent() will return the old one
     }
     private void initDrawer() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -142,12 +135,40 @@ public class MainActivity extends BaseMap {
         int windowsWight = metric.widthPixels;
         View leftMenu = findViewById(R.id.leftMain);
         ViewGroup.LayoutParams leftParams = leftMenu.getLayoutParams();
+        findViewById(R.id.left_back).setOnClickListener(this);
         leftParams.width = windowsWight;
         leftMenu.setLayoutParams(leftParams);
+    }
+    private TextView textView1,textView2,textView3,textView4;
+    private List<TextView> list = new ArrayList<>();
 
-        useProgress.setPoistion(3);
+
+    private void showProgreesOrNot(User user) {
+        setProgressView(1);//更新
+        if(user == null ){
+            Log.i(TAG, "showProgreesOrNot: user is null ");
+            useProgressParent.setVisibility(View.GONE);
+            return;
+        }
+        if(useProgressParent.getVisibility() == View.GONE)
+            useProgressParent.setVisibility(View.VISIBLE);
+        if(user.getRealName() != null )
+            setProgressView(2);
+        if(user.getUsermoney() != 0)
+            useProgressParent.setVisibility(View.GONE);
     }
 
+    private void setProgressView(int a) {
+
+        useProgress.setPoistion(a);
+        int i ;
+        for(TextView T:list){
+            T.setTextColor(getResources().getColor(R.color.gray));
+        }
+        for(i = 0;i<a;i++){
+            list.get(i).setTextColor(getResources().getColor(R.color.baseColor));
+        }
+    }
     public void init() {
         mContext = this.getApplicationContext();
         userControl = UserControl.getUserControl();
@@ -235,8 +256,7 @@ public class MainActivity extends BaseMap {
             final LatLng latLng = screenMarker.getPosition();
             Point point =  aMap.getProjection().toScreenLocation(latLng);
             point.y -=  uiUtils.dip2px(80);
-//            dip2px(this,80);
-//            point.y -= UiUtils.dip2px(80);????转换有问题
+
             LatLng target = aMap.getProjection()
                     .fromScreenLocation(point);
             //使用TranslateAnimation,填写一个需要移动的目标点
@@ -260,11 +280,6 @@ public class MainActivity extends BaseMap {
             screenMarker.startAnimation();
         }
     }
-    //dip和px转换
-    private static int dip2px(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
-    }
     //*****************************************************************************************
 
 
@@ -283,14 +298,26 @@ public class MainActivity extends BaseMap {
     }
 
     public void findid() {
-        mapView = (MapView) findViewById(R.id.mapView);
+        mapView = (MapView) findViewById(R.id.main_mapView);
         location = (Button) findViewById(R.id.main_location);
+
+        useProgressParent = findViewById(R.id.main_progress);
 
         userIcn = (CircleImageView) findViewById(R.id.main_user_icn);
         userName = (TextView) findViewById(R.id.main_user_name);
         userMoney = (TextView) findViewById(R.id.money);
         userCash = (TextView) findViewById(R.id.cash);
-        myProgress = (progress) findViewById(R.id.main_progress);
+        myProgress = (progress) findViewById(R.id.main_progress_view);
+
+        textView1 = (TextView) findViewById(R.id.text1);
+        textView2 = (TextView) findViewById(R.id.text2);
+        textView3 = (TextView) findViewById(R.id.text3);
+        textView4 = (TextView) findViewById(R.id.text4);
+
+        list.add(textView1);
+        list.add(textView2);
+        list.add(textView3);
+        list.add(textView4);
 
     }
 
@@ -325,11 +352,11 @@ public class MainActivity extends BaseMap {
                 getLocation();
                 break;
             case R.id.rent:
-                dialogControl.setDialog(new
-                        MarginAlerDialog(MainActivity.this,
-                        "保证金提示","请先充值保证金"));
-                dialogControl.show();
-//                userControl.saoma(MainActivity.this);
+//                dialogControl.setDialog(new
+//                        MarginAlerDialog(MainActivity.this,
+//                        "保证金提示","请先充值保证金"));
+//                dialogControl.show();
+                userControl.saoma(MainActivity.this);
                 break;
             case R.id.main_user_icn:
                 userControl.toChoice(MainActivity.this);
@@ -350,7 +377,11 @@ public class MainActivity extends BaseMap {
                 userControl.share(MainActivity.this);
                 break;
             case R.id.main_use_explain:
-           startActivity(new Intent(this, Use_Explain.class));
+             startActivity(new Intent(this, Use_Explain.class));
+                break;
+            case R.id.left_back:
+                if(drawer.isDrawerOpen(GravityCompat.START))
+                    drawer.closeDrawer(GravityCompat.START);
                 break;
             default:
                 break;
@@ -387,11 +418,9 @@ public class MainActivity extends BaseMap {
         switch (item.getItemId()) {
             case R.id.nav_search:
                 toSearchActivty();
-
             case android.R.id.home:
                 Log.i(TAG, "onOptionsItemSelected: home ");
-                if(drawer.isDrawerOpen(GravityCompat.START))
-                    drawer.closeDrawer(GravityCompat.START);
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -667,6 +696,7 @@ public class MainActivity extends BaseMap {
         userName.setText(userControl.getUser().getUsername());
         userMoney.setText(userControl.getUser().getUsermoney()+"");
         userCash.setText(userControl.getUser().getUsermoney()+"");
+        showProgreesOrNot(user);
         if(after_image_path == null )
             return;
         after_image_path = pre_image_path +"/"+userControl.getUser().getUsername()+".jpg";
@@ -677,6 +707,8 @@ public class MainActivity extends BaseMap {
                     after_image_path);
         }
     }
+
+
     /**
      * 未登录状态
      */
@@ -684,9 +716,10 @@ public class MainActivity extends BaseMap {
         userName.setText("未登录");
         userMoney.setText("0");
         userCash.setText("0");
-//        userIcn.setImageResource(ResourcesCompat
-//                .getDrawable(this.getResources(),
-//                        R.drawable.default_icn,null));
+        setProgressView(0);
+        if(useProgressParent.getVisibility() == View.GONE)
+            useProgressParent.setVisibility(View.VISIBLE);
+
         userIcn.setImageResource(R.drawable.default_icn);
     }
 

@@ -1,11 +1,13 @@
 package com.joshua.a51bike.activity.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -46,7 +48,8 @@ public class searchBike extends BaseActivity {
     public void init() {
         initActionBar();
         setLister();
-
+        InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 
     private void initActionBar() {
@@ -177,9 +180,19 @@ public class searchBike extends BaseActivity {
                 break;
 
             case R.id.sure:
-                RequestParams params = new RequestParams();
-                params.addHeader("Content-Type","application/json");
-                post(params);
+                if(sb.length() < 2 )
+                    break;
+                userControl.toBikeMes(this,"  ");
+
+//                RequestParams params = new RequestParams();
+//                params.addHeader("Content-Type","application/json");
+//                post(params);
+                break;
+            case R.id.search_button:
+                if(sb.length() < 2 )
+                    break;
+                userControl.toBikeMes(this,"  ");
+
                 break;
             default:
                 break;

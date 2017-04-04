@@ -1,12 +1,16 @@
 package com.joshua.a51bike.entity;
 
 public class Car {
+	public final static int STATE_AVALIABLE = 0;
+	public final static int STATE_START = 1;
+	public final static int STATE_PARKING= 2;
+
   	private  int carId;
 	private   String carName;
 	private  int carPrice;
 	private  String carX;
 	private  String carY;
-	private  int carState; // 0 可租 1不可租 2正在使用中
+	private  int carState; // 0 可租 1 启动 2 锁车
 	public int getCarId() {
 		return carId;
 	}

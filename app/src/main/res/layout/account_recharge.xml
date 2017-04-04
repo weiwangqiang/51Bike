@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -28,11 +30,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:background="@color/white"
         android:gravity="center"
         android:text="我的余额（元）"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:id="@+id/recharge_UserMoney"
         android:textSize="@dimen/text_size_Big"
         android:gravity="center"
         android:text="100.0"/>
@@ -58,11 +63,10 @@
             android:button="@null"
             android:padding="10dp"
             android:gravity="center_horizontal"
-            android:text="充值100\n得到100"
+            android:text="充50\n得100"
             android:background="@drawable/account_recharge_button_bg"
             android:layout_margin="10dp"
-
-            android:textColor="@color/baseColor" />
+            android:textColor="@drawable/text_color_bcolor_black" />
 
         <RadioButton
             android:id="@+id/radio2"
@@ -71,13 +75,13 @@
             android:layout_weight="1"
             android:button="@null"
             android:padding="10dp"
-
+            android:checked="true"
             android:gravity="center_horizontal"
-            android:text="充值100\n得到100"
+            android:text="充100\n得200"
             android:background="@drawable/account_recharge_button_bg"
             android:layout_margin="10dp"
 
-            android:textColor="@color/baseColor" />
+            android:textColor="@drawable/text_color_bcolor_black" />
 
         <RadioButton
             android:id="@+id/radio3"
@@ -86,12 +90,11 @@
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:padding="10dp"
-
             android:background="@drawable/account_recharge_button_bg"
             android:button="@null"
             android:gravity="center_horizontal"
-            android:text="充值100\n得到100"
-            android:textColor="@color/baseColor" />
+            android:text="充值200\n得到400"
+            android:textColor="@drawable/text_color_bcolor_black"  />
     </RadioGroup>
     <TextView
         android:layout_width="match_parent"

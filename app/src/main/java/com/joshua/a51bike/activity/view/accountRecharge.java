@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
@@ -56,13 +57,12 @@ public class accountRecharge extends BaseActivity {
     }
 
     public void findId() {
-
+        ((TextView)findViewById(R.id.recharge_UserMoney))
+                .setText(userControl.getUser().getUsermoney()+"");
     }
 
     public void setLister() {
-
         findViewById(R.id.recharge_pay).setOnClickListener(this);
-
     }
 
     /**

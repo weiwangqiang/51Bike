@@ -47,6 +47,7 @@ public class ChoiceProvince extends BaseActivity {
     private SimpleAdapter adapter;
     private List<Map<String,String>> list = new ArrayList<>();
     private final int GET_PRO = 101;
+    private final int GET_PRO_RESULT = 110;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,8 +180,8 @@ public class ChoiceProvince extends BaseActivity {
                                     Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == GET_PRO){
-            if(resultCode == 110){
-                setResult(110,data);
+            if(resultCode == GET_PRO_RESULT){
+                setResult(GET_PRO_RESULT,data);
                 finish();
             }
         }

@@ -33,6 +33,7 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size_Big"
         android:gravity="center"
+        android:id="@+id/account_money"
         android:text="1000.0"/>
     <Button
         android:layout_width="wrap_content"

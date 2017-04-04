@@ -62,7 +62,7 @@ public class BluetoothLeService extends Service {
     public final static String EXTRA_DATA = "com.example.bluetooth.le.EXTRA_DATA";
     //设备主动上报信息的地址
     public static String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
-
+    //----------------------------------------------------------------------
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status,
@@ -136,6 +136,7 @@ public class BluetoothLeService extends Service {
             broadcastUpdate(ACTION_DATA_AVAILABLE, resultBytes);
         }
     };
+    //----------------------------------------------------------------------
 
     private void broadcastUpdate(final String action) {
         final Intent intent = new Intent(action);

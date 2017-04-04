@@ -101,6 +101,7 @@ public class LoginState implements UserState {
     @Override
     public void rent(Activity activity) {
         Intent intent = new Intent(activity, BikeControl.class);
+        intent.putExtra("bid","2634");
         activity.startActivity(intent);
         activity.finish();
     }
@@ -146,8 +147,7 @@ public class LoginState implements UserState {
 
     @Override
     public void lockBike(Activity activity) {
-        dialogControl.setDialog(new LocateProgress(activity,"正在锁车"));
-        dialogControl.show();
+
     }
 
     @Override

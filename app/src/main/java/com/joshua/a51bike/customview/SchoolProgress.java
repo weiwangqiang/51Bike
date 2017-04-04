@@ -10,7 +10,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.joshua.a51bike.R;
@@ -23,30 +22,28 @@ import com.joshua.a51bike.R;
  * @project 51Bike
  * @since 2017-03-17
  */
-public class progress extends ViewGroup {
-    private String TAG = "progress";
+public class SchoolProgress extends ViewGroup {
+    private String TAG = "SchoolProgress";
     private Context context;
-    public progress(Context context) {
+    public SchoolProgress(Context context) {
         super(context);
         this.context = context;
     }
 
-    public progress(Context context, AttributeSet attrs) {
+    public SchoolProgress(Context context, AttributeSet attrs) {
         super(context, attrs);
         setPadding(0,0,0,0);
         this.context = context;
 
     }
 
-    public progress(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SchoolProgress(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
 
     }
 
-    private int okImageRes = R.drawable.progress_ok;
     private int okImageRadius;
-    private ImageView mImageView;
     private static final float RADIUS_DEFAULT = 2/5f;
     private int childWith,paragraphWith;
     private int parentWith,parentHeight;
@@ -55,7 +52,6 @@ public class progress extends ViewGroup {
     /*测量view*/
     @Override
     protected void onMeasure(int widthMeasureSpec,int heightMeasureSpec){
-        Log.i(TAG, "onMeasure: ");
         builMenu();
         MeaSureParent(widthMeasureSpec, heightMeasureSpec);
         MeaSureChild();
@@ -208,7 +204,7 @@ public class progress extends ViewGroup {
         if(i == 3){
             Log.i(TAG, "drawBackGround: parent width is "+parentWith );
             Log.i(TAG, "drawBackGround: i == 3 "+right+" childPadding "+childPadding);
-            right = right - childPadding;
+            right = parentWith - 2 * childPadding;
             Log.i(TAG, "drawBackGround: "+right);
         }
         int bottom = top + height;

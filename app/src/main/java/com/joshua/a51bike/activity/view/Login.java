@@ -43,7 +43,6 @@ public class Login extends BaseActivity{
     private EditText getName, getCode;
     private   User user;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +92,7 @@ public class Login extends BaseActivity{
     }
 
     public void toWebView(){
-        Intent intent = new Intent(this,WebView.class);
+        Intent intent = new Intent(this,RegisterAgreement.class);
         intent.putExtra("title","51get租车服务条款");
         intent.putExtra("url","51get租车服务条款");
         startActivity(intent);

@@ -22,9 +22,9 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     public static String EXIT_APP_ACTION = "com.joshua.exit";
     private Boolean isFinished = false;
     public UiUtils uiUtils;
-    public UserControl userControl;
     public DialogControl dialogControl;
     public CarControl carControl;
+    public UserControl userControl;
     public final int NET_SUCCESS = 0x1;
     public final int NET_ERROR = 0x2;
     private String TAG = "BaseActivity";
@@ -36,9 +36,9 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         uiUtils = new UiUtils(getApplicationContext());
-        userControl = UserControl.getUserControl();
         dialogControl = DialogControl.getDialogControl();
         carControl = CarControl.getCarControl();
+        userControl = UserControl.getUserControl();
         initScreen();
         initXUtils();
         initReceiver();

@@ -3,11 +3,24 @@ package com.joshua.a51bike.entity;
 public class User {
     private  int userid;
 	private  String username;
-	private String realName = "韦王强";
+	private String realName = null;
 	private  int usermoney;
 	private  int userstate;  // 0 可租 1不可租 2 正在租
 	private  String userpass;
 	private  String userpic;
+	public String getSchool() {
+		return school;
+	}
+
+	public void setSchool(String school) {
+		this.school = school;
+	}
+
+	private String school = "";
+
+	public void setRealName(String name){
+		this.realName = name;
+	}
 	public String getRealName(){
 		return realName;
 	}

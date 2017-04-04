@@ -50,7 +50,7 @@ public class PayUtils {
          * 访问服务器
          * 上传订单信息
          */
-        String url="http://192.168.0.8:8080/diandongche/user/getOrder";
+        String url="http://123.206.104.107/diandongche/user/getOrder";
 
         RequestParams order_params = new RequestParams(url);
         order_params.addParameter("app_id",params.get("app_id"));
@@ -108,7 +108,7 @@ public class PayUtils {
             UiUtils.showToast("操作已经取消");
         }
         Log.i(TAG, "postPayResult: ");
-        String url="http://192.168.1.100:8080/diandongche/user/verifyResult";
+        String url="http://123.206.104.107/diandongche/user/verifyResult";
         RequestParams result_params = new RequestParams(url);
         result_params.addParameter("resultStatus",result.get("resultStatus"));
         result_params.addParameter("result",result.get("result"));

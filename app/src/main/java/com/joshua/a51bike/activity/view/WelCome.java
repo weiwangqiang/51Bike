@@ -43,10 +43,7 @@ public class WelCome extends Activity {
             public void run() {
                 try{
                     Thread.sleep(3000);
-                    if(isFirst())
-                         toFirstView();
-                    else
-                         ToMainActivity();
+                    ToMainActivity();
 
                 }catch(Exception e){
                     e.printStackTrace();

@@ -5,13 +5,13 @@
     android:id="@+id/main_progress"
     android:orientation="vertical">
 
-    <com.joshua.a51bike.customview.progress
+    <com.joshua.a51bike.customview.SchoolProgress
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:id="@+id/main_progress_view"
+        android:id="@+id/school_progress_view"
         />
     <LinearLayout
         android:layout_width="match_parent"

@@ -4,9 +4,9 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context=".activity.view.register">
+    tools:context=".activity.view.register"
+    android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_height"
@@ -94,7 +94,7 @@
         <TextView
             style="@style/OrangeTextStyle"
             android:id="@+id/bike_mes_agreement"
-            android:text="@string/agreement"/>
+            android:text="《51get注册服务条款》"/>
 
     </LinearLayout>
 </LinearLayout>

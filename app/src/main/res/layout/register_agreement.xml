@@ -12,13 +12,9 @@
             android:textColor="@color/white" android:layout_gravity="center"
             android:textSize="@dimen/text_size_title"
             android:id="@+id/browse_title"
-            android:text="条款" />
+            android:text="注册服务条款" />
     </android.support.v7.widget.Toolbar>
-    <!--<WebView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
 
-    <!--</WebView>-->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -26,7 +22,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:text="@string/service_argument"/>
+            android:textSize="18sp"
+            android:text="@string/register_agreement"/>
 
     </ScrollView>
 

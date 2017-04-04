@@ -17,11 +17,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.joshua.a51bike.Interface.DialogCallBack;
 import com.joshua.a51bike.R;
-import com.joshua.a51bike.activity.control.LogoutState;
 import com.joshua.a51bike.activity.core.BaseActivity;
-import com.joshua.a51bike.activity.dialog.CurrencyAlerDialog;
 import com.joshua.a51bike.activity.dialog.GetIcnAlerDialog;
 import com.joshua.a51bike.activity.dialog.WaitProgress;
 import com.joshua.a51bike.customview.CircleImageView;
@@ -65,7 +62,7 @@ public class UserInfor extends BaseActivity  {
     //拍照和图库的Intent请求码
     public final int TAKE_PHOTO_WITH_DATE = 200;
     public final int TAKE_PHOTO_FROM_IMAGE = 201;
-    private MyButton userName,renzhen,userPhone;
+    private MyButton userName,renzhen,userPhone,mySchool;
     private Toolbar myToolbar;
     private TextView TextViewName;
 
@@ -97,6 +94,7 @@ public class UserInfor extends BaseActivity  {
         userName = (MyButton) findViewById(R.id.user_inf_name);
         renzhen = (MyButton) findViewById(R.id.user_inf_renzhen);
         userPhone = (MyButton) findViewById(R.id.user_infor_phone);
+        mySchool = (MyButton) findViewById(R.id.user_infor_school);
         TextViewName = (TextView) findViewById(R.id.main_user_name);
     }
 
@@ -108,9 +106,10 @@ public class UserInfor extends BaseActivity  {
     }
 
     public void setLister() {
-        findViewById(R.id.user_infor_Logout).setOnClickListener(this);
+//        findViewById(R.id.user_infor_Logout).setOnClickListener(this);
         findViewById(R.id.user_infor_icn).setOnClickListener(this);
-        findViewById(R.id.user_infor_save).setOnClickListener(this);
+        findViewById(R.id.user_infor_school).setOnClickListener(this);
+//        findViewById(R.id.user_infor_save).setOnClickListener(this);
         renzhen.setOnClickListener(this);
         userPhone.setOnClickListener(this);
     }
@@ -118,8 +117,21 @@ public class UserInfor extends BaseActivity  {
      * 初始化用户信息
      */
     private void initUserMessage() {
-        userName.setRightText(userControl.getUser().getRealName());
-        renzhen.setRightText("已认证");
+        if(userControl.getUser().getRealName() != null){
+            renzhen.setRightText("已认证");
+            userName.setRightText(userControl.getUser().getRealName());
+
+        }
+        else{
+            renzhen.setRightText("未认证");
+            userName.setRightText("无");
+        }
+        if(userControl.getUser().getSchool() != ""){
+            mySchool.setRightText("已认证");
+        }
+        else
+            mySchool.setRightText("未认证");
+
         userPhone.setRightText(userControl.getUser().getUsername());
     }
 
@@ -145,9 +157,6 @@ public class UserInfor extends BaseActivity  {
             case R.id.left_back:
                 finish();
                 break;
-            case R.id.user_infor_Logout:
-                logout();
-                break;
             case R.id.user_infor_icn:
                 changeIcn();
                 break;
@@ -155,10 +164,10 @@ public class UserInfor extends BaseActivity  {
                 userControl.userInforPhoneBefor(UserInfor.this);
                 break;
             case R.id.user_inf_renzhen:
-               userControl.renZheng(UserInfor.this);
+                startActivity(new Intent(this,RZRealName.class));
                 break;
-            case R.id.user_infor_save:
-                post();
+            case R.id.user_infor_school:
+                startActivity(new Intent(this,RZSchool.class));
                 break;
             default:
                 break;
@@ -245,31 +254,6 @@ public class UserInfor extends BaseActivity  {
         ImageLFMemory imageLFMemory = ImageLFMemory.InStance();
         imageLFMemory.setBitmapToMemory(after_image_path, BitmapFactory.decodeFile(after_image_path));
     }
-    /**
-     * 退出
-     */
-    private void logout() {
-
-        dialogControl.setDialog(new CurrencyAlerDialog(UserInfor.this,"温馨提示",
-                "确定要离开我吗？",new callback()));
-        dialogControl.show();
-
-    }
-    public class callback implements DialogCallBack {
-
-        @Override
-        public void sure() {
-            userControl.setUserState(new LogoutState());
-            userControl.setUser(null);
-            uiUtils.showToast("注销成功！");
-            finish();
-        }
-
-        @Override
-        public void cancel() {
-
-        }
-    }
 
     /**
      * 获取系统拍照或图库的回调函数
@@ -306,6 +290,7 @@ public class UserInfor extends BaseActivity  {
         file_post = new File(after_image_path);
         //更新ui界面
         upUserIcn();
+        saveIcnToLocal();
         Log.i(TAG, "getphoto: file  "+file_post);
     }
     /**
@@ -316,6 +301,8 @@ public class UserInfor extends BaseActivity  {
         if (data == null) return;
         file_post = UriToFile(data.getData());
         upUserIcn();
+        saveIcnToLocal();
+
         Log.i(TAG,"-->获取图库图片 file is :\n "+file_post);
     }
 

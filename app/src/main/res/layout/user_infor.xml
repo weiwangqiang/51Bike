@@ -53,33 +53,32 @@
             </RelativeLayout>
 
             <com.joshua.a51bike.customview.MyButton
-                xmlns:button="http://schemas.android.com/apk/res/com.joshua.a51bike"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:id="@+id/user_inf_name"
-                button:leftText="姓名"
-                button:leftTextColor="@color/black"
-                button:leftTextSize="15sp"
-                button:rightText="哈哈哈"
-                button:rightImage="@drawable/gray_next"
-                button:rightTextColor="@color/black"
-                button:rightTextSize="15sp"/>
+                app:leftText="姓名"
+                app:leftTextColor="@color/black"
+                app:leftTextSize="15sp"
+                app:rightText="无"
+                android:background="@color/white"
+                app:rightImage="@drawable/gray_next"
+                app:rightTextColor="@color/black"
+                app:rightTextSize="15sp"/>
             <com.joshua.a51bike.customview.MyButton
-
-                xmlns:button="http://schemas.android.com/apk/res/com.joshua.a51bike"
+                android:background="@drawable/main_b_white_gray_bg"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:id="@+id/user_inf_renzhen"
-                button:leftText="实名认证"
-                button:leftTextColor="@color/black"
-                button:leftTextSize="15sp"
-                button:rightText="已认证"
-                button:rightImage="@drawable/gray_next"
-                button:rightTextColor="@color/black"
-                button:rightTextSize="15sp"/>
+                app:leftText="实名认证"
+                app:leftTextColor="@color/black"
+                app:leftTextSize="15sp"
+                app:rightText="未认证"
+                app:rightImage="@drawable/gray_next"
+                app:rightTextColor="@color/black"
+                app:rightTextSize="15sp"/>
 
             <com.joshua.a51bike.customview.MyButton
-
+                android:background="@drawable/main_b_white_gray_bg"
                 android:id="@+id/user_infor_phone"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -91,28 +90,19 @@
                 app:rightTextColor="@color/black"
                 app:rightTextSize="15sp" />
 
-            <Button
-                android:id="@+id/user_infor_Logout"
+            <com.joshua.a51bike.customview.MyButton
+                android:id="@+id/user_infor_school"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_height="50dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/buttonbg"
-                android:text="退出账户"
-                android:textColor="@color/white" />
-            <Button
-                android:id="@+id/user_infor_save"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-
-                android:background="@drawable/buttonbg"
-                android:text="保存"
-                android:textColor="@color/white" />
+                android:background="@drawable/main_b_white_gray_bg"
+                app:leftText="校园认证"
+                app:leftTextColor="@color/black"
+                app:leftTextSize="15sp"
+                app:rightImage="@drawable/gray_next"
+                app:rightText="未认证"
+                app:rightTextColor="@color/rad"
+                app:rightTextSize="15sp" />
         </LinearLayout>
     </ScrollView>
 

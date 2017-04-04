@@ -102,6 +102,7 @@
                 android:value=".activity.view.AccountYaJin" />
         </activity>
         <activity android:name=".activity.view.registerOrLogin" />
+        <activity android:name=".activity.view.RegisterAgreement" />
         <activity android:name=".activity.view.renzheng"/>
         <activity android:name=".activity.view.ScanActivity"/>
         <activity android:name=".activity.view.BlueTooth"/>
@@ -109,7 +110,12 @@
         <activity android:name=".activity.view.UserRouteMes"/>
         <activity android:name=".activity.view.ChargingRule"/>
         <activity android:name=".activity.view.FirstClick"/>
-        <activity android:name=".activity.view.searchBike"/>
+        <activity android:name=".activity.view.RZRealName"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity android:name=".activity.view.RZSchool"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity android:name=".activity.view.searchBike"
+            android:configChanges="keyboardHidden" />
         <activity android:name=".activity.view.ChoiceProvince"/>
         <activity android:name=".activity.view.ChoiceSchool"/>
 

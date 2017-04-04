@@ -42,7 +42,7 @@
     layout="@layout/left_main_progress"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/main_progress"/>
+ />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -159,36 +159,40 @@
                 style="@style/listButtonStyle"
                 android:text="我的钱包"
                 android:id="@+id/account"
-                android:background="@color/white"/>
+                android:background="@drawable/main_b_white_gray_bg"/>
          <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/listButtonStyle"
                 android:text="我的行程"
                 android:id="@+id/user_route"
-                android:background="@color/white"/>
-             <Button
+             android:background="@drawable/main_b_white_gray_bg"/>
+
+            <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/listButtonStyle"
                 android:text="联系客服"
                 android:id="@+id/service"
-                android:background="@color/white"/>
-             <Button
+                android:background="@drawable/main_b_white_gray_bg"/>
+
+            <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/listButtonStyle"
                 android:text="分享"
                 android:id="@+id/share"
-                android:background="@color/white"/>
-             <Button
+                android:background="@drawable/main_b_white_gray_bg"/>
+
+            <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/listButtonStyle"
                 android:text="设置"
                 android:id="@+id/main_setting"
-                android:background="@color/white"/>
-            </LinearLayout>
+                android:background="@drawable/main_b_white_gray_bg"/>
+
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
 

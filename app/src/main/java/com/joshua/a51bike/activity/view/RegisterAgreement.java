@@ -1,15 +1,14 @@
 package com.joshua.a51bike.activity.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
-import com.joshua.a51bike.customview.MyButton;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -20,28 +19,23 @@ import org.xutils.view.annotation.ViewInject;
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike
- * @since 2017-03-07
+ * @since 2017-03-29
  */
-@ContentView(R.layout.account)
-public class account extends BaseActivity {
-    private static final String TAG = "account";
+@ContentView(R.layout.register_agreement)
+public class RegisterAgreement extends BaseActivity {
+    private static final String TAG = "RegisterAgreement";
+    private String url = "";
 
-
-    @ViewInject(R.id.account_money)
-    private TextView money;
-
-    @ViewInject(R.id.account_yajin)
-    private MyButton yajin;
+    @ViewInject(R.id.browse_title)
+    private TextView title;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        initView();
+        Intent intent = getIntent();
+        String t = intent.getStringExtra("title");
+        url = intent.getStringExtra("url");
+        title.setText(t);
     }
 
     public void init() {
@@ -50,21 +44,12 @@ public class account extends BaseActivity {
         setLister();
     }
 
-    private void initView() {
-        money.setText(userControl.getUser().getUsermoney()+"");
-        if(userControl.getUser().getUsermoney() != 0){
-            yajin.setRightText("已经缴纳");
-        }
-        else
-            yajin.setRightText("未缴纳，点击缴纳");
-
-    }
-
     private void initActionBar() {
-        Toolbar myToolbar = (Toolbar)findViewById(R.id.account_toolbar);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setTitle("");
         myToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.title_back));
         setSupportActionBar(myToolbar);
+
     }
 
     public void findId() {
@@ -72,10 +57,6 @@ public class account extends BaseActivity {
     }
 
     public void setLister() {
-        findViewById(R.id.account_minxi).setOnClickListener(this);
-
-        findViewById(R.id.account_recharge).setOnClickListener(this);
-        findViewById(R.id.account_yajin).setOnClickListener(this);
 
     }
 
@@ -89,15 +70,6 @@ public class account extends BaseActivity {
         switch (v.getId()) {
             case R.id.left_back:
                 finish();
-                break;
-            case R.id.account_recharge:
-                userControl.accountRecharge(account.this);
-                break;
-            case R.id.account_minxi:
-                userControl.accountMiXi(account.this);
-                break;
-            case R.id.account_yajin:
-                userControl.accountYaJin(account.this);
                 break;
             default:
                 break;
@@ -114,10 +86,15 @@ public class account extends BaseActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    /**
+     * Called when an activity you launched exits
+     */
     @Override
-    public void onStop(){
-        super.onStop();
-        Log.i(TAG, "onStop: tiem is "+System.currentTimeMillis());
+    protected void onActivityResult(int requestCode,
+                                    int resultCode,
+                                    Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
   

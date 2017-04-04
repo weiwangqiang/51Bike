@@ -22,23 +22,23 @@
             />
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        >
 
         <include
             layout="@layout/bike_control_bikemes"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_above="@+id/include_bottom" />
 
         <include
             android:id="@+id/include_bottom"
             layout="@layout/bike_control_bottom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
             android:layout_alignParentBottom="true" />
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

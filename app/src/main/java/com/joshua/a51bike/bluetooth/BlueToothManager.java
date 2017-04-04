@@ -12,19 +12,28 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Toast;
+import android.util.Log;
 
-import com.joshua.a51bike.R;
 import com.joshua.a51bike.bluetooth.utils.Protocol;
+import com.joshua.a51bike.util.UiUtils;
 
 import java.util.List;
 import java.util.UUID;
 
-public class TestActivity extends AppCompatActivity {
+import static android.content.Context.BIND_AUTO_CREATE;
+
+/**
+ * class description here
+ *  BEL manager 管理一切蓝牙工作
+ * @version 1.0.0
+ * @outher wangqiang
+ * @project 51Bike
+ * @since 2017-04-02
+ */
+public class BlueToothManager {
+    private String TAG = "BlueToothManager";
+    private Context context;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothLeService mBluetoothLeService;
     private static final int REQUEST_ENABLE_BT = 0x01;
@@ -35,46 +44,65 @@ public class TestActivity extends AppCompatActivity {
     private static final String readUuid = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
     private static final byte startCommand = 0x01;
     private static final byte stopCommand = 0x02;
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
-        checkPhoneState();
-    }
-
-    /**
-     * 连接ble设备
-     */
-    public void connect_ble(View view) {
-        mDeviceId = "E899B6C8A9B9000000001036";//扫码获取的
-        mDeviceAddress = getDeviceAddress(mDeviceId);//
-        Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
-        bindService(gattServiceIntent, mServiceConnection,
-                BIND_AUTO_CREATE);
+    public BlueToothManager(Context context) {
+        this.context = context;
     }
 
     /**
      * 检查设备是否支持蓝牙
+     * @return true 是支持
      */
-    private void checkPhoneState() {
+    public boolean checkPhoneState() {
         // 检查当前手机是否支持ble 蓝牙,如果不支持退出程序
-        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            Toast.makeText(this, "设备不支持BLE", Toast.LENGTH_SHORT).show();
-            finish();
+        if (!context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            UiUtils.showToast("手机不支持低功耗蓝牙");
+            ((Activity) context).finish();
+
         }
         // 初始化 Bluetooth adapter, 通过蓝牙管理器得到一个参考蓝牙适配器(API必须在以上android4.3或以上和版本)
         final BluetoothManager bluetoothManager = (BluetoothManager)
-                getSystemService(Context.BLUETOOTH_SERVICE);
+                context.getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
 
         // 检查设备上是否支持蓝牙
         if (mBluetoothAdapter == null) {
-            Toast.makeText(this, "设备不支持蓝牙", Toast.LENGTH_SHORT).show();
-            finish();
+            UiUtils.showToast("手机不支持蓝牙");
+            ((Activity) context).finish();
+        }
+        return true;
+    }
+
+    public void checkOpenBLE(){
+        context.registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+        // 为了确保设备上蓝牙能使用, 如果当前蓝牙设备没启用,弹出对话框向用户要求授予权限来启用
+        if (!mBluetoothAdapter.isEnabled()) {
+            if (!mBluetoothAdapter.isEnabled()) {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                ((Activity) context).startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            }
         }
     }
+    public void unRegisterRecevier(){
+        context.unregisterReceiver(mGattUpdateReceiver);
+
+    }
+    public void UnbindService(){
+        context.unbindService(mServiceConnection);
+        mBluetoothLeService = null;
+    }
+    /**
+     * 连接ble设备
+     */
+    public boolean connect_ble() {
+        mDeviceId = "E899B6C8A9B9000000001036";//扫码获取的
+        mDeviceAddress = getDeviceAddress(mDeviceId);//
+        Intent gattServiceIntent = new Intent(context, BluetoothLeService.class);
+        Log.i(TAG, "connect_ble: bindService");
+        context.bindService(gattServiceIntent, mServiceConnection,
+                BIND_AUTO_CREATE);
+        return  true;
+    }
+
 
     /**
      * 将扫描到的设备id转换成设备MAC地址
@@ -100,35 +128,30 @@ public class TestActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName componentName,
                                        IBinder service) {
+            Log.i(TAG, "onServiceConnected: ");
             mBluetoothLeService = ((BluetoothLeService.LocalBinder) service)
                     .getService();
             if (!mBluetoothLeService.initialize()) {
-                Toast.makeText(TestActivity.this, "蓝牙初始化失败", Toast.LENGTH_SHORT).show();
-                finish();
+                UiUtils.showToast("蓝牙初始化失败");
+                ((Activity) context).finish();
+
             }
             //链接Service成功，则通过该Service尝试连接蓝牙设备
             if (mBluetoothLeService.connect(mDeviceAddress)) {
-                Toast.makeText(TestActivity.this, "设备连接成功", Toast.LENGTH_SHORT).show();
+                UiUtils.showToast("设备连接成功");
+
             }
+            else
+                UiUtils.showToast("设备连接失败！");
         }
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
+            Log.i(TAG, "onServiceDisconnected: ");
             mBluetoothLeService = null;
         }
     };
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
-            finish();
-            return;
-        } else {
-            Toast.makeText(this, "成功打开蓝牙", Toast.LENGTH_SHORT).show();
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
     /**
      * 根据uuid获取Characteristic
@@ -180,7 +203,7 @@ public class TestActivity extends AppCompatActivity {
     /**
      * 开锁
      */
-    public void startBike(View view) {
+    public void startBike() {
         byte[] bytes = Protocol.getBytes(mDeviceId, startCommand);
         executeBle(bytes);
     }
@@ -189,7 +212,7 @@ public class TestActivity extends AppCompatActivity {
     /**
      * 还车
      */
-    public void returnBike(View view) {
+    public void returnBike() {
         byte[] bytes = Protocol.getBytes(mDeviceId, stopCommand);
         executeBle(bytes);
     }
@@ -197,7 +220,7 @@ public class TestActivity extends AppCompatActivity {
     /**
      * 锁车
      */
-    public void lockBike(View view) {
+    public void lockBike() {
 
     }
 
@@ -220,16 +243,16 @@ public class TestActivity extends AppCompatActivity {
     };
 
     private void parseBytes(byte[] resultBytes) {
-      //功能码为5
+        //功能码为5
         byte model=resultBytes[0];
         String str_model=model+"";
-       //// TODO: 2017/3/29
+        //// TODO: 2017/3/29
 
         //开关机
         byte state=resultBytes[3];
         String str_state=state+"";
         if(str_state.equals("0")){
-            Toast.makeText(this, "成功还车", Toast.LENGTH_SHORT).show();
+            UiUtils.showToast("成功还车");
         }
     }
 
@@ -242,30 +265,4 @@ public class TestActivity extends AppCompatActivity {
         return intentFilter;
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
-        // 为了确保设备上蓝牙能使用, 如果当前蓝牙设备没启用,弹出对话框向用户要求授予权限来启用
-        if (!mBluetoothAdapter.isEnabled()) {
-            if (!mBluetoothAdapter.isEnabled()) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-            }
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(mGattUpdateReceiver);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbindService(mServiceConnection);
-        mBluetoothLeService = null;
-    }
 }

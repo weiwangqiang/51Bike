@@ -145,20 +145,20 @@ public class BikeMessage extends BaseActivity {
         Intent intent = new Intent(this,WebView.class);
         intent.putExtra("title","51get租车服务条款");
         intent.putExtra("url","51get租车服务条款");
-
         startActivity(intent);
     }
+    //点击租车
+    private Car car;
     private void rent(){
-
         RequestParams params = new RequestParams(rentUrl);
         User user = userControl.getUser();
+        car  = new Car();
+        car.setCarId(1);
+        car.setCarState(1);
         params.addBodyParameter("userid",user.getUserid()+"");
-//        params.addBodyParameter("carState","0");
 
-        params.addBodyParameter("carId","1");
-        params.addBodyParameter("carName","one");
-//        params.addBodyParameter("carPrice","20");
-        Log.i(TAG, "rent: param "+params.toString());
+        params.addBodyParameter("carId",car.getCarState()+"");
+//        params.addBodyParameter("carName","one");
         post(params,RENT_BIKE);
         dialogControl.setDialog(new WaitProgress(this));
         dialogControl.show();
@@ -167,7 +167,6 @@ public class BikeMessage extends BaseActivity {
     * */
      private void post(final RequestParams params, final int kind){
         Log.d(TAG, "post: post by xutils------>> " +rentUrl);
-
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
@@ -175,9 +174,7 @@ public class BikeMessage extends BaseActivity {
                 if(kind==GET_BIKEMESSAGE){
                     parseCar(result);
                 }else
-                {
                     parseRent(result);
-                }
                 dialogControl.cancel();
                 Log.i(TAG, "onSuccess: cancel");
             }
@@ -217,7 +214,7 @@ public class BikeMessage extends BaseActivity {
     /*更新车辆信息到UI*/
     private void upCarView() {
 //        uiUtils.showToast("获取信息成功! ");
-        Toast.makeText(BikeMessage.this,"获取信息成功!",Toast.LENGTH_SHORT).show();
+        uiUtils.showToast("获取信息成功!");
         Log.i(TAG, "upCarView: upCarView");
         price.setText(carControl.getCar().getCarPrice()+"元/小时");
         account.setText(userControl.getUser().getUsermoney()+"元");
@@ -226,6 +223,7 @@ public class BikeMessage extends BaseActivity {
     private void parseRent(String result) {
         Log.i(TAG, "parseRent: "+result);
         if(result.equals("ok")){
+            carControl.setCar(car);
             uiUtils.showToast("租车成功！");
             userControl.rent(BikeMessage.this);
         }else
