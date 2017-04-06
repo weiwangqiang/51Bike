@@ -28,17 +28,18 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center_vertical">
-            <Button
-                android:id="@+id/Login_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="80dp"
-                android:layout_marginRight="80dp"
-                android:layout_marginTop="30dp"
-                android:background="@drawable/button_orange_bg"
-                android:text="登陆/注册"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_content" />
+
+        <Button
+            android:id="@+id/Login_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="80dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/button_orange_bg"
+            android:text="登陆/注册"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_content" />
 
     </LinearLayout>
 

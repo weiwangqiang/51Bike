@@ -101,14 +101,11 @@ public class LogoutState implements UserState {
     @Override
     public void lockBike(Activity activity) {
         Choice(activity);
-
-
     }
 
     @Override
     public void startBike(Activity activity) {
         Choice(activity);
-
     }
 
     @Override

@@ -32,8 +32,8 @@ import static android.content.Context.BIND_AUTO_CREATE;
  * @since 2017-04-02
  */
 public class BlueToothManager {
-    private String TAG = "BlueToothManager";
-    private Context context;
+    private String TAG = "BikeControl";
+    private Activity context;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothLeService mBluetoothLeService;
     private static final int REQUEST_ENABLE_BT = 0x01;
@@ -44,7 +44,7 @@ public class BlueToothManager {
     private static final String readUuid = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
     private static final byte startCommand = 0x01;
     private static final byte stopCommand = 0x02;
-    public BlueToothManager(Context context) {
+    public BlueToothManager(Activity context) {
         this.context = context;
     }
 
@@ -56,8 +56,7 @@ public class BlueToothManager {
         // 检查当前手机是否支持ble 蓝牙,如果不支持退出程序
         if (!context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             UiUtils.showToast("手机不支持低功耗蓝牙");
-            ((Activity) context).finish();
-
+            context.finish();
         }
         // 初始化 Bluetooth adapter, 通过蓝牙管理器得到一个参考蓝牙适配器(API必须在以上android4.3或以上和版本)
         final BluetoothManager bluetoothManager = (BluetoothManager)
@@ -67,7 +66,7 @@ public class BlueToothManager {
         // 检查设备上是否支持蓝牙
         if (mBluetoothAdapter == null) {
             UiUtils.showToast("手机不支持蓝牙");
-            ((Activity) context).finish();
+            context.finish();
         }
         return true;
     }
@@ -78,16 +77,16 @@ public class BlueToothManager {
         if (!mBluetoothAdapter.isEnabled()) {
             if (!mBluetoothAdapter.isEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                ((Activity) context).startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                context.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             }
         }
     }
     public void unRegisterRecevier(){
         context.unregisterReceiver(mGattUpdateReceiver);
-
     }
     public void UnbindService(){
         context.unbindService(mServiceConnection);
+        Log.i(TAG, "UnbindService: aaaaaaaaaaaaaaaaaaaaaaaa");
         mBluetoothLeService = null;
     }
     /**
@@ -131,15 +130,15 @@ public class BlueToothManager {
             Log.i(TAG, "onServiceConnected: ");
             mBluetoothLeService = ((BluetoothLeService.LocalBinder) service)
                     .getService();
+            if(mBluetoothLeService == null)
+                Log.i(TAG, "onServiceConnected: mBluetoothLeService is null  ");
             if (!mBluetoothLeService.initialize()) {
                 UiUtils.showToast("蓝牙初始化失败");
-                ((Activity) context).finish();
-
+                context.finish();
             }
             //链接Service成功，则通过该Service尝试连接蓝牙设备
             if (mBluetoothLeService.connect(mDeviceAddress)) {
                 UiUtils.showToast("设备连接成功");
-
             }
             else
                 UiUtils.showToast("设备连接失败！");
@@ -252,7 +251,7 @@ public class BlueToothManager {
         byte state=resultBytes[3];
         String str_state=state+"";
         if(str_state.equals("0")){
-            UiUtils.showToast("成功还车");
+//            UiUtils.showToast("成功还车");
         }
     }
 

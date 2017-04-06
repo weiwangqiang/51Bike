@@ -43,7 +43,8 @@ import java.util.UUID;
  */
 @SuppressLint("NewApi")
 public class BluetoothLeService extends Service {
-    private final static String TAG = BluetoothLeService.class.getSimpleName();
+//    private final static String TAG = BluetoothLeService.class.getSimpleName();
+    private final static String TAG = "BikeControl";
 
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
@@ -67,8 +68,10 @@ public class BluetoothLeService extends Service {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status,
                                             int newState) {
+            Log.i(TAG, "onConnectionStateChange: ");
             String intentAction;
             if (newState == BluetoothProfile.STATE_CONNECTED) {
+                Log.i(TAG, "onConnectionStateChange: STATE_CONNECTED ");
                 intentAction = ACTION_GATT_CONNECTED;
                 mConnectionState = STATE_CONNECTED;
                 broadcastUpdate(intentAction);
@@ -86,6 +89,7 @@ public class BluetoothLeService extends Service {
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            Log.i(TAG, "onServicesDiscovered: ");
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
             } else {
@@ -96,6 +100,7 @@ public class BluetoothLeService extends Service {
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt,
                                          BluetoothGattCharacteristic characteristic, int status) {
+            Log.i(TAG, "onCharacteristicRead: ");
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
                 for (int i = 0; i < characteristic.getValue().length; i++) {
@@ -128,6 +133,7 @@ public class BluetoothLeService extends Service {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
+            Log.i(TAG, "onCharacteristicChanged: ");
             byte[] resultBytes=new byte[8];
             for (int i = 0; i < (characteristic.getValue().length-1); i++) {
                 resultBytes[i]=characteristic.getValue()[i];
@@ -151,6 +157,7 @@ public class BluetoothLeService extends Service {
 
     private void broadcastUpdate(final String action,
                                  final BluetoothGattCharacteristic characteristic) {
+        Log.i(TAG, "broadcastUpdate: ");
         final Intent intent = new Intent(action);
         System.out.println("change broadcast update:uuid=" + characteristic.getUuid().toString());
         final byte[] data = characteristic.getValue();
@@ -214,6 +221,8 @@ public class BluetoothLeService extends Service {
     /**
      * Connects to the GATT server hosted on the Bluetooth LE device.
      *
+     * 连接失败就返回false
+     *
      * @param address The device address of the destination device.
      * @return Return true if the connection is initiated successfully. The
      * connection result is reported asynchronously through the
@@ -250,7 +259,7 @@ public class BluetoothLeService extends Service {
         // We want to directly connect to the device, so we are setting the
         // autoConnect
         // parameter to false.
-        mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
+        mBluetoothGatt = device.connectGatt(this, true, mGattCallback);
         Log.d(TAG, "Trying to create a new connection.");
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;

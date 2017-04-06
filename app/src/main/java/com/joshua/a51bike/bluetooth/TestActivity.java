@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class TestActivity extends AppCompatActivity {
+    private String TAG = "TestActivity";
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothLeService mBluetoothLeService;
     private static final int REQUEST_ENABLE_BT = 0x01;
@@ -48,6 +50,7 @@ public class TestActivity extends AppCompatActivity {
      * 连接ble设备
      */
     public void connect_ble(View view) {
+        Log.i(TAG, "connect_ble: ");
         mDeviceId = "E899B6C8A9B9000000001036";//扫码获取的
         mDeviceAddress = getDeviceAddress(mDeviceId);//
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
@@ -100,8 +103,11 @@ public class TestActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName componentName,
                                        IBinder service) {
+            Log.i(TAG, "onServiceConnected: ");
             mBluetoothLeService = ((BluetoothLeService.LocalBinder) service)
                     .getService();
+            if(mBluetoothLeService == null)
+                 Log.i(TAG, "onServiceConnected: mBluetoothLeService is null  ");
             if (!mBluetoothLeService.initialize()) {
                 Toast.makeText(TestActivity.this, "蓝牙初始化失败", Toast.LENGTH_SHORT).show();
                 finish();
@@ -134,6 +140,7 @@ public class TestActivity extends AppCompatActivity {
      * 根据uuid获取Characteristic
      */
     private BluetoothGattCharacteristic getCharacteristic(String uuid) {
+        Log.i(TAG, "getCharacteristic: ");
         List<BluetoothGattService> services = mBluetoothLeService
                 .getSupportedGattServices();
         for (BluetoothGattService service : services) {

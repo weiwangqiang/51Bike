@@ -75,7 +75,10 @@ public class BikeControl extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
-        manager = new BlueToothManager(this);
+        Car car = new Car();
+        car.setCarState(Car.STATE_START);
+        carControl.setCar(car);
+        manager = new BlueToothManager(BikeControl.this);
         //检查设备是否支持蓝牙
        if(manager.checkPhoneState()){
            Log.i(TAG, "onCreate: connect_BLE");
@@ -156,7 +159,6 @@ public class BikeControl extends BaseActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        Log.e(TAG,"--->>onWindowFocusChanged");
 //        ViewGroup.LayoutParams params = rechange.getLayoutParams();
 //        params.height = params.width;
 //        rechange.setLayoutParams(params);
@@ -175,7 +177,6 @@ public class BikeControl extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.left_back:
-//                finish();
                 dialogControl.setDialog(new OutControlDialog(this,
                         "提示",
                         "确定退出当前控制界面？"));
@@ -207,7 +208,7 @@ public class BikeControl extends BaseActivity {
         isStart = true;
         manager.startBike();
         carControl.getCar().setCarState(Car.STATE_START);
-        uiUtils.showToast("开始计时");
+        uiUtils.showToast("租车成功，开始计时");
         startTimer();
     }
 
@@ -258,11 +259,9 @@ public class BikeControl extends BaseActivity {
         isStart = false;
     }
     public void upTimerView(){
-        Log.i(TAG, "upTimerView: long "+time);
         SimpleDateFormat format =  new SimpleDateFormat("HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone("GMT+00:00"));
         String d = format.format(time);
-        Log.i(TAG, "upTimerView: time is "+d);
         textTimer.setText("使用时间 : "+d);
     }
     /*还车*/

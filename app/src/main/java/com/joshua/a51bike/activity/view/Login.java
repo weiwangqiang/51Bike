@@ -31,9 +31,9 @@ import org.xutils.x;
  * @project 51Bike
  * @since 2017-01-10
  */
-@ContentView(R.layout.login_fast)
+@ContentView(R.layout.login)
 public class Login extends BaseActivity{
-    private String TAG = "register";
+    private String TAG = "Login";
     private String url = AppUtil.BaseUrl +"/user/login";
     private String mesUrl = AppUtil.BaseUrl +"/user/getCode";
     private String resultCode = "";
@@ -188,6 +188,7 @@ public class Login extends BaseActivity{
     }
     //获取验证码成功
     private void getCodeSuccess(String result) {
+        Log.i(TAG, "getCodeSuccess: "+result);
         if(result.length() == 6 ){
             resultCode = result;
             uiUtils.showToast("已发送验证码，请注意查收");

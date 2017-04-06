@@ -93,7 +93,7 @@
             android:background="@drawable/account_recharge_button_bg"
             android:button="@null"
             android:gravity="center_horizontal"
-            android:text="充值200\n得到400"
+            android:text="充200\n得400"
             android:textColor="@drawable/text_color_bcolor_black"  />
     </RadioGroup>
     <TextView
