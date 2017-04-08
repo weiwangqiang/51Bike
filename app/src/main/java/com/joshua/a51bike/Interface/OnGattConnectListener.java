@@ -18,4 +18,6 @@ package com.joshua.a51bike.Interface;
 
 public interface OnGattConnectListener {
     void onGattConnect(String action);
+
+    void getStateFromDevice(byte[] results);
 }

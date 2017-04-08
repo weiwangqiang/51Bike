@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.autonavi.amap.mapcore.ERROR_CODE;
 import com.joshua.a51bike.Interface.OnGattConnectListener;
 import com.joshua.a51bike.bluetooth.utils.Protocol;
 import com.joshua.a51bike.util.UiUtils;
@@ -26,7 +27,8 @@ import static android.content.Context.BIND_AUTO_CREATE;
 
 /**
  * class description here
- *  BEL manager 管理一切蓝牙工作
+ * BEL manager 管理一切蓝牙工作
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike
@@ -45,13 +47,16 @@ public class BlueToothManager {
     private static final String readUuid = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
     private static final byte startCommand = 0x01;
     private static final byte stopCommand = 0x02;
+
     public BlueToothManager(Activity context) {
         this.context = context;
     }
+
     private OnGattConnectListener mOnGattConnectListener;
 
     /**
      * 检查设备是否支持蓝牙
+     *
      * @return true 是支持
      */
     public boolean checkPhoneState() {
@@ -73,7 +78,7 @@ public class BlueToothManager {
         return true;
     }
 
-    public void checkOpenBLE(){
+    public void checkOpenBLE() {
         context.registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         // 为了确保设备上蓝牙能使用, 如果当前蓝牙设备没启用,弹出对话框向用户要求授予权限来启用
         if (!mBluetoothAdapter.isEnabled()) {
@@ -83,14 +88,17 @@ public class BlueToothManager {
             }
         }
     }
-    public void unRegisterRecevier(){
+
+    public void unRegisterRecevier() {
         context.unregisterReceiver(mGattUpdateReceiver);
     }
-    public void UnbindService(){
+
+    public void UnbindService() {
         context.unbindService(mServiceConnection);
         Log.i(TAG, "UnbindService: ");
         mBluetoothLeService = null;
     }
+
     /**
      * 连接ble设备
      */
@@ -101,7 +109,7 @@ public class BlueToothManager {
         Log.i(TAG, "connect_ble: bindService");
         context.bindService(gattServiceIntent, mServiceConnection,
                 BIND_AUTO_CREATE);
-        return  true;
+        return true;
     }
 
 
@@ -132,7 +140,7 @@ public class BlueToothManager {
             Log.i(TAG, "onServiceConnected: ");
             mBluetoothLeService = ((BluetoothLeService.LocalBinder) service)
                     .getService();
-            if(mBluetoothLeService == null)
+            if (mBluetoothLeService == null)
                 Log.i(TAG, "onServiceConnected: mBluetoothLeService is null  ");
             if (!mBluetoothLeService.initialize()) {
                 UiUtils.showToast("蓝牙初始化失败");
@@ -141,8 +149,7 @@ public class BlueToothManager {
             //链接Service成功，则通过该Service尝试连接蓝牙设备
             if (mBluetoothLeService.connect(mDeviceAddress)) {
                 Log.i(TAG, "onServiceConnected: connecting  ");
-            }
-            else
+            } else
                 UiUtils.showToast("设备连接失败！");
         }
 
@@ -225,9 +232,10 @@ public class BlueToothManager {
 
     }
 
-public void setOnGattConnectListener(OnGattConnectListener listener){
-    this.mOnGattConnectListener=listener;
-}
+    public void setOnGattConnectListener(OnGattConnectListener listener) {
+        this.mOnGattConnectListener = listener;
+    }
+
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -241,24 +249,31 @@ public void setOnGattConnectListener(OnGattConnectListener listener){
                     .equals(action)) {
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 byte[] resultBytes = intent.getByteArrayExtra("resultBytes");
-                parseBytes(resultBytes);
-
+                mOnGattConnectListener.getStateFromDevice(resultBytes);
             }
         }
     };
+    private static final int BIKE_START = 0x04;
+    private static final int BIKE_LOCK = 0x08;
+    private static final int BIKE_STOP = 0x16;
+    private static final int BIKE_ERROR = 0x32;
 
-    private void parseBytes(byte[] resultBytes) {
+    public int parseBytes(byte[] resultBytes) {
         //功能码为5
-        byte model=resultBytes[0];
-        String str_model=model+"";
-        //// TODO: 2017/3/29
-
-        //开关机
-        byte state=resultBytes[3];
-        String str_state=state+"";
-        if(str_state.equals("0")){
-//            UiUtils.showToast("成功还车");
+        byte model = resultBytes[0];
+        String str_model = model + "";
+        if (!str_model.equals("5")) {
+            return BIKE_ERROR;
         }
+        //开关机
+        byte state = resultBytes[3];
+        String str_state = state + "";
+        if (str_state.equals("0")) {
+            return BIKE_LOCK;
+        } else if (str_state.equals("1")){
+            return BIKE_START;
+        }
+        return BIKE_ERROR;
     }
 
     private static IntentFilter makeGattUpdateIntentFilter() {

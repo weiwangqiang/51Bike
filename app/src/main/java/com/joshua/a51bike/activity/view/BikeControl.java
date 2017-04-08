@@ -75,21 +75,49 @@ public class BikeControl extends BaseActivity {
         }
     };
 
+    private static final int BIKE_START=0x04;
+    private static final int BIKE_LOCK=0x08;
+    private static final int BIKE_STOP=0x16;
+    private static final int BIKE_ERROR = 0x32;
 
     private OnGattConnectListener mOnGattConnectListener=new OnGattConnectListener() {
         @Override
         public void onGattConnect(String action) {
             dialogControl.cancel();
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 manager.startBike();
-                isStart = true;
-                carControl.getCar().setCarState(Car.STATE_START);
-                uiUtils.showToast("租车成功，开始计时");
-                startTimer();
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED
                     .equals(action)) {
-                uiUtils.showToast("租车成功，开始计时");
+                uiUtils.showToast("启动失败");
+                dialogControl.cancel();
             }
+        }
+
+        @Override
+        public void getStateFromDevice(byte[] results) {
+            int state=manager.parseBytes(results);
+            switch (state){
+                case BIKE_START:
+                    isStart = true;
+                    carControl.getCar().setCarState(Car.STATE_START);
+                    uiUtils.showToast("租车成功，开始计时");
+                    startTimer();
+                    break;
+                case BIKE_LOCK:
+
+                    break;
+                case BIKE_ERROR:
+
+                    break;
+
+            }
+            dialogControl.cancel();
+
         }
     };
 
