@@ -70,6 +70,7 @@ public class BluetoothLeService extends Service {
                                             int newState) {
             Log.i(TAG, "onConnectionStateChange: ");
             String intentAction;
+            Log.d(TAG, "onConnectionStateChange: "+newState);
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 Log.i(TAG, "onConnectionStateChange: STATE_CONNECTED ");
                 intentAction = ACTION_GATT_CONNECTED;
@@ -231,8 +232,7 @@ public class BluetoothLeService extends Service {
      */
     public boolean connect(final String address) {
         if (mBluetoothAdapter == null || address == null) {
-            Log.w(TAG,
-                    "BluetoothAdapter not initialized or unspecified address.");
+            Log.w(TAG, "BluetoothAdapter not initialized or unspecified address.");
             return false;
         }
 
@@ -240,8 +240,7 @@ public class BluetoothLeService extends Service {
         if (mBluetoothDeviceAddress != null
                 && address.equals(mBluetoothDeviceAddress)
                 && mBluetoothGatt != null) {
-            Log.d(TAG,
-                    "Trying to use an existing mBluetoothGatt for connection.");
+            Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             if (mBluetoothGatt.connect()) {
                 mConnectionState = STATE_CONNECTING;
                 return true;
@@ -250,8 +249,15 @@ public class BluetoothLeService extends Service {
             }
         }
 
+//        try {
+//            Thread.sleep(2000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
         final BluetoothDevice device = mBluetoothAdapter
                 .getRemoteDevice(address);
+        Log.d(TAG, "GET BLe device"+device.getAddress());
         if (device == null) {
             Log.w(TAG, "Device not found.  Unable to connect.");
             return false;
@@ -363,9 +369,11 @@ public class BluetoothLeService extends Service {
      * @return A {@code List} of supported services.
      */
     public List<BluetoothGattService> getSupportedGattServices() {
-        if (mBluetoothGatt == null)
+        if (mBluetoothGatt == null){
+            Log.d(TAG, "getSupportedGattServices: mBluetoothGatt==null");
             return null;
-
+        }
+        Log.d(TAG, "getSupportedGattServices: services size:"+mBluetoothGatt.getServices().size());
         return mBluetoothGatt.getServices();
     }
 

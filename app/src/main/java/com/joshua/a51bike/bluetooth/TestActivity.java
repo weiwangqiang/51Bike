@@ -51,7 +51,7 @@ public class TestActivity extends AppCompatActivity {
      */
     public void connect_ble(View view) {
         Log.i(TAG, "connect_ble: ");
-        mDeviceId = "E899B6C8A9B9000000001036";//扫码获取的
+        mDeviceId = "EA8F2B98C3E8FFFFFFFFFFFF";//扫码获取的
         mDeviceAddress = getDeviceAddress(mDeviceId);//
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection,
@@ -120,7 +120,9 @@ public class TestActivity extends AppCompatActivity {
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
-            mBluetoothLeService = null;
+            mBluetoothLeService.disconnect();
+            mBluetoothLeService=null;
+
         }
     };
 
@@ -260,6 +262,10 @@ public class TestActivity extends AppCompatActivity {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             }
+        }
+        if (mBluetoothLeService != null) {
+            final boolean result = mBluetoothLeService.connect(mDeviceAddress);
+            Log.d(TAG, "Connect request result=" + result);
         }
     }
 

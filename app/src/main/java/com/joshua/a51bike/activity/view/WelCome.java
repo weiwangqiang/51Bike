@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import com.joshua.a51bike.R;
+import com.joshua.a51bike.bluetooth.TestActivity;
 import com.joshua.a51bike.util.PrefUtils;
 
 import org.xutils.view.annotation.ContentView;
@@ -35,7 +36,7 @@ public class WelCome extends Activity {
     }
 
     public void init() {
-          findId();
+        findId();
         setLister();
         new Thread(new Runnable() {
             @Override
@@ -62,7 +63,7 @@ public class WelCome extends Activity {
     //跳转到主界面
     public void ToMainActivity(){
 //        startActivity(new Intent(this, MainActivity.class));
-        startActivity(new Intent(this, BikeControl.class));
+        startActivity(new Intent(this, TestActivity.class));
         finish();
 
     }

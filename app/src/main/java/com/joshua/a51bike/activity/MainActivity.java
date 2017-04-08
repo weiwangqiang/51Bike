@@ -108,6 +108,7 @@ public class MainActivity extends BaseMap {
             canShow = true;
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         initDrawer();
+
     }
     private void initDrawer() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);

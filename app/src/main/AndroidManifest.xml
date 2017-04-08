@@ -103,7 +103,6 @@
         <activity android:name=".activity.view.RegisterAgreement" />
         <activity android:name=".activity.view.renzheng"/>
         <activity android:name=".activity.view.ScanActivity"/>
-        <activity android:name=".bluetooth.TestActivity"/>
         <activity android:name=".activity.view.UserRoute"/>
         <activity android:name=".activity.view.UserRouteMes"/>
         <activity android:name=".activity.view.ChargingRule"/>
@@ -135,6 +134,9 @@
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
         <service android:name="com.amap.api.location.APSService" />
         <service android:name=".bluetooth.BluetoothLeService"/>
+
+        <activity android:name=".bluetooth.TestActivity"/>
+
 
     </application>
 

@@ -11,13 +11,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.joshua.a51bike.Interface.DialogCallBack;
+import com.joshua.a51bike.Interface.OnGattConnectListener;
 import com.joshua.a51bike.R;
+import com.joshua.a51bike.activity.control.DialogControl;
 import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.activity.dialog.CurrencyAlerDialog;
 import com.joshua.a51bike.activity.dialog.LocateProgress;
 import com.joshua.a51bike.activity.dialog.OutControlDialog;
 import com.joshua.a51bike.activity.dialog.WaitProgress;
 import com.joshua.a51bike.bluetooth.BlueToothManager;
+import com.joshua.a51bike.bluetooth.BluetoothLeService;
 import com.joshua.a51bike.entity.Car;
 import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.util.AppUtil;
@@ -71,6 +74,27 @@ public class BikeControl extends BaseActivity {
             }
         }
     };
+
+
+    private OnGattConnectListener mOnGattConnectListener=new OnGattConnectListener() {
+        @Override
+        public void onGattConnect(String action) {
+            dialogControl.cancel();
+            if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
+                manager.startBike();
+                isStart = true;
+                carControl.getCar().setCarState(Car.STATE_START);
+                uiUtils.showToast("租车成功，开始计时");
+                startTimer();
+            } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED
+                    .equals(action)) {
+                uiUtils.showToast("租车成功，开始计时");
+            }
+        }
+    };
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +106,7 @@ public class BikeControl extends BaseActivity {
         //检查设备是否支持蓝牙
        if(manager.checkPhoneState()){
            Log.i(TAG, "onCreate: connect_BLE");
-           manager.connect_ble();//连接设备
+//           manager.connect_ble();//连接设备
        }
        else{
             uiUtils.showToast("当前手机不支持蓝牙");
@@ -96,6 +120,7 @@ public class BikeControl extends BaseActivity {
         super.onResume();
         // 为了确保设备上蓝牙能使用, 如果当前蓝牙设备没启用,弹出对话框向用户要求授予权限来启用
         manager.checkOpenBLE();
+        manager.setOnGattConnectListener(mOnGattConnectListener);
     }
 
     @Override
@@ -205,11 +230,10 @@ public class BikeControl extends BaseActivity {
             return ;
         }
         if(isStart) return;
-        isStart = true;
-        manager.startBike();
-        carControl.getCar().setCarState(Car.STATE_START);
-        uiUtils.showToast("租车成功，开始计时");
-        startTimer();
+
+        manager.connect_ble();//连接设备
+        dialogControl.setDialog(new WaitProgress(this));
+        dialogControl.show();
     }
 
     private void lockBike() {

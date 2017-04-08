@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.joshua.a51bike.Interface.OnGattConnectListener;
 import com.joshua.a51bike.bluetooth.utils.Protocol;
 import com.joshua.a51bike.util.UiUtils;
 
@@ -47,6 +48,7 @@ public class BlueToothManager {
     public BlueToothManager(Activity context) {
         this.context = context;
     }
+    private OnGattConnectListener mOnGattConnectListener;
 
     /**
      * 检查设备是否支持蓝牙
@@ -86,14 +88,14 @@ public class BlueToothManager {
     }
     public void UnbindService(){
         context.unbindService(mServiceConnection);
-        Log.i(TAG, "UnbindService: aaaaaaaaaaaaaaaaaaaaaaaa");
+        Log.i(TAG, "UnbindService: ");
         mBluetoothLeService = null;
     }
     /**
      * 连接ble设备
      */
     public boolean connect_ble() {
-        mDeviceId = "E899B6C8A9B9000000001036";//扫码获取的
+        mDeviceId = "EA8F2B98C3E8FFFFFFFFFFFF";//扫码获取的
         mDeviceAddress = getDeviceAddress(mDeviceId);//
         Intent gattServiceIntent = new Intent(context, BluetoothLeService.class);
         Log.i(TAG, "connect_ble: bindService");
@@ -138,7 +140,7 @@ public class BlueToothManager {
             }
             //链接Service成功，则通过该Service尝试连接蓝牙设备
             if (mBluetoothLeService.connect(mDeviceAddress)) {
-                UiUtils.showToast("设备连接成功");
+                Log.i(TAG, "onServiceConnected: connecting  ");
             }
             else
                 UiUtils.showToast("设备连接失败！");
@@ -223,14 +225,18 @@ public class BlueToothManager {
 
     }
 
-
+public void setOnGattConnectListener(OnGattConnectListener listener){
+    this.mOnGattConnectListener=listener;
+}
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
+                mOnGattConnectListener.onGattConnect(action);
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED
                     .equals(action)) {
+                mOnGattConnectListener.onGattConnect(action);
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED
                     .equals(action)) {
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
