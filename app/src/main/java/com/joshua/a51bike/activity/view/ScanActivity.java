@@ -1,6 +1,8 @@
 package com.joshua.a51bike.activity.view;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
@@ -9,15 +11,19 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.joshua.a51bike.R;
+import com.joshua.a51bike.activity.MainActivity;
 import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.zxing.camera.CameraManager;
 import com.joshua.a51bike.zxing.decoding.CaptureActivityHandler;
@@ -53,11 +59,13 @@ public class ScanActivity extends BaseActivity implements Callback {
 	private final static int RESULT_CODE_OK = 3;
 	private final static int RESULT_CODE_FAIL = 4;
 	private Intent resultIntent;
+	private static final int REQUEST_CODE_CAMERA = 0x0002;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_scan);
+		initGranted();
 //		initTextView();
 		CameraManager.init(getApplication());
 		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
@@ -67,7 +75,34 @@ public class ScanActivity extends BaseActivity implements Callback {
 		hasSurface = false;
 		inactivityTimer = new InactivityTimer(this);
 	}
-
+	/**
+	 * 初始化权限
+	 */
+	private void initGranted() {
+		int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+		if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
+			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA);
+			return;
+		}
+	}
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		switch (requestCode) {
+			case REQUEST_CODE_CAMERA:
+				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					// Permission Granted
+					Toast.makeText(ScanActivity.this, "Location Granted", Toast.LENGTH_SHORT)
+							.show();
+				} else {
+					// Permission Denied
+					Toast.makeText(ScanActivity.this, "Location Denied", Toast.LENGTH_SHORT)
+							.show();
+				}
+				break;
+			default:
+				super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		}
+	}
 
 	@Override
 	protected void onResume() {

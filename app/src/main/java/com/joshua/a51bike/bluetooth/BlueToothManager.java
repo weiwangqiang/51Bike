@@ -103,7 +103,11 @@ public class BlueToothManager {
      * 连接ble设备
      */
     public boolean connect_ble() {
-        mDeviceId = "EA8F2B98C3E8FFFFFFFFFFFF";//扫码获取的
+//        mDeviceId = "EA8F2B98C3E8FFFFFFFFFFFF";//扫码获取的
+        mDeviceId = "DCCCFFBEC40BFFFFFFFFFFFF";//扫码获取的
+
+
+
         mDeviceAddress = getDeviceAddress(mDeviceId);//
         Intent gattServiceIntent = new Intent(context, BluetoothLeService.class);
         Log.i(TAG, "connect_ble: bindService");
