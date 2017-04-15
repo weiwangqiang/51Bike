@@ -45,8 +45,8 @@ public class BlueToothManager {
     private static final String serviceUuid = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
     private static final String writeUuid = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
     private static final String readUuid = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
-    private static final byte startCommand = 0x01;
-    private static final byte stopCommand = 0x02;
+    private static final byte startCommand = 0x01;//开机命令
+    private static final byte stopCommand = 0x00;//关机命令
 
     public BlueToothManager(Activity context) {
         this.context = context;
@@ -56,8 +56,6 @@ public class BlueToothManager {
 
     /**
      * 检查设备是否支持蓝牙
-     *
-     * @return true 是支持
      */
     public boolean checkPhoneState() {
         // 检查当前手机是否支持ble 蓝牙,如果不支持退出程序
@@ -69,7 +67,6 @@ public class BlueToothManager {
         final BluetoothManager bluetoothManager = (BluetoothManager)
                 context.getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
-
         // 检查设备上是否支持蓝牙
         if (mBluetoothAdapter == null) {
             UiUtils.showToast("手机不支持蓝牙");
@@ -78,6 +75,9 @@ public class BlueToothManager {
         return true;
     }
 
+    /**
+     * 确保设备上ble蓝牙能使用
+     */
     public void checkOpenBLE() {
         context.registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         // 为了确保设备上蓝牙能使用, 如果当前蓝牙设备没启用,弹出对话框向用户要求授予权限来启用
@@ -88,6 +88,7 @@ public class BlueToothManager {
             }
         }
     }
+
 
     public void unRegisterRecevier() {
         context.unregisterReceiver(mGattUpdateReceiver);
@@ -104,10 +105,8 @@ public class BlueToothManager {
      */
     public boolean connect_ble() {
 //        mDeviceId = "EA8F2B98C3E8FFFFFFFFFFFF";//扫码获取的
-        mDeviceId = "DCCCFFBEC40BFFFFFFFFFFFF";//扫码获取的
-
-
-
+//        mDeviceId = "DCCCFFBEC40BFFFFFFFFFFFF";//扫码获取的
+        mDeviceId = "E899B6C8A9B9000000001036";//扫码获取的
         mDeviceAddress = getDeviceAddress(mDeviceId);//
         Intent gattServiceIntent = new Intent(context, BluetoothLeService.class);
         Log.i(TAG, "connect_ble: bindService");
@@ -137,7 +136,6 @@ public class BlueToothManager {
      * 连接Service的接口
      */
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName componentName,
                                        IBinder service) {
@@ -160,6 +158,7 @@ public class BlueToothManager {
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
             Log.i(TAG, "onServiceDisconnected: ");
+            mBluetoothLeService.disconnect();
             mBluetoothLeService = null;
         }
     };
@@ -192,7 +191,7 @@ public class BlueToothManager {
         BluetoothGattCharacteristic writeCharacteristic = getCharacteristic(writeUuid);
         writeCharacteristic.setValue(pre_20);
         writeCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
-        mBluetoothLeService.wirteCharacteristic(writeCharacteristic);
+        mBluetoothLeService.writeCharacteristic(writeCharacteristic);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -200,7 +199,7 @@ public class BlueToothManager {
         }
         writeCharacteristic.setValue(after_5);
         writeCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
-        mBluetoothLeService.wirteCharacteristic(writeCharacteristic);
+        mBluetoothLeService.writeCharacteristic(writeCharacteristic);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -233,6 +232,8 @@ public class BlueToothManager {
      * 锁车
      */
     public void lockBike() {
+        byte[] bytes = Protocol.getBytes(mDeviceId, stopCommand);
+        executeBle(bytes);
 
     }
 
@@ -251,6 +252,9 @@ public class BlueToothManager {
                 mOnGattConnectListener.onGattConnect(action);
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED
                     .equals(action)) {
+
+
+
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 byte[] resultBytes = intent.getByteArrayExtra("resultBytes");
                 mOnGattConnectListener.getStateFromDevice(resultBytes);

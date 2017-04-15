@@ -166,7 +166,7 @@ public class TestActivity extends AppCompatActivity {
         BluetoothGattCharacteristic writeCharacteristic = getCharacteristic(writeUuid);
         writeCharacteristic.setValue(pre_20);
         writeCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
-        mBluetoothLeService.wirteCharacteristic(writeCharacteristic);
+        mBluetoothLeService.writeCharacteristic(writeCharacteristic);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -174,7 +174,7 @@ public class TestActivity extends AppCompatActivity {
         }
         writeCharacteristic.setValue(after_5);
         writeCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
-        mBluetoothLeService.wirteCharacteristic(writeCharacteristic);
+        mBluetoothLeService.writeCharacteristic(writeCharacteristic);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
