@@ -13,6 +13,7 @@ import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.activity.fragments.DetailFragment;
 import com.joshua.a51bike.adapter.FragmentAdapter;
+import com.joshua.a51bike.util.AppUtil;
 
 import org.xutils.view.annotation.ContentView;
 
@@ -31,6 +32,7 @@ import java.util.List;
 @ContentView(R.layout.account_mingxi)
 public class accountMingxi extends BaseActivity {
     private static final String TAG = "accountMingxi";
+    private String url  = AppUtil.BaseUrl+"use/getChargesByid";
     private TabLayout tabLayout;
     private List<Fragment> list = new ArrayList<>();
     private FragmentAdapter adapter;

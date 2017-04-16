@@ -1,9 +1,6 @@
 package com.joshua.a51bike.activity.core;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.maps.AMap;
@@ -20,12 +17,8 @@ import com.joshua.a51bike.activity.presenter.mapPresenter;
 public abstract class BaseMap extends BaseActivity implements
         AMap.OnMarkerClickListener,latLonPointInterface,
         AMap.InfoWindowAdapter, RouteSearch.OnRouteSearchListener  {
-    public String terminal;
-    public EditText editText;
-    public TextView search;
     public locatePresenter locatepresener;
     public mapPresenter mappresenter = mapPresenter.getmapPresenter();
-    public Context mContext;
     public RouteSearch mRouteSearch;
     public LatLonPoint mStartPoint ;//起点
     public LatLonPoint mEndPoint;//终点
@@ -33,9 +26,7 @@ public abstract class BaseMap extends BaseActivity implements
     public final int ROUTE_TYPE_RIDE = 4;
     public UiSettings mUiSettings;
     protected AMapLocationClient mlocationClient;
-
     public  final int GPS_REQUESTCODE = 1 ;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -15,7 +15,6 @@ import android.content.pm.PackageManager;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.autonavi.amap.mapcore.ERROR_CODE;
 import com.joshua.a51bike.Interface.OnGattConnectListener;
 import com.joshua.a51bike.bluetooth.utils.Protocol;
 import com.joshua.a51bike.util.UiUtils;
@@ -95,7 +94,8 @@ public class BlueToothManager {
     }
 
     public void UnbindService() {
-        context.unbindService(mServiceConnection);
+        if(mServiceConnection != null)
+          context.unbindService(mServiceConnection);
         Log.i(TAG, "UnbindService: ");
         mBluetoothLeService = null;
     }

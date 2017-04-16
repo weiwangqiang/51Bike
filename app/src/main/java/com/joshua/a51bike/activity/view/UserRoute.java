@@ -13,9 +13,13 @@ import com.joshua.a51bike.Interface.myitemLister;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.adapter.URRecyclerAdapter;
+import com.joshua.a51bike.util.AppUtil;
 
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +36,7 @@ import java.util.List;
 @ContentView(R.layout.user_route)
 public class UserRoute extends BaseActivity implements ListView.OnItemClickListener{
     private static final String TAG = "UserRoute";
+    private   String url = AppUtil.BaseUrl+"/car/getList";//uid
 
     @ViewInject(R.id.route_List)
     private RecyclerView recyclerView;
@@ -46,8 +51,42 @@ public class UserRoute extends BaseActivity implements ListView.OnItemClickListe
     public void init() {
         setLister();
         initListView();
+        getData();
     }
+    public void getData(){
+        RequestParams params = new RequestParams(url);
+        params.addBodyParameter("uid","5");
+        post(params);
+    }
+    /*发送请求*/
+    private static void post(RequestParams params){
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                System.out.println(result);
+                Log.i(TAG, "onSuccess: -------------------");
+                Log.i(TAG, "onSuccess: "+result);
+            }
 
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                Log.i(TAG, "onError: --------------------");
+                ex.printStackTrace();
+//              1handler.sendEmptyMessage(NET_ERROR);
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                Log.e(TAG, "onCancelled: cancel", null);
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
     private void initListView() {
         addData();
         LinearLayoutManager   manager =  new LinearLayoutManager(UserRoute.this);

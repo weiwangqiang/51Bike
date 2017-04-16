@@ -3,16 +3,24 @@ package com.joshua.a51bike.activity.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
 
+import com.joshua.a51bike.Interface.PaySuccess;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
+import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.pay.util.PayUtils;
+import com.joshua.a51bike.util.AppUtil;
+import com.joshua.a51bike.util.UiUtils;
 
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
 
 /**
  * class description here
@@ -81,13 +89,64 @@ public class AccountYaJin extends BaseActivity {
     private void reChange() {
         if(zhifubao.isChecked()){
             uiUtils.showToast("正在跳转");
-            PayUtils.payV2(this);
+            PayUtils payUtils = PayUtils.getPayUtils();
+            payUtils.setPaySuccess(new myPaySuccess());
+            payUtils.payV2(this,200);
         }
         else {
+            post();
             uiUtils.showToast("微信支付暂时未开通");
 
         }
 
+
+    }
+    private class myPaySuccess implements PaySuccess {
+
+        @Override
+        public void onSccuess() {
+            post();
+        }
+    }
+
+    private void success() {
+        UiUtils.showToast("支付成功");
+        User user = userControl.getUser();
+        user.setUsermoney(200);
+        userControl.setUser(user);
+        userControl.saoma(this);
+    }
+
+    private String url = AppUtil.BaseUrl+"/user/insertCharge";
+    private void post(){
+        RequestParams result_params = new RequestParams(url);
+        result_params.addParameter("userId",userControl.getUser().getUserid());
+        result_params.addParameter("userCharge","200");
+
+        x.http().post(result_params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Log.i(TAG, "onSuccess: result "+result);
+                if(result.equals("ok")){
+                    success();
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                Log.i("msp", ">>>>>>>>>>>>>>>>>>>>>>>>>>o2:"+ex.getMessage());
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
 
     }
         @Override

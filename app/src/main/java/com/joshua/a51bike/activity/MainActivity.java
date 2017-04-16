@@ -100,13 +100,10 @@ public class MainActivity extends BaseMap {
     private TextView explain;
 
     private View useProgressParent;
-
     @ViewInject(R.id.main_progress_view)
     private progress useProgress;
 
-
     private static final int REQUEST_CODE_LOCATION = 0x0001;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,8 +114,6 @@ public class MainActivity extends BaseMap {
             canShow = true;
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         initDrawer();
-
-
     }
 
     /**
@@ -186,7 +181,6 @@ public class MainActivity extends BaseMap {
     private void showProgreesOrNot(User user) {
         setProgressView(1);//更新
         if(user == null ){
-            Log.i(TAG, "showProgreesOrNot: user is null ");
             useProgressParent.setVisibility(View.GONE);
             return;
         }
@@ -199,7 +193,6 @@ public class MainActivity extends BaseMap {
     }
 
     private void setProgressView(int a) {
-
         useProgress.setPoistion(a);
         int i ;
         for(TextView T:list){
@@ -254,13 +247,11 @@ public class MainActivity extends BaseMap {
                 {
                     float x = Math.abs((float)(nowPosition.latitude - lastPosition.latitude));
                     float y = Math.abs((float)(nowPosition.longitude - lastPosition.longitude));
-                    Log.i(TAG, "onCameraChangeFinish: x "+x+" y "+y);
                     if(x > 0.005 || y > 0.005){
                         startJumpAnimation();
                     }
                 }
                 lastPosition = nowPosition;
-                Log.i(TAG, "onCameraChangeFinish: ");
             }
         });
     }
@@ -290,7 +281,6 @@ public class MainActivity extends BaseMap {
      * 屏幕中心marker 跳动
      */
     public void startJumpAnimation() {
-        Log.i(TAG, "startJumpAnimation: ");
         if (screenMarker != null ) {
             //根据屏幕距离计算需要移动的目标点
             final LatLng latLng = screenMarker.getPosition();
@@ -396,7 +386,7 @@ public class MainActivity extends BaseMap {
 //                        MarginAlerDialog(MainActivity.this,
 //                        "保证金提示","请先充值保证金"));
 //                dialogControl.show();
-                userControl.saoma(MainActivity.this);
+                toRent();
                 break;
             case R.id.main_user_icn:
                 userControl.toChoice(MainActivity.this);
@@ -427,7 +417,11 @@ public class MainActivity extends BaseMap {
                 break;
         }
     }
-//*************** ****************************************************
+
+    private void toRent() {
+             userControl.saoma(MainActivity.this);
+    }
+//*******************************************************************
 
     /**
      * 获取当前位置
@@ -440,8 +434,8 @@ public class MainActivity extends BaseMap {
             mlocationClient = new AMapLocationClient(this);
         }
         locatepresener.getcurrentLocation(mlocationClient);//开始定位
-//        dialogControl.setDialog(new LocateProgress(MainActivity.this, "正在搜索......"));
-//        dialogControl.show();
+        dialogControl.setDialog(new LocateProgress(MainActivity.this, "正在搜索......"));
+        dialogControl.show();
     }
 //*************** menu相关的方法***********************************
     //引入menu布局
@@ -459,8 +453,6 @@ public class MainActivity extends BaseMap {
             case R.id.nav_search:
                 toSearchActivty();
             case android.R.id.home:
-                Log.i(TAG, "onOptionsItemSelected: home ");
-
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -468,14 +460,8 @@ public class MainActivity extends BaseMap {
 
     private void toSearchActivty() {
       startActivity(new Intent(this,searchBike.class));
-
     }
 //**************************************************
-
-    private void showToast(String s) {
-        Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
-    }
-
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         if (0 == resultCode) {
@@ -728,11 +714,8 @@ public class MainActivity extends BaseMap {
     String pre_image_path = Environment.getExternalStorageDirectory()+"/51get";
 
     private void initUserMessage() {
-//        String  after_image_path = pre_image_path +"/"+userControl.getUser().getUsername()+".jpg";
         User user = userControl.getUser();
         String after_image_path = "";
-
-
         userName.setText(userControl.getUser().getUsername());
         userMoney.setText(userControl.getUser().getUsermoney()+"");
         userCash.setText(userControl.getUser().getUsermoney()+"");
@@ -740,7 +723,6 @@ public class MainActivity extends BaseMap {
         if(after_image_path == null )
             return;
         after_image_path = pre_image_path +"/"+userControl.getUser().getUsername()+".jpg";
-        Log.i(TAG, "initUserMessage: afte_image_uri"+after_image_path);
         ImageManager manager = new  ImageManager();
         if(userControl.getUser().getUserpic() != null){
             manager.bindImageWithBitmap(userIcn,
@@ -759,7 +741,6 @@ public class MainActivity extends BaseMap {
         setProgressView(0);
         if(useProgressParent.getVisibility() == View.GONE)
             useProgressParent.setVisibility(View.VISIBLE);
-
         userIcn.setImageResource(R.drawable.default_icn);
     }
 
@@ -787,9 +768,10 @@ public class MainActivity extends BaseMap {
      */
     @Override
     public void getstartlatLonPoint(AMapLocation aMapLocation) {
+        Log.i(TAG, "getstartlatLonPoint: "+aMapLocation.getLatitude());
         mStartPoint = new LatLonPoint(aMapLocation.getLatitude(), aMapLocation.getLongitude());
         Boolean b = dialogControl.getDialog() instanceof LocateProgress;
-        if (b) dialogControl.cancel();
+         dialogControl.cancel();
 //        避免重复定位
         if (canGetPos) {
             canGetPos = false;
@@ -869,13 +851,6 @@ public class MainActivity extends BaseMap {
 
     @Override
     public void getEndlatLonPoint(LatLonPoint point) {
-        if (null != point)
-            mEndPoint = point;
-        dialogControl.cancel();
-        aMap.addMarker(new MarkerOptions()
-                .position(AMapUtil.convertToLatLng(mEndPoint))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.end)));
-        searchRouteResult(ROUTE_TYPE_RIDE, RouteSearch.RidingDefault);
     }
 
 }

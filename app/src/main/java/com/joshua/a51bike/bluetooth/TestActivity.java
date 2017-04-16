@@ -113,9 +113,8 @@ public class TestActivity extends AppCompatActivity {
                 finish();
             }
             //链接Service成功，则通过该Service尝试连接蓝牙设备
-            if (mBluetoothLeService.connect(mDeviceAddress)) {
+            if (mBluetoothLeService.connect(mDeviceAddress))
                 Toast.makeText(TestActivity.this, "设备连接成功", Toast.LENGTH_SHORT).show();
-            }
         }
 
         @Override
@@ -134,9 +133,9 @@ public class TestActivity extends AppCompatActivity {
             return;
         } else {
             Toast.makeText(this, "成功打开蓝牙", Toast.LENGTH_SHORT).show();
-        }
+}
         super.onActivityResult(requestCode, resultCode, data);
-    }
+        }
 
     /**
      * 根据uuid获取Characteristic
@@ -145,6 +144,7 @@ public class TestActivity extends AppCompatActivity {
         Log.i(TAG, "getCharacteristic: ");
         List<BluetoothGattService> services = mBluetoothLeService
                 .getSupportedGattServices();
+        Log.i(TAG, "getCharacteristic: size is "+services.size());
         for (BluetoothGattService service : services) {
             if (service.getUuid().toString().equals(serviceUuid)) {
                 return service.getCharacteristic(UUID.fromString(uuid));

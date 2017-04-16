@@ -1,8 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '25.0.1'
+    signingConfigs {
+        config {
+            keyAlias 'wei'
+            keyPassword '1995421'
+            storeFile file('G:/android/key/androidkey/wei.jks')
+            storePassword '1995421'
+        }
+    }
+        compileSdkVersion 24
+        buildToolsVersion '25.0.1'
     defaultConfig {
         applicationId "com.joshua.a51bike"
         minSdkVersion 18
@@ -15,6 +23,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
 }
@@ -24,11 +33,8 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     compile files('libs/AMap_Location_V3.2.0_20161205.jar')
     compile files('libs/zxing.jar')
-
-
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'org.xutils:xutils:3.3.40'
     compile 'com.lovedise:permissiongen:0.0.6'
@@ -43,4 +49,20 @@ dependencies {
     androidTestCompile 'com.android.support:support-annotations:24.0.0'
     androidTestCompile 'com.android.support.test:runner:0.4.1'
     androidTestCompile 'com.android.support.test:rules:0.4.1'
+}
+
+android {
+    signingConfigs {
+        config {
+            keyAlias 'wei'
+            keyPassword '1995421'
+            storeFile file('G:/android/key/androidkey/wei.jks')
+            storePassword '1995421'
+        }
+    }
+    buildTypes {
+        buildType {
+            signingConfig signingConfigs.config
+        }
+    }
 }

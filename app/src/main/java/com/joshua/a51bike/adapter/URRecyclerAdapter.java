@@ -41,7 +41,6 @@ public class URRecyclerAdapter extends  RecyclerView.Adapter<URRecyclerAdapter.M
 
         viewHolder = new MyViewHolder(LayoutInflater.
                 from(context).inflate(view,parent,false),context);
-
         return viewHolder;
     }
 
@@ -57,14 +56,6 @@ public class URRecyclerAdapter extends  RecyclerView.Adapter<URRecyclerAdapter.M
         }catch(Exception e){
             e.printStackTrace();
         }
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(lister != null){
-                    lister.ItemLister(position);
-                }
-            }
-        });
     }
 
     /**
@@ -81,12 +72,13 @@ public class URRecyclerAdapter extends  RecyclerView.Adapter<URRecyclerAdapter.M
         notifyDataSetChanged();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder{
+    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView time,spend,bikeId;
         private CardView cardView;
 
         public MyViewHolder(View itemView, Context context) {
             super(itemView);
+            itemView.setOnClickListener(this);
             if(context!=null){
                 getshow();
 
@@ -100,5 +92,11 @@ public class URRecyclerAdapter extends  RecyclerView.Adapter<URRecyclerAdapter.M
 
         }
 
+        @Override
+        public void onClick(View v) {
+            if(lister != null){
+                lister.ItemLister(getAdapterPosition());
+            }
+        }
     }
 }

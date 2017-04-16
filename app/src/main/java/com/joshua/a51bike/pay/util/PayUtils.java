@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.alipay.sdk.app.PayTask;
+import com.joshua.a51bike.Interface.PaySuccess;
 import com.joshua.a51bike.util.UiUtils;
 
 import org.xutils.common.Callback;
@@ -22,18 +23,24 @@ import java.util.Map;
  * @since 2017-03-29
  */
 public class PayUtils {
-    private static String TAG = "PayUtils";
-    public static final String APPID = "2017020605540725";
-
+    private  String TAG = "PayUtils";
+    public  final String APPID = "2017020605540725";
+    private PaySuccess paySuccess;
+    public  static PayUtils payUtils = new PayUtils();
     public PayUtils() {
     }
-
+    public void setPaySuccess(PaySuccess paySuccess){
+        this.paySuccess = paySuccess;
+    }
+    public static  PayUtils getPayUtils(){
+        return payUtils;
+    }
     /**
      * 支付宝支付业务
      *
      *
      */
-    public static void payV2(final Activity activity) {
+    public void payV2(final Activity activity,float money) {
 
         Log.i(TAG, "payV2: ");
         /**
@@ -43,7 +50,7 @@ public class PayUtils {
          *
          * orderInfo的获取必须来自服务端；
          */
-        Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, false);
+        Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID,money, false);
         String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
         Log.i("msp", ">>>>>>>>>>>>>>>>>>>>>>>>>>orderParam:"+params.toString());
         /**
@@ -103,7 +110,7 @@ public class PayUtils {
     /**
      * 将支付结果发送给服务器
      */
-    private static void postPayResult(Map<String, String > result) {
+    private void postPayResult(Map<String, String > result) {
         if(result.get("resultStatus").equals("6001")){
             UiUtils.showToast("操作已经取消");
         }
@@ -119,7 +126,7 @@ public class PayUtils {
             @Override
             public void onSuccess(String result) {
                 if (TextUtils.equals(result, "9000")) {
-                    UiUtils.showToast("支付成功");
+                    paySuccess.onSccuess();
                 } else {
                     UiUtils.showToast("支付失败");
 

@@ -85,7 +85,7 @@ public class PayDemoActivity extends FragmentActivity {
 		 * 
 		 * orderInfo的获取必须来自服务端；
 		 */
-		Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, false);
+		Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, 200,false);
 		String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
 		Log.i("msp", ">>>>>>>>>>>>>>>>>>>>>>>>>>orderParam:"+params.toString());
 		/**

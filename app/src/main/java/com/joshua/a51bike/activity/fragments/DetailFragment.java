@@ -13,8 +13,15 @@ import android.view.ViewGroup;
 
 import com.joshua.a51bike.Interface.RVItemListener;
 import com.joshua.a51bike.R;
+import com.joshua.a51bike.activity.control.UserControl;
 import com.joshua.a51bike.adapter.DetailRecyclerAdapter;
 import com.joshua.a51bike.animator.MyItemAnimator;
+import com.joshua.a51bike.entity.User;
+import com.joshua.a51bike.util.AppUtil;
+
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +40,8 @@ import java.util.Map;
 public class DetailFragment extends Fragment {
     private String TAG = "DetailSpend";
     private View mRootView;
+    private String url  = AppUtil.BaseUrl+"/user/getChargesByid";
+
     private RecyclerView mRecyclerView;
     public List<Map<String,String>> date = new ArrayList<>();
     private DetailRecyclerAdapter adapter;
@@ -46,12 +55,52 @@ public class DetailFragment extends Fragment {
         return f;
     }
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.e("onCreateView","fragmentJS  is onCreateView");
         mRootView = inflater.inflate(R.layout.fragment_detail,container,false);
         initRefresh();
+        getData();
         initView();
         return mRootView;
+    }
+    public void getData(){
+        Log.i(TAG, "getData: ");
+        RequestParams params = new RequestParams(url);
+        User user = UserControl.getUserControl().getUser();
+        params.addBodyParameter("userid","5");
+        post(params);
+    }
+    /*发送请求*/
+    private  void post(RequestParams params){
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Log.i(TAG, "onSuccess: ---------------------------------");
+                Log.i(TAG, "onSuccess: result is "+result);
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
+                Log.i(TAG, "onError: ");
+//              1handler.sendEmptyMessage(NET_ERROR);
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                Log.e(TAG, "onCancelled: cancel", null);
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
     }
     private LinearLayoutManager manager;
     private Map<String ,String> map;

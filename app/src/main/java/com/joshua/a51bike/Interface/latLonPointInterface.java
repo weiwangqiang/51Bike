@@ -8,7 +8,6 @@ import com.amap.api.services.core.LatLonPoint;
  */
 
 public interface latLonPointInterface {
-//    void getstartlatLonPoint(LatLonPoint point);
     void getstartlatLonPoint(AMapLocation aMapLocation);
     void getEndlatLonPoint(LatLonPoint point);
 }

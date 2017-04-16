@@ -3,17 +3,25 @@ package com.joshua.a51bike.activity.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.joshua.a51bike.Interface.PaySuccess;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
+import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.pay.util.PayUtils;
+import com.joshua.a51bike.util.AppUtil;
+import com.joshua.a51bike.util.UiUtils;
 
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
 
 /**
  * class description here
@@ -33,6 +41,7 @@ public class accountRecharge extends BaseActivity {
     @ViewInject(R.id.pay_weixin)
     private RadioButton weixin;
 
+    private int money = 100;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +72,9 @@ public class accountRecharge extends BaseActivity {
 
     public void setLister() {
         findViewById(R.id.recharge_pay).setOnClickListener(this);
+        findViewById(R.id.radio1).setOnClickListener(this);
+        findViewById(R.id.radio2).setOnClickListener(this);
+        findViewById(R.id.radio3).setOnClickListener(this);
     }
 
     /**
@@ -79,6 +91,15 @@ public class accountRecharge extends BaseActivity {
             case R.id.recharge_pay:
                 reChange();
                 break;
+            case R.id.radio1:
+               money =  100;
+                break;
+            case R.id.radio2:
+                money = 200;
+                break;
+            case R.id.radio3:
+                money = 400;
+                break;
             default:
                 break;
         }
@@ -87,15 +108,62 @@ public class accountRecharge extends BaseActivity {
     private void reChange() {
         if(zhifubao.isChecked()){
             uiUtils.showToast("正在跳转");
-            PayUtils.payV2(this);
+            PayUtils payUtils = PayUtils.getPayUtils();
+            payUtils.setPaySuccess(new myPaySuccess());
+            payUtils.payV2(this,money);
         }
         else {
-            uiUtils.showToast("微信支付暂时未开通");
-
+            post();
         }
 
     }
+    private class myPaySuccess implements PaySuccess {
 
+        @Override
+        public void onSccuess() {
+            post();
+        }
+    }
+
+    private void success() {
+        UiUtils.showToast("支付成功");
+        User user = userControl.getUser();
+        user.setUsermoney(user.getUsermoney()+money);
+        userControl.setUser(user);
+    }
+
+    private String url = AppUtil.BaseUrl+"/user/insertCharge";
+    private void post(){
+        RequestParams result_params = new RequestParams(url);
+        result_params.addParameter("userId",userControl.getUser().getUserid());
+        result_params.addParameter("userCharge",money+"");
+
+        x.http().post(result_params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Log.i(TAG, "onSuccess: result "+result);
+                if(result.equals("ok")){
+                    success();
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                Log.i("msp", ">>>>>>>>>>>>>>>>>>>>>>>>>>o2:"+ex.getMessage());
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

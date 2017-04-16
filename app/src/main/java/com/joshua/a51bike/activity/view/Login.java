@@ -178,7 +178,6 @@ public class Login extends BaseActivity{
         Log.i(TAG, "loginSuccess: userima"+result);
         User user = JsonUtil.getUserObject(result);
         if(user != null){
-            Log.i(TAG, "loginSuccess: id"+user.getUserid());
             uiUtils.showToast("成功！");
             userControl.setUser(user);
             userControl.setUserState(new LoginState());
@@ -188,7 +187,6 @@ public class Login extends BaseActivity{
     }
     //获取验证码成功
     private void getCodeSuccess(String result) {
-        Log.i(TAG, "getCodeSuccess: "+result);
         if(result.length() == 6 ){
             resultCode = result;
             uiUtils.showToast("已发送验证码，请注意查收");
@@ -199,11 +197,9 @@ public class Login extends BaseActivity{
     public void onBackPressed() {
         if((cancelable != null) && (!cancelable.isCancelled())){
             cancelable.cancel();
-            Log.i(TAG, "onBackPressed: be cancel");
         }
         else{
             finish();
-            Log.i(TAG, "onBackPressed: finish");
         }
     }
     @Override

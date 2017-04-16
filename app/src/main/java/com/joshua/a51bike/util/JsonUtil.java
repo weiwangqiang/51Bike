@@ -2,6 +2,7 @@ package com.joshua.a51bike.util;
 
 import com.google.gson.Gson;
 import com.joshua.a51bike.entity.Car;
+import com.joshua.a51bike.entity.ReadData;
 import com.joshua.a51bike.entity.User;
 
 import org.json.JSONException;
@@ -65,5 +66,15 @@ public class JsonUtil {
 
         }
         return car;
+    }
+
+    public static ReadData getReadDataByString(String string){
+        ReadData readData = null;
+            try{
+                readData = gson.fromJson(string,ReadData.class);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+        return readData;
     }
 }

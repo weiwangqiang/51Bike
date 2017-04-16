@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="99元"
+            android:text="200元"
             android:gravity="end"
             android:textSize="20sp"/>
     </LinearLayout>
@@ -64,28 +64,36 @@
 
     <RadioGroup
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
 
         <RadioButton
             android:id="@+id/pay_zhifubao"
             style="@style/payRadioButton"
             android:checked="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:drawableLeft="@drawable/zhifubao"
             android:drawableRight="@drawable/radio_red_circular"
             android:text="支付宝支付"
             android:textSize="20sp" />
-<ImageView
+
+        <RadioButton
+            android:id="@+id/pay_weixin"
+            style="@style/payRadioButton"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:drawableLeft="@drawable/weixin"
+            android:drawableRight="@drawable/radio_red_circular"
+            android:text="微信支付" />
+
+        <ImageView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginRight="10dp"
     android:layout_marginLeft="10dp"
     android:background="@drawable/x_divider"/>
-        <RadioButton
-            android:id="@+id/pay_weixin"
-            style="@style/payRadioButton"
-            android:drawableLeft="@drawable/weixin"
-            android:drawableRight="@drawable/radio_red_circular"
-            android:text="微信支付" />
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

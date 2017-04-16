@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +22,8 @@ import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.activity.dialog.LocateProgress;
 import com.joshua.a51bike.activity.dialog.WaitProgress;
 import com.joshua.a51bike.entity.Car;
+import com.joshua.a51bike.entity.CarState;
+import com.joshua.a51bike.entity.ReadData;
 import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.util.AMapUtil;
 import com.joshua.a51bike.util.AppUtil;
@@ -35,15 +36,15 @@ import org.xutils.x;
 
 
 /**
- * Created by wangqiang on 2017/1/9.
+ *  Created by wangqiang on 2017/1/9.
  */
 @ContentView(R.layout.bike_message)
 public class BikeMessage extends BaseActivity {
-    private Button rent;
     private String TAG = "BikeMessage";
+    private String bike_mac;
     private String rentUrl = AppUtil.BaseUrl +"/user/zuche";
     private String CarMesUrl = AppUtil.BaseUrl +"/car/getCarById";
-
+    private static  String url = AppUtil.BaseUrl+"/car/getGps";
     private static int GET_BIKEMESSAGE = 1;
     private static int RENT_BIKE = 2;
     private TextView price,account;
@@ -54,40 +55,41 @@ public class BikeMessage extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
+
         mapView.onCreate(savedInstanceState); // 此方法必须重写
     }
 
     private void init() {
-        getUrl();
+        getMac();
         findid();
         initmap();
         setLister();
         getCarMes();
     }
 
-    private void getUrl() {
+    private void getMac() {
        Intent inetnt =  getIntent();
-        String url =inetnt.getStringExtra("url");
-        Log.i(TAG, "getUrl: "+url);
-
+        bike_mac =inetnt.getStringExtra("bike_mac");
+        Log.i(TAG, "getUrl: "+bike_mac);
     }
     /*获取车辆信息*/
+    private String post_bike_mac;
     private void getCarMes() {
-        Log.d(TAG, "getCarMes: begin to getCarMes");
         RequestParams params = new RequestParams(CarMesUrl);
-        params.addBodyParameter("carId","1");
+        post_bike_mac = bike_mac.substring(0,12);
+        params.addBodyParameter("id",5+"");
+
         post(params,GET_BIKEMESSAGE);
         dialogControl.setDialog(new WaitProgress(this));
         dialogControl.show();
     }
     private void setLister() {
-        rent.setOnClickListener(this);
+        findViewById(R.id.bike_mes_rent).setOnClickListener(this);
         findViewById(R.id.left_back).setOnClickListener(this);
         findViewById(R.id.bike_mes_agreement).setOnClickListener(this);
     }
 
     private void findid() {
-        rent = (Button) findViewById(R.id.bike_mes_rent);
         mapView = (MapView) findViewById(R.id.bike_mes_mapView);
         price = (TextView) findViewById(R.id.bike_mes_price);
         account = (TextView) findViewById(R.id.bike_mes_account);
@@ -95,7 +97,6 @@ public class BikeMessage extends BaseActivity {
     }
     private void initmap() {
         if (aMap == null) {
-            Log.w(TAG,"------>> aMap is null");
             aMap = mapView.getMap();
         }
         aMap.clear();
@@ -152,13 +153,8 @@ public class BikeMessage extends BaseActivity {
     private void rent(){
         RequestParams params = new RequestParams(rentUrl);
         User user = userControl.getUser();
-        car  = new Car();
-        car.setCarId(1);
-        car.setCarState(1);
         params.addBodyParameter("userid",user.getUserid()+"");
-
-        params.addBodyParameter("carId",car.getCarState()+"");
-//        params.addBodyParameter("carName","one");
+        params.addBodyParameter("carId",5+"");
         post(params,RENT_BIKE);
         dialogControl.setDialog(new WaitProgress(this));
         dialogControl.show();
@@ -166,17 +162,15 @@ public class BikeMessage extends BaseActivity {
     /*上传数据
     * */
      private void post(final RequestParams params, final int kind){
-        Log.d(TAG, "post: post by xutils------>> " +rentUrl);
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.d(TAG, "onSuccess: king is "+kind+"result is "+result);
+                Log.d(TAG, "onSuccess:  is result is "+result);
                 if(kind==GET_BIKEMESSAGE){
                     parseCar(result);
                 }else
                     parseRent(result);
                 dialogControl.cancel();
-                Log.i(TAG, "onSuccess: cancel");
             }
 
             @Override
@@ -203,13 +197,16 @@ public class BikeMessage extends BaseActivity {
         });
     }
     private void parseCar(String result) {
+        Log.i(TAG, "parseCar: ");
+        ReadData readData = JsonUtil.getReadDataByString(result);
+
         Car car = JsonUtil.getCarObject(result);
-        Log.i(TAG, "parseCar: car is "+car.getCarName());
-        if(null != car){
-            carControl.setCar(car);
-            Car car1 = carControl.getCar();
-            upCarView();
-        }
+//        Log.i(TAG, "parseCar: car is "+car.getCarName());
+//        if(null != car){
+//            carControl.setCar(car);
+//            Car car1 = carControl.getCar();
+//            upCarView();
+//        }
     }
     /*更新车辆信息到UI*/
     private void upCarView() {
@@ -223,6 +220,9 @@ public class BikeMessage extends BaseActivity {
     private void parseRent(String result) {
         Log.i(TAG, "parseRent: "+result);
         if(result.equals("ok")){
+            car  = new Car();
+            car.setCarMac(post_bike_mac);
+            car.setCarState(CarState.STATE_RENTED);
             carControl.setCar(car);
             uiUtils.showToast("租车成功！");
             userControl.rent(BikeMessage.this);

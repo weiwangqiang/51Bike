@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.joshua.a51bike.R;
-import com.joshua.a51bike.activity.MainActivity;
 import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.zxing.camera.CameraManager;
 import com.joshua.a51bike.zxing.decoding.CaptureActivityHandler;
@@ -146,18 +145,18 @@ public class ScanActivity extends BaseActivity implements Callback {
 	
 
 	public void handleDecode(Result result, Bitmap barcode) {
-		Log.e(TAG,"----->>>handleDecode result is "+result.getText());
+		Log.e(TAG,"----->>>handleDecode result is  \n  "+result.getText());
 		inactivityTimer.onActivity();
 		playBeepSoundAndVibrate();
 		String resultString = result.getText();
 		resultIntent = new Intent();
 		if (resultString.equals("")) {
+			uiUtils.showToast("请重新再试");
 //			setResult(RESULT_CODE_FAIL, resultIntent);
-			finish();
+//			finish();
 		}else {
-			resultIntent.putExtra("url",resultString);
+			resultIntent.putExtra("bike_mac",resultString);
 //			setResult(RESULT_CODE_OK, resultIntent);
-
 			userControl.toBikeMes(this,resultString);
 		}
 //		finish();

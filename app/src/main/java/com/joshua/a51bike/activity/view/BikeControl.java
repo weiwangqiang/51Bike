@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.joshua.a51bike.Interface.DialogCallBack;
 import com.joshua.a51bike.Interface.OnGattConnectListener;
 import com.joshua.a51bike.R;
-import com.joshua.a51bike.activity.control.DialogControl;
 import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.activity.dialog.CurrencyAlerDialog;
 import com.joshua.a51bike.activity.dialog.LocateProgress;
@@ -371,20 +370,25 @@ private boolean isBack=true;//是否还车
 
     /*发送请求*/
     private void post(RequestParams params) {
-        Log.d(TAG, "post: post by xutils------>>");
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 Log.i(TAG, "onSuccess: result is " + result);
                 dialogControl.cancel();
-
+            try{
                 if (result.equals("ok")) {
-                    manager.returnBike();//还车
+
                     uiUtils.showToast("还车成功！");
                     carControl.getCar().setCarState(Car.STATE_AVALIABLE);
                     userControl.returnBike(BikeControl.this);
+                    manager.returnBike();//还车
                 } else
                     uiUtils.showToast("还车失败！");
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+
 
             }
 

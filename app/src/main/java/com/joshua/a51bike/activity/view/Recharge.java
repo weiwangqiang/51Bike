@@ -52,7 +52,8 @@ public class Recharge extends BaseActivity {
     }
     private void reChange(){
         uiUtils.showToast("正在跳转");
-        PayUtils.payV2(this);
+        PayUtils payUtils = PayUtils.getPayUtils();
+        payUtils.payV2(this,100);
 
 
 //        RequestParams params = new RequestParams(url);

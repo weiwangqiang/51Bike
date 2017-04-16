@@ -63,9 +63,8 @@ public class WelCome extends Activity {
     //跳转到主界面
     public void ToMainActivity(){
         startActivity(new Intent(this, MainActivity.class));
-//        startActivity(new Intent(this, BikeControl.class));
+//        startActivity(new Intent(this, ScanActivity.class));
         finish();
-
     }
     public void findId() {
 

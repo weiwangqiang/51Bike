@@ -14,6 +14,7 @@ import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.joshua.a51bike.Interface.latLonPointInterface;
+import com.joshua.a51bike.util.UiUtils;
 
 import java.util.List;
 
@@ -24,14 +25,13 @@ import java.util.List;
 
 public class locatePresenter implements AMapLocationListener,
         GeocodeSearch.OnGeocodeSearchListener {
-        String TAG = "location";
+        String TAG = "locatePresenter";
     public AMapLocationClientOption mLocationOption = null;
     private latLonPointInterface res;
-    private static locatePresenter l = new locatePresenter();
-    private locatePresenter(){}
-
+    private boolean canShow = true;
+    private static locatePresenter locatePres= new locatePresenter();
     public static locatePresenter Instance(){
-        return l;
+        return locatePres;
     }
 
     /**
@@ -79,13 +79,13 @@ public class locatePresenter implements AMapLocationListener,
         //启动定位
         mLocationClient.startLocation();
         Log.i(TAG, "getcurrentLocation: start location");
+        canShow = true;
     }
     /**
      * 定位成功后回调函数
      */
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
-        Log.i(TAG, "onLocationChanged: "+aMapLocation.getErrorCode());
         if (aMapLocation != null) {
             if (aMapLocation.getErrorCode() == 0) {
                 //定位成功回调信息，设置相关消息
@@ -95,6 +95,9 @@ public class locatePresenter implements AMapLocationListener,
 //                LatLonPoint mStartPoint = new LatLonPoint(aMapLocation.getLatitude(),
 //                        aMapLocation.getLongitude());
                 res.getstartlatLonPoint(aMapLocation);
+            }else if(canShow){
+                UiUtils.showToast("定位失败，请重试");
+                canShow = false;
             }
         }
     }
@@ -114,7 +117,6 @@ public class locatePresenter implements AMapLocationListener,
                     list.get(0).getLatLonPoint().getLongitude());
             //创建目的地的纬度经度
             res.getEndlatLonPoint(ends);
-            Log.w("geocodeSearchListener","------->>>onGeocodeSearched");
         }
     }
 }

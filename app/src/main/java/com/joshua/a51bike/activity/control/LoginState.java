@@ -82,18 +82,19 @@ public class LoginState implements UserState {
 
     @Override
     public void saoma(Activity activity) {
-//        toBikeMes(activity,"test url ");
-        Intent intent = new Intent(activity, ScanActivity.class);
-//        Intent intent = new Intent(activity, BlueTooth.class);
-
+        Intent intent ;
+        if(UserControl.getUserControl().getUser().getUsermoney()<200)
+           intent = new Intent(activity, AccountYaJin.class);
+        else
+          intent = new Intent(activity, ScanActivity.class);
         activity.startActivity(intent);
     }
 
     @Override
-    public void toBikeMes(Activity activity,String url) {
+    public void toBikeMes(Activity activity,String bike_mac) {
 
         Intent intent = new Intent(activity, BikeMessage.class);
-        intent.putExtra("url",url);
+        intent.putExtra("bike_mac",bike_mac);
         activity.startActivity(intent);
         activity.finish();
     }
@@ -103,7 +104,6 @@ public class LoginState implements UserState {
         Intent intent = new Intent(activity, BikeControl.class);
         intent.putExtra("bid","2634");
         activity.startActivity(intent);
-        activity.finish();
     }
 
     @Override
@@ -143,6 +143,7 @@ public class LoginState implements UserState {
     public void returnBike(Activity activity) {
         Intent intent = new Intent(activity, Pay.class);
         activity.startActivity(intent);
+        activity.finish();
     }
 
     @Override

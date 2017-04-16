@@ -1,16 +1,33 @@
 package com.joshua.a51bike.entity;
 
 public class Car {
-	public final static int STATE_AVALIABLE = 0;
-	public final static int STATE_START = 1;
-	public final static int STATE_PARKING= 2;
+	public static final int STATE_AVALIABLE = 0;
+	public static final int STATE_RENTED = 1;
+	public static final int STATE_START = 2;
+	public static final int STATE_PARKING = 3;
+      int carId;
+      String carName;
+      int carPrice;
+      String carX;
+      String carY;
+      int carState; // 0 可租 1不可租 2正在使用中 
+      String carMac;
 
-  	private  int carId;
-	private   String carName;
-	private  int carPrice;
-	private  String carX;
-	private  String carY;
-	private  int carState; // 0 可租 1 启动 2 锁车
+	public String getCarNum() {
+		return carNum;
+	}
+
+	public void setCarNum(String carNum) {
+		this.carNum = carNum;
+	}
+
+	String carNum;
+	public String getCarMac() {
+		return carMac;
+	}
+	public void setCarMac(String carMac) {
+		this.carMac = carMac;
+	}
 	public int getCarId() {
 		return carId;
 	}
