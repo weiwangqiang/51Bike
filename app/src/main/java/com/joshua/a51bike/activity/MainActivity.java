@@ -853,4 +853,10 @@ public class MainActivity extends BaseMap {
     public void getEndlatLonPoint(LatLonPoint point) {
     }
 
+    @Override
+    public void Error() {
+        uiUtils.showToast("定位失败，请重试");
+        dialogControl.cancel();
+    }
+
 }

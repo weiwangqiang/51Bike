@@ -16,6 +16,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.joshua.a51bike.Interface.OnGattConnectListener;
+import com.joshua.a51bike.activity.control.CarControl;
 import com.joshua.a51bike.bluetooth.utils.Protocol;
 import com.joshua.a51bike.util.UiUtils;
 
@@ -106,7 +107,10 @@ public class BlueToothManager {
     public boolean connect_ble() {
 //        mDeviceId = "EA8F2B98C3E8FFFFFFFFFFFF";//扫码获取的
 //        mDeviceId = "DCCCFFBEC40BFFFFFFFFFFFF";//扫码获取的
-        mDeviceId = "E899B6C8A9B9000000001036";//扫码获取的
+        mDeviceId = CarControl.getCarControl().getCar().getCarMac();//扫码获取的
+
+        Log.i(TAG, "connect_ble: device Mac : "+mDeviceId);
+
         mDeviceAddress = getDeviceAddress(mDeviceId);//
         Intent gattServiceIntent = new Intent(context, BluetoothLeService.class);
         Log.i(TAG, "connect_ble: bindService");

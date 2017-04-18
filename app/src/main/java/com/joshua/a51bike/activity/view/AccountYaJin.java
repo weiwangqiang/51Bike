@@ -95,7 +95,7 @@ public class AccountYaJin extends BaseActivity {
         }
         else {
             post();
-            uiUtils.showToast("微信支付暂时未开通");
+//            uiUtils.showToast("微信支付暂时未开通");
 
         }
 
@@ -120,6 +120,7 @@ public class AccountYaJin extends BaseActivity {
     private String url = AppUtil.BaseUrl+"/user/insertCharge";
     private void post(){
         RequestParams result_params = new RequestParams(url);
+        Log.i(TAG, "post: userid "+ userControl.getUser().getUserid());
         result_params.addParameter("userId",userControl.getUser().getUserid());
         result_params.addParameter("userCharge","200");
 

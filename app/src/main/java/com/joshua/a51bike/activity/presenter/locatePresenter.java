@@ -96,8 +96,8 @@ public class locatePresenter implements AMapLocationListener,
 //                        aMapLocation.getLongitude());
                 res.getstartlatLonPoint(aMapLocation);
             }else if(canShow){
-                UiUtils.showToast("定位失败，请重试");
                 canShow = false;
+                res.Error();
             }
         }
     }

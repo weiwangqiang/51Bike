@@ -267,6 +267,11 @@ public class UserRouteMes extends BaseMap {
 
     }
 
+    @Override
+    public void Error() {
+
+    }
+
 
     /**
      * 方法必须重写

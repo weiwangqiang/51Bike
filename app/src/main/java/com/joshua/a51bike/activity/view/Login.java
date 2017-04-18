@@ -140,7 +140,6 @@ public class Login extends BaseActivity{
          cancelable =  x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-//                Log.d(TAG, "success: object is "+ result.toString());
                 dialogControl.cancel();
                 switch (type){
                     case GET_CODE:
@@ -175,7 +174,7 @@ public class Login extends BaseActivity{
     }
     //登陆成功
     private void loginSuccess(String result) {
-        Log.i(TAG, "loginSuccess: userima"+result);
+        Log.i(TAG, "loginSuccess: "+result);
         User user = JsonUtil.getUserObject(result);
         if(user != null){
             uiUtils.showToast("成功！");

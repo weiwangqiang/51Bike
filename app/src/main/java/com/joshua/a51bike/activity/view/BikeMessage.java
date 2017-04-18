@@ -55,7 +55,6 @@ public class BikeMessage extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
-
         mapView.onCreate(savedInstanceState); // 此方法必须重写
     }
 
@@ -223,6 +222,7 @@ public class BikeMessage extends BaseActivity {
             car  = new Car();
             car.setCarMac(post_bike_mac);
             car.setCarState(CarState.STATE_RENTED);
+            car.setCarMac(bike_mac);
             carControl.setCar(car);
             uiUtils.showToast("租车成功！");
             userControl.rent(BikeMessage.this);

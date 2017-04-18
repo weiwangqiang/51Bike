@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.joshua.a51bike.Interface.DialogCallBack;
 import com.joshua.a51bike.Interface.OnGattConnectListener;
 import com.joshua.a51bike.R;
+import com.joshua.a51bike.activity.control.CarControl;
 import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.activity.dialog.CurrencyAlerDialog;
 import com.joshua.a51bike.activity.dialog.LocateProgress;
@@ -135,9 +136,9 @@ private boolean isBack=true;//是否还车
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
-        Car car = new Car();
-        car.setCarState(Car.STATE_START);
-        carControl.setCar(car);
+       String  mDeviceId = CarControl.getCarControl().getCar().getCarMac();//扫码获取的
+
+        Log.i(TAG, "onCreate: device Mac : "+mDeviceId);
         manager = new BlueToothManager(BikeControl.this);
         //检查设备是否支持蓝牙
         if (manager.checkPhoneState()) {
