@@ -45,6 +45,7 @@ public class BlueToothManager {
     private static final String serviceUuid = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
     private static final String writeUuid = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
     private static final String readUuid = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+
     private static final byte startCommand = 0x01;//开机命令
     private static final byte stopCommand = 0x00;//关机命令
 
@@ -56,27 +57,26 @@ public class BlueToothManager {
 
     /**
      * 检查设备是否支持蓝牙
+     * 支持返回true
+     * 不支持返回false
      */
     public boolean checkPhoneState() {
-        // 检查当前手机是否支持ble 蓝牙,如果不支持退出程序
+        // 检查当前手机是否支持ble 蓝牙,如果不支持返回false
         if (!context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            UiUtils.showToast("手机不支持低功耗蓝牙");
-            context.finish();
+           return false;
         }
         // 初始化 Bluetooth adapter, 通过蓝牙管理器得到一个参考蓝牙适配器(API必须在以上android4.3或以上和版本)
         final BluetoothManager bluetoothManager = (BluetoothManager)
                 context.getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
         // 检查设备上是否支持蓝牙
-        if (mBluetoothAdapter == null) {
-            UiUtils.showToast("手机不支持蓝牙");
-            context.finish();
-        }
-        return true;
+        return mBluetoothAdapter != null;
     }
 
     /**
-     * 确保设备上ble蓝牙能使用
+     * 检查设备是否打开了蓝牙
+     * 如果当前蓝牙设备没启用
+     * 弹出对话框向用户要求授予权限来启用
      */
     public void checkOpenBLE() {
         context.registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
@@ -90,13 +90,12 @@ public class BlueToothManager {
     }
 
 
-    public void unRegisterRecevier() {
+    public void unRegisterReceiver() {
         context.unregisterReceiver(mGattUpdateReceiver);
     }
 
     public void UnbindService() {
-        if(mServiceConnection != null)
-          context.unbindService(mServiceConnection);
+        context.unbindService(mServiceConnection);
         Log.i(TAG, "UnbindService: ");
         mBluetoothLeService = null;
     }
@@ -118,7 +117,6 @@ public class BlueToothManager {
                 BIND_AUTO_CREATE);
         return true;
     }
-
 
     /**
      * 将扫描到的设备id转换成设备MAC地址

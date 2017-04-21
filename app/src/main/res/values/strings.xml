@@ -37,7 +37,7 @@
     <string name="about_2">镇江市江苏大学创业孵化基地\n客服电话：18852852276 \n微信公众号：ujs-51get</string>
     <string name="bike_message_text1">租车不满15分钟只需要1元</string>
     <string name="use_explain">1. 打开51get共享出行APP，在地图上查找符合自己出行里程车辆的位置。\n\n2. 找到车辆后扫码租车。\n\n3. 待蓝牙连接成功后点击解锁按钮。\n\n4. 按照提示长按开锁按钮，待听到“滴”声后即可正常使用车辆。</string>
-<string name="service_argument">\n一、51get的权利义务\n\n\n
+    <string name="service_argument">\n一、51get的权利义务\n\n\n
 1、51get向用户交付设备齐全的租赁车辆，并对承租人是否具有相应的行为能力进行合理审查，车辆所有权归51get所有。\n
 2、车辆租赁期间若发生交通事故，51get不承担任何责任，需由用户自行负责。\n
 3、51get免费提供租赁车辆保养及月检、合理使用中出现的故障维修。\n

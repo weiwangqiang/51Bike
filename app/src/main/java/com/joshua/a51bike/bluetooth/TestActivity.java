@@ -1,284 +1,186 @@
 package com.joshua.a51bike.bluetooth;
 
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattService;
-import android.bluetooth.BluetoothManager;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
+import com.joshua.a51bike.Interface.BleCallBack;
 import com.joshua.a51bike.R;
+import com.joshua.a51bike.activity.control.CarControl;
+import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.bluetooth.utils.Protocol;
+import com.joshua.a51bike.entity.Car;
+import com.joshua.a51bike.util.UiUtils;
 
-import java.util.List;
-import java.util.UUID;
+import org.xutils.view.annotation.ContentView;
 
-public class TestActivity extends AppCompatActivity {
-    private String TAG = "TestActivity";
-    private BluetoothAdapter mBluetoothAdapter;
-    private BluetoothLeService mBluetoothLeService;
-    private static final int REQUEST_ENABLE_BT = 0x01;
-    private String mDeviceAddress;
-    private String mDeviceId;
-    private static final String serviceUuid = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
-    private static final String writeUuid = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
-    private static final String readUuid = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
-    private static final byte startCommand = 0x01;
-    private static final byte stopCommand = 0x02;
+import static com.joshua.a51bike.bluetooth.BleManager.BIKE_ERROR;
+import static com.joshua.a51bike.bluetooth.BleManager.BIKE_START;
+import static com.joshua.a51bike.bluetooth.BleManager.BIKE_STOP;
 
+@ContentView(R.layout.activity_test)
+public class TestActivity extends BaseActivity {
+    BleManager mBleManager;
+    private final static String TAG = "TestActivity";
+    private int mCurrentState;//设备当前状态
+    private int mLastState;//设备上一次的状态
+    private static final int STATE_START = 0x20;//设备开启
+    private static final int STATE_STOP = 0x22;//设备上锁
+    private static final int STATE_BACK = 0x23;//设备还车
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
-        checkPhoneState();
+        Car car = new Car();
+        car.setCarMac("E899B6C8A9B9000000001036");
+        CarControl.getCarControl().setCar(car);
+        //初始化Ble管理器
+        initBleManager();
+        initState();
     }
 
-    /**
-     * 连接ble设备
-     */
-    public void connect_ble(View view) {
-        Log.i(TAG, "connect_ble: ");
-        mDeviceId = "EA8F2B98C3E8FFFFFFFFFFFF";//扫码获取的
-        mDeviceAddress = getDeviceAddress(mDeviceId);//
-        Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
-        bindService(gattServiceIntent, mServiceConnection,
-                BIND_AUTO_CREATE);
+    private void initState() {
+        mCurrentState = STATE_BACK;
+        mLastState = STATE_BACK;
     }
 
-    /**
-     * 检查设备是否支持蓝牙
-     */
-    private void checkPhoneState() {
-        // 检查当前手机是否支持ble 蓝牙,如果不支持退出程序
-        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            Toast.makeText(this, "设备不支持BLE", Toast.LENGTH_SHORT).show();
-            finish();
-        }
-        // 初始化 Bluetooth adapter, 通过蓝牙管理器得到一个参考蓝牙适配器(API必须在以上android4.3或以上和版本)
-        final BluetoothManager bluetoothManager = (BluetoothManager)
-                getSystemService(Context.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = bluetoothManager.getAdapter();
-
-        // 检查设备上是否支持蓝牙
-        if (mBluetoothAdapter == null) {
-            Toast.makeText(this, "设备不支持蓝牙", Toast.LENGTH_SHORT).show();
-            finish();
-        }
-    }
-
-    /**
-     * 将扫描到的设备id转换成设备MAC地址
-     * 格式为 E8:99:B6:C8:A9:B9
-     */
-    private String getDeviceAddress(String deviceId) {
-        String preAddress = deviceId.substring(0, 12);
-        StringBuilder deviceAddress = new StringBuilder();
-        for (int i = 0; i < preAddress.length(); i++) {
-            deviceAddress.append(preAddress.substring(i, i++ + 2));
-            if (i != preAddress.length() - 1) {
-                deviceAddress.append(":");
+    private void initBleManager() {
+        mBleManager = new BleManager(mBaseActivity, new BleCallBack() {
+            //Gatt连接回调
+            @Override
+            public void onGattConnect(String action) {
+                if (BleManager.ACTION_GATT_CONNECTED.equals(action)) {
+                    mBleManager.startBike();
+                } else if (BleManager.ACTION_GATT_DISCONNECTED
+                        .equals(action)) {
+                    UiUtils.showToast("启动失败");
+                }
             }
-        }
-        return deviceAddress.toString();
-    }
 
-    /**
-     * 连接Service的接口
-     */
-    private final ServiceConnection mServiceConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName componentName,
-                                       IBinder service) {
-            Log.i(TAG, "onServiceConnected: ");
-            mBluetoothLeService = ((BluetoothLeService.LocalBinder) service)
-                    .getService();
-            if(mBluetoothLeService == null)
-                 Log.i(TAG, "onServiceConnected: mBluetoothLeService is null  ");
-            if (!mBluetoothLeService.initialize()) {
-                Toast.makeText(TestActivity.this, "蓝牙初始化失败", Toast.LENGTH_SHORT).show();
-                finish();
+            //判断是否要继续向Ble设备写数据
+            @Override
+            public void onCharacteristicContinueWrite() {
+                mBleManager.sendCommandToDevice(true);
             }
-            //链接Service成功，则通过该Service尝试连接蓝牙设备
-            if (mBluetoothLeService.connect(mDeviceAddress))
-                Toast.makeText(TestActivity.this, "设备连接成功", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mBluetoothLeService.disconnect();
-            mBluetoothLeService=null;
-
-        }
-    };
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
-            finish();
-            return;
-        } else {
-            Toast.makeText(this, "成功打开蓝牙", Toast.LENGTH_SHORT).show();
-}
-        super.onActivityResult(requestCode, resultCode, data);
-        }
-
-    /**
-     * 根据uuid获取Characteristic
-     */
-    private BluetoothGattCharacteristic getCharacteristic(String uuid) {
-        Log.i(TAG, "getCharacteristic: ");
-        List<BluetoothGattService> services = mBluetoothLeService
-                .getSupportedGattServices();
-        Log.i(TAG, "getCharacteristic: size is "+services.size());
-        for (BluetoothGattService service : services) {
-            if (service.getUuid().toString().equals(serviceUuid)) {
-                return service.getCharacteristic(UUID.fromString(uuid));
+            //开始向Ble设备读取数据
+            @Override
+            public void onCharacteristicFinishWrite() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                mBleManager.readStateFromDevice();
             }
-        }
-        return null;
-    }
 
-    /**
-     * 执行具体的通信任务
-     * 数据分两次发送
-     * 发送完毕后读取设备返回信息
-     */
-    private void executeBle(byte[] bytes) {
-        byte[] pre_20 = new byte[20];
-        System.arraycopy(bytes, 0, pre_20, 0, 20);
-        byte[] after_5 = new byte[5];
-        System.arraycopy(bytes, 20, after_5, 0, 5);
-        BluetoothGattCharacteristic writeCharacteristic = getCharacteristic(writeUuid);
-        writeCharacteristic.setValue(pre_20);
-        writeCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
-        mBluetoothLeService.writeCharacteristic(writeCharacteristic);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        writeCharacteristic.setValue(after_5);
-        writeCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
-        mBluetoothLeService.writeCharacteristic(writeCharacteristic);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        BluetoothGattCharacteristic readCharacteristic = getCharacteristic(readUuid);
-        mBluetoothLeService.setCharacteristicNotification(
-                readCharacteristic, true);
-        mBluetoothLeService.readCharacteristic(readCharacteristic);
-    }
-
-    /**
-     * 开锁
-     */
-    public void startBike(View view) {
-        byte[] bytes = Protocol.getBytes(mDeviceId, startCommand);
-        executeBle(bytes);
-    }
-
-
-    /**
-     * 还车
-     */
-    public void returnBike(View view) {
-        byte[] bytes = Protocol.getBytes(mDeviceId, stopCommand);
-        executeBle(bytes);
-    }
-
-    /**
-     * 锁车
-     */
-    public void lockBike(View view) {
-
-    }
-
-
-    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-            if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
-            } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED
-                    .equals(action)) {
-            } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED
-                    .equals(action)) {
-            } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
-                byte[] resultBytes = intent.getByteArrayExtra("resultBytes");
-                parseBytes(resultBytes);
-
+            //获取设备状态
+            @Override
+            public void getStateFromDevice(int state) {
+                switch (state) {
+                    case BleManager.BIKE_START:
+                        if (mLastState == STATE_BACK||mLastState == STATE_STOP) {
+                            mCurrentState = STATE_START;
+                            mLastState = STATE_START;
+                            doStartBike();
+                        }
+                        break;
+                    case BIKE_STOP:
+                        if (mLastState == STATE_START) {
+                            mCurrentState = STATE_STOP;
+                            mLastState = STATE_STOP;
+                            doStopBike();
+                        }
+                        break;
+                    case BleManager.BIKE_ERROR:
+                        UiUtils.showToast("连接失败，请重试");
+                        mBleManager.disconnect();
+                        break;
+                }
             }
-        }
-    };
-
-    private void parseBytes(byte[] resultBytes) {
-      //功能码为5
-        byte model=resultBytes[0];
-        String str_model=model+"";
-       //// TODO: 2017/3/29
-
-        //开关机
-        byte state=resultBytes[3];
-        String str_state=state+"";
-        if(str_state.equals("0")){
-            Toast.makeText(this, "成功还车", Toast.LENGTH_SHORT).show();
-        }
+        });
+    }
+    /**
+     * 进行停止电动车的一系列逻辑操作
+     */
+    private void doStopBike() {
+        UiUtils.showToast("车已上锁");
     }
 
-    private static IntentFilter makeGattUpdateIntentFilter() {
-        final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
-        intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
-        intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
-        intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
-        return intentFilter;
+    /**
+     * 进行开启电动车的一系列逻辑操作
+     */
+    private void doStartBike() {
+        startTimer();
+        postServerStartBike();
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
-        // 为了确保设备上蓝牙能使用, 如果当前蓝牙设备没启用,弹出对话框向用户要求授予权限来启用
-        if (!mBluetoothAdapter.isEnabled()) {
-            if (!mBluetoothAdapter.isEnabled()) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        //检查设备是否支持Ble
+        if (!mBleManager.checkAndInit()) {
+            UiUtils.showToast("启动失败");
+        }
+        //检查设备是否打开Ble
+        mBleManager.checkOpenBLE();
+    }
+
+
+    public void startBike(View view) {
+        if (mLastState == STATE_BACK||mLastState == STATE_STOP) {
+            if (!mBleManager.connect()) {
+                UiUtils.showToast("启动失败");
             }
+        }else {
+            UiUtils.showToast("请不要重复开启车辆");
         }
-        if (mBluetoothLeService != null) {
-            final boolean result = mBluetoothLeService.connect(mDeviceAddress);
-            Log.d(TAG, "Connect request result=" + result);
+
+    }
+
+    public void lockBike(View view) {
+        UiUtils.showToast("请直接长按按钮锁车");
+    }
+
+    public void returnBike(View view) {
+        if (mCurrentState == STATE_START) {
+            UiUtils.showToast("请先长按按钮锁车");
+        }else if(mCurrentState==STATE_STOP){
+            UiUtils.showToast("还车成功");
+            mLastState=STATE_BACK;
+            mCurrentState=STATE_BACK;
+            mBleManager.disconnect();
+            postServerReturnBike();
         }
+
+    }
+
+    /**
+     * 通知服务器还车
+     */
+    private void postServerReturnBike() {
+
+    }
+
+    /**
+     * 通知服务器租车
+     */
+    private void postServerStartBike() {
+
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(mGattUpdateReceiver);
+    public void onClick(View v) {
+
+    }
+
+    private void startTimer() {
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbindService(mServiceConnection);
-        mBluetoothLeService = null;
+        mBleManager.disconnect();
     }
 }

@@ -18,12 +18,18 @@ import org.xutils.x;
  */
 public class test {
     private static  String TAG = "test";
-    private static  String url = AppUtil.BaseUrl+"/car/getGps";
+//    private static  String url = AppUtil.BaseUrl+"/car/getGps";
+    private static String url = AppUtil.BaseUrl + "/user/huanche/car/get";
+    private static Integer STATE_START_TIME=0;
+    private static Integer STATE_CURRENT_TIME=1;
+
 
     public test() {
     }
     public static void main(String arg0[]){
         RequestParams params = new RequestParams(url);
+        params.addBodyParameter("carId","1");
+        params.addBodyParameter("status",STATE_START_TIME+"");
 //        params.addBodyParameter("carId","EA8F2B98C3E8FFFFFFFFFFFF");
         post(params);
     }

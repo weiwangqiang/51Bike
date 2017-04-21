@@ -337,7 +337,4 @@ public class BluetoothLeService extends Service {
     }
 
 
-    public BluetoothGatt getBluetoothGatt() {
-        return mBluetoothGatt;
-    }
 }

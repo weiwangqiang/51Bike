@@ -1,123 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.joshua.a51bike">
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
+          package="com.joshua.a51bike">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-feature android:name="android.hardware.location.gps" />
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
+    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+
+    <uses-feature android:name="android.hardware.location.gps"/>
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true"/>
+
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+
     <application
+        android:name=".application.BaseApplication"
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name=".application.BaseApplication">
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="fea9f64bbf6cb9f5722958110376f3d0" />
+            android:value="fea9f64bbf6cb9f5722958110376f3d0"/>
 
-        <activity android:name=".activity.view.WelCome"
-            android:theme="@style/StartAppTheme"
-            android:launchMode="standard">
+        <activity
+            android:name=".activity.view.WelCome"
+            android:launchMode="standard"
+            android:theme="@style/StartAppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity android:name=".activity.view.BikeMessage"/>
         <activity android:name=".activity.view.BikeControl"/>
         <activity android:name=".activity.view.Recharge"/>
         <activity android:name=".activity.view.Pay"/>
-        <activity android:name=".activity.view.Login"  />
+        <activity android:name=".activity.view.Login"/>
         <activity android:name=".activity.view.UserInfor"/>
         <activity android:name=".activity.view.Use_Explain"/>
         <activity android:name=".activity.view.WebView"/>
         <activity android:name=".activity.view.UserInforPhoneBefor">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.view.UserInforPhoneBefor" />
+                android:value=".activity.view.UserInforPhoneBefor"/>
         </activity>
         <activity android:name=".activity.view.Config">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.view.Config" />
-            </activity>
-        <activity android:name=".activity.view.share"
+                android:value=".activity.view.Config"/>
+        </activity>
+        <activity
+            android:name=".activity.view.share"
             android:taskAffinity=".activity.view.share">
-        <meta-data
+            <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.view.share" />
+                android:value=".activity.view.share"/>
         </activity>
         <activity android:name=".activity.view.about">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.view.about" />
+                android:value=".activity.view.about"/>
         </activity>
         <activity android:name=".activity.view.Suggest">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.view.Suggest" />
+                android:value=".activity.view.Suggest"/>
         </activity>
         <activity android:name=".activity.view.account">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.view.account" />
+                android:value=".activity.view.account"/>
         </activity>
-
         <activity android:name=".activity.view.accountRecharge">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.view.accountRecharge" />
+                android:value=".activity.view.accountRecharge"/>
         </activity>
         <activity android:name=".activity.view.accountMingxi">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.view.accountMingxi" />
+                android:value=".activity.view.accountMingxi"/>
         </activity>
         <activity android:name=".activity.view.AccountYaJin">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.view.AccountYaJin" />
+                android:value=".activity.view.AccountYaJin"/>
         </activity>
-        <activity android:name=".activity.view.registerOrLogin" />
-        <activity android:name=".activity.view.RegisterAgreement" />
+        <activity android:name=".activity.view.registerOrLogin"/>
+        <activity android:name=".activity.view.RegisterAgreement"/>
         <activity android:name=".activity.view.renzheng"/>
         <activity android:name=".activity.view.ScanActivity"/>
         <activity android:name=".activity.view.UserRoute"/>
         <activity android:name=".activity.view.UserRouteMes"/>
         <activity android:name=".activity.view.ChargingRule"/>
         <activity android:name=".activity.view.FirstClick"/>
-        <activity android:name=".activity.view.RZRealName"
+        <activity
+            android:name=".activity.view.RZRealName"
             android:configChanges="orientation|keyboardHidden"/>
-        <activity android:name=".activity.view.RZSchool"
+        <activity
+            android:name=".activity.view.RZSchool"
             android:configChanges="orientation|keyboardHidden"/>
-        <activity android:name=".activity.view.searchBike"
-            android:configChanges="keyboardHidden" />
+        <activity
+            android:name=".activity.view.searchBike"
+            android:configChanges="keyboardHidden"/>
         <activity android:name=".activity.view.ChoiceProvince"/>
         <activity android:name=".activity.view.ChoiceSchool"/>
-
-        <activity android:name=".activity.MainActivity" />
-        <!--支付宝-->
+        <activity android:name=".activity.MainActivity"/>
+        <!-- 支付宝 -->
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
@@ -132,13 +143,10 @@
         </activity>
 
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
-        <service android:name="com.amap.api.location.APSService" />
+        <service android:name="com.amap.api.location.APSService"/>
         <service android:name=".bluetooth.BluetoothLeService"/>
 
         <activity android:name=".bluetooth.TestActivity"/>
-
-
     </application>
-
 
 </manifest>

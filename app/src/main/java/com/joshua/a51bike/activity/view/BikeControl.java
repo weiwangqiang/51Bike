@@ -169,7 +169,7 @@ private boolean isBack=true;//是否还车
     protected void onPause() {
         super.onPause();
         //注销广播
-        manager.unRegisterRecevier();
+        manager.unRegisterReceiver();
     }
 
     @Override
