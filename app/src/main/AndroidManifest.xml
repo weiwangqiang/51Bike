@@ -147,6 +147,8 @@
         <service android:name=".bluetooth.BluetoothLeService"/>
 
         <activity android:name=".bluetooth.TestActivity"/>
+        <activity android:name=".activity.view.BikeControlActivity">
+        </activity>
     </application>
 
 </manifest>

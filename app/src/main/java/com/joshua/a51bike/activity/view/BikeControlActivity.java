@@ -1,4 +1,4 @@
-package com.joshua.a51bike.bluetooth;
+package com.joshua.a51bike.activity.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import com.joshua.a51bike.Interface.BleCallBack;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.activity.dialog.OutControlDialog;
+import com.joshua.a51bike.activity.dialog.WaitProgress;
+import com.joshua.a51bike.bluetooth.BleManager;
 import com.joshua.a51bike.entity.Car;
 import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.util.AppUtil;
@@ -22,20 +24,13 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
-import static com.joshua.a51bike.bluetooth.BleManager.BIKE_STOP;
 
 @ContentView(R.layout.bike_control)
-public class TestActivity extends BaseActivity {
-
-    private View rechange, reback, start, lock;
+public class BikeControlActivity extends BaseActivity {
     @ViewInject(R.id.bike_control_bid)
     private TextView bid;
-
     @ViewInject(R.id.bike_control_Route)
     private TextView Rout;
-
-    @ViewInject(R.id.bike_control_timer)
-    private TextView textTimer;
 
     private BleManager mBleManager;
     private final static String TAG = "TestActivity";
@@ -56,7 +51,7 @@ public class TestActivity extends BaseActivity {
     }
     private void init() {
         initBikeMes();
-        findid();
+        findId();
     }
 
     private void initBikeMes() {
@@ -65,7 +60,7 @@ public class TestActivity extends BaseActivity {
         Rout.setText("剩余里程：15公里");
     }
 
-    private void findid() {
+    private void findId() {
         findViewById(R.id.left_back).setOnClickListener(this);
     }
 
@@ -114,7 +109,7 @@ public class TestActivity extends BaseActivity {
                             doStartBike();
                         }
                         break;
-                    case BIKE_STOP:
+                    case BleManager.BIKE_STOP:
                         if (mLastState == STATE_START) {
                             mCurrentState = STATE_STOP;
                             mLastState = STATE_STOP;
@@ -140,6 +135,7 @@ public class TestActivity extends BaseActivity {
      * 进行开启电动车的一系列逻辑操作
      */
     private void doStartBike() {
+        dialogControl.cancel();
         postServerStartBike();
     }
 
@@ -158,13 +154,15 @@ public class TestActivity extends BaseActivity {
 
     public void startBike(View view) {
         if (mLastState == STATE_BACK||mLastState == STATE_STOP) {
+            dialogControl.setDialog(new WaitProgress(mBaseActivity));
+            dialogControl.show();
             if (!mBleManager.connect()) {
                 UiUtils.showToast("启动失败");
+                dialogControl.cancel();
             }
         }else {
             UiUtils.showToast("请不要重复开启车辆");
         }
-
     }
 
     public void lockBike(View view) {
@@ -175,10 +173,8 @@ public class TestActivity extends BaseActivity {
         if (mCurrentState == STATE_START) {
             UiUtils.showToast("请先长按按钮锁车");
         }else if(mCurrentState==STATE_STOP){
-            UiUtils.showToast("还车成功");
-            mLastState=STATE_BACK;
-            mCurrentState=STATE_BACK;
-            mBleManager.disconnect();
+            dialogControl.setDialog(new WaitProgress(mBaseActivity));
+            dialogControl.show();
             postServerReturnBike();
         }
 
@@ -237,21 +233,23 @@ public class TestActivity extends BaseActivity {
                 try{
                     if (result.equals("ok")) {
                         UiUtils.showToast("还车成功！");
+                        mLastState=STATE_BACK;
+                        mCurrentState=STATE_BACK;
+                        mBleManager.disconnect();
                         carControl.getCar().setCarState(Car.STATE_AVALIABLE);
                         userControl.returnBike(mBaseActivity);
+                        dialogControl.cancel();
                     } else
                         UiUtils.showToast("还车失败！");
+                    dialogControl.cancel();
 
                 }catch(Exception e){
                     e.printStackTrace();
                 }
-
-
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-//              1handler.sendEmptyMessage(NET_ERROR);
                 Log.e(TAG, "onError: onError", null);
                 ex.printStackTrace();
                 UiUtils.showToast("还车失败！");
@@ -262,12 +260,11 @@ public class TestActivity extends BaseActivity {
             public void onCancelled(CancelledException cex) {
                 Log.e(TAG, "onCancelled: cancel", null);
                 dialogControl.cancel();
-
             }
 
             @Override
             public void onFinished() {
-
+                dialogControl.cancel();
             }
         });
     }

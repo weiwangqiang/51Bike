@@ -12,6 +12,7 @@ import com.joshua.a51bike.activity.dialog.GetIcnAlerDialog;
 import com.joshua.a51bike.activity.dialog.LocateProgress;
 import com.joshua.a51bike.activity.view.AccountYaJin;
 import com.joshua.a51bike.activity.view.BikeControl;
+import com.joshua.a51bike.activity.view.BikeControlActivity;
 import com.joshua.a51bike.activity.view.BikeMessage;
 import com.joshua.a51bike.activity.view.Config;
 import com.joshua.a51bike.activity.view.Pay;
@@ -101,7 +102,7 @@ public class LoginState implements UserState {
     //租车
     @Override
     public void rent(Activity activity) {
-        Intent intent = new Intent(activity, BikeControl.class);
+        Intent intent = new Intent(activity, BikeControlActivity.class);
         intent.putExtra("bid","2634");
         activity.startActivity(intent);
         activity.finish();

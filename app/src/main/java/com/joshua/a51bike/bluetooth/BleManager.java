@@ -20,7 +20,6 @@ import com.joshua.a51bike.Interface.BleCallBack;
 import com.joshua.a51bike.activity.control.CarControl;
 import com.joshua.a51bike.bluetooth.utils.Protocol;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -410,7 +409,6 @@ public class BleManager {
                 System.out.println(i + "--------change success----- characteristic:" + resultBytes[i]);
             }
             mBleCallBack.getStateFromDevice(parseBytes(resultBytes));
-            resultBytes=null;
         }
     };
 }

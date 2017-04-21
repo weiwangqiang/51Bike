@@ -8,7 +8,6 @@ import android.view.WindowManager;
 
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.MainActivity;
-import com.joshua.a51bike.bluetooth.TestActivity;
 import com.joshua.a51bike.util.PrefUtils;
 
 import org.xutils.view.annotation.ContentView;
@@ -63,9 +62,7 @@ public class WelCome extends Activity {
     }
     //跳转到主界面
     public void ToMainActivity(){
-//        startActivity(new Intent(this, MainActivity.class));
-        startActivity(new Intent(this, TestActivity.class));
-        finish();
+        startActivity(new Intent(this, MainActivity.class));
     }
     public void findId() {
 

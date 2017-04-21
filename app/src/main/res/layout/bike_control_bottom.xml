@@ -50,7 +50,7 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:clickable="false"
-
+android:onClick="returnBike"
                 android:background="@drawable/bike_reback" />
 
             <TextView
@@ -84,7 +84,7 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:clickable="false"
-
+android:onClick="startBike"
                 android:background="@drawable/bike_unlock" />
 
             <TextView
@@ -112,6 +112,7 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:clickable="false"
+                android:onClick="lockBike"
                 android:background="@drawable/bike_lock" />
 
             <TextView
