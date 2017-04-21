@@ -15,8 +15,6 @@
         android:id="@+id/bike_mes_mapView"
         android:layout_width="match_parent"
         android:layout_above="@+id/bike_mes_inlclude2"
-        android:layout_height="wrap_content">
-    </com.amap.api.maps.MapView>
-
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

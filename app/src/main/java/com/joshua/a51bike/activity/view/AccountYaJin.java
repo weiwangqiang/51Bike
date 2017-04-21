@@ -22,6 +22,8 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import static com.joshua.a51bike.pay.util.PayUtils.payUtils;
+
 /**
  * class description here
  *
@@ -88,8 +90,8 @@ public class AccountYaJin extends BaseActivity {
 
     private void reChange() {
         if(zhifubao.isChecked()){
-            uiUtils.showToast("正在跳转");
-            PayUtils payUtils = PayUtils.getPayUtils();
+            UiUtils.showToast("正在跳转");
+            PayUtils patils = PayUtils.getPayUtils();
             payUtils.setPaySuccess(new myPaySuccess());
             payUtils.payV2(this,200);
         }
@@ -102,7 +104,6 @@ public class AccountYaJin extends BaseActivity {
 
     }
     private class myPaySuccess implements PaySuccess {
-
         @Override
         public void onSccuess() {
             post();
@@ -120,8 +121,9 @@ public class AccountYaJin extends BaseActivity {
     private String url = AppUtil.BaseUrl+"/user/insertCharge";
     private void post(){
         RequestParams result_params = new RequestParams(url);
-        Log.i(TAG, "post: userid "+ userControl.getUser().getUserid());
-        result_params.addParameter("userId",userControl.getUser().getUserid());
+//        Log.i(TAG, "post: userid "+ userControl.getUser().getUserid());
+//        result_params.addParameter("userId",userControl.getUser().getUserid());
+        result_params.addParameter("userId","50029");
         result_params.addParameter("userCharge","200");
 
         x.http().post(result_params, new Callback.CommonCallback<String>() {

@@ -21,6 +21,6 @@
             android:id="@+id/left_back"
             />
     </RelativeLayout>
-    <include
-        layout="@layout/bike_message_content"/>
+
+    <include layout="@layout/bike_message_content" />
 </LinearLayout>

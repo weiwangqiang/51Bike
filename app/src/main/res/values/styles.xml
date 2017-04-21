@@ -223,4 +223,14 @@
         <item name="android:minHeight">10.0dp</item>
         <item name="android:maxHeight">10.0dp</item>
     </style>
+    <!--主界面的progress的style-->
+
+    <style name="CustomProgressStyle" parent="@android:style/Widget.ProgressBar.Small">
+        <item name="android:minWidth">@dimen/progress_width</item>
+        <item name="android:maxWidth">@dimen/progress_width</item>
+        <item name="android:minHeight">@dimen/progress_width</item>
+        <item name="android:maxHeight">@dimen/progress_width</item>
+        <item name="android:startColor">@color/baseColor</item>
+        <item name="android:endColor">@color/white</item>
+    </style>
 </resources>

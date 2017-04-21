@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.joshua.a51bike.Interface.DialogCallBack;
 import com.joshua.a51bike.Interface.OnGattConnectListener;
 import com.joshua.a51bike.R;
-import com.joshua.a51bike.activity.control.CarControl;
 import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.activity.dialog.CurrencyAlerDialog;
 import com.joshua.a51bike.activity.dialog.LocateProgress;
@@ -136,13 +135,9 @@ private boolean isBack=true;//是否还车
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
-       String  mDeviceId = CarControl.getCarControl().getCar().getCarMac();//扫码获取的
-
-        Log.i(TAG, "onCreate: device Mac : "+mDeviceId);
         manager = new BlueToothManager(BikeControl.this);
         //检查设备是否支持蓝牙
         if (manager.checkPhoneState()) {
-            Log.i(TAG, "onCreate: connect_BLE");
 //           manager.connect_ble();//连接设备
         } else {
             uiUtils.showToast("当前手机不支持蓝牙");
@@ -176,7 +171,7 @@ private boolean isBack=true;//是否还车
     protected void onDestroy() {
         super.onDestroy();
         //释放蓝牙资源service
-        manager.UnbindService();
+//        manager.UnbindService();
     }
 
     private static final int REQUEST_ENABLE_BT = 0x01;
@@ -351,7 +346,6 @@ private boolean isBack=true;//是否还车
 
             @Override
             public void cancel() {
-
             }
         }));
         dialogControl.show();
@@ -359,13 +353,16 @@ private boolean isBack=true;//是否还车
 
     private void realReback() {
         long t = System.currentTimeMillis();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        String time = format.format(t);
         RequestParams params = new RequestParams(rbUrl);
         User user = userControl.getUser();
-        params.addBodyParameter("userId", user.getUserid() + "");
         Car car = carControl.getCar();
+        params.addBodyParameter("userId", user.getUserid() + "");
         params.addBodyParameter("carId", car.getCarId() + "");
+        params.addBodyParameter("useHour", t+"" );
+        params.addBodyParameter("useEndTime", t+"" );
+        params.addBodyParameter("useMoney", 20+"" );
+        params.addBodyParameter("useDistance", 200+"" );
+        Log.i(TAG, "realReback: params ------- "+params.toString() );
         post(params);
     }
 

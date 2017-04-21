@@ -28,8 +28,6 @@ import org.xutils.x;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.amap.api.mapcore.util.eo.a;
-
 /**
  * class description here
  *
@@ -72,7 +70,7 @@ public class RZRealName extends BaseActivity {
         for(TextView T:list){
             T.setTextColor(getResources().getColor(R.color.gray));
         }
-        for(i = 0;i<a;i++){
+        for(i = 0;i<4;i++){
             list.get(i).setTextColor(getResources().getColor(R.color.baseColor));
         }
     }

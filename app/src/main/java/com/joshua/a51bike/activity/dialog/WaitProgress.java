@@ -23,6 +23,7 @@ public class WaitProgress extends MyProgress  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_wait);
         getWindow().setBackgroundDrawable(new ColorDrawable());
+        setCanceledOnTouchOutside(false);
 
         setIndeterminate(false);
         setCancelable(true);

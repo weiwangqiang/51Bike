@@ -9,10 +9,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.joshua.a51bike.Interface.myitemLister;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
+import com.joshua.a51bike.adapter.TimestampTypeAdapter;
 import com.joshua.a51bike.adapter.URRecyclerAdapter;
+import com.joshua.a51bike.entity.UserAndUse;
 import com.joshua.a51bike.util.AppUtil;
 
 import org.xutils.common.Callback;
@@ -21,7 +26,12 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.lang.reflect.Type;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -45,27 +55,25 @@ public class UserRoute extends BaseActivity implements ListView.OnItemClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
-        Object[] o = new Object[1];
     }
 
     public void init() {
         setLister();
-        initListView();
         getData();
     }
     public void getData(){
         RequestParams params = new RequestParams(url);
-        params.addBodyParameter("uid","5");
+        params.addBodyParameter("uid",userControl.getUser().getUserid()+"");
         post(params);
     }
     /*发送请求*/
-    private static void post(RequestParams params){
+    private  void post(RequestParams params){
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                System.out.println(result);
                 Log.i(TAG, "onSuccess: -------------------");
                 Log.i(TAG, "onSuccess: "+result);
+                parseResult(result);
             }
 
             @Override
@@ -87,6 +95,20 @@ public class UserRoute extends BaseActivity implements ListView.OnItemClickListe
             }
         });
     }
+    private List<UserAndUse> list;
+    private  void parseResult(String result) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("yyyy-MM-dd hh:mm:ss");
+        gsonBuilder.registerTypeAdapter(Timestamp.class,new TimestampTypeAdapter());
+        Gson gson = gsonBuilder.create();
+        Type type = new TypeToken<ArrayList<UserAndUse>>() {}.getType();
+        list =gson.fromJson(result, type);
+        for(UserAndUse use :list){
+            Log.i(TAG, "parseResult: "+use.getUseDistance()
+                    +" time  "+use.getUseHour());
+        }
+        initListView();
+    }
     private void initListView() {
         addData();
         LinearLayoutManager   manager =  new LinearLayoutManager(UserRoute.this);
@@ -105,16 +127,16 @@ public class UserRoute extends BaseActivity implements ListView.OnItemClickListe
     }
 
     private void addData() {
-        HashMap<String,String> map = new HashMap<>();
-        map.put("time","2016-121-123 23:32");
-        map.put("spend","￥ 1.1");
-        map.put("carId","6565656");
-        data.add(map);
-        data.add(map);
-        data.add(map);
-        data.add(map);
-        data.add(map);
-        data.add(map);
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        for(UserAndUse use:list ){
+            HashMap<String,String> map = new HashMap<>();
+            map.put("time",format.format(new Date(use.getUseHour().getTime())));
+            map.put("spend",use.getUseMoney()+"");
+            map.put("carId",use.getCarId()+"");
+            data.add(map);
+        }
+
     }
     public void setLister() {
         findViewById(R.id.left_back).setOnClickListener(this);

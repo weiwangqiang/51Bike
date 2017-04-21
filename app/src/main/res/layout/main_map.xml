@@ -6,6 +6,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <com.amap.api.maps.MapView
             android:id="@+id/main_mapView"
             android:layout_width="match_parent"
@@ -23,54 +24,66 @@
             android:layout_centerHorizontal="true"
             android:background="@drawable/button_circle_white"
             android:text="51get使用说明"/>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/main_Bottom_height"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="10dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
-            <Button
-                android:layout_width="@dimen/main_Bottom_height"
-                android:layout_height="match_parent"
-                android:id="@+id/main_location"
-                android:background="@drawable/location"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:onClick="getLocation"
-                />
-            <LinearLayout
+            android:orientation="vertical">
+            <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_weight="1"
-                android:id="@+id/rent"
-                android:onClick="rent"
-                android:background="@drawable/buttonbg"
+                android:layout_margin="10dp"
+                style="@style/CustomProgressStyle"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <ImageView
+                <Button
+                    android:layout_width="@dimen/main_Bottom_height"
+                    android:layout_height="match_parent"
+                    android:id="@+id/main_location"
+                    android:background="@drawable/location"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:onClick="getLocation"
+                    />
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:src="@drawable/saoma"/>
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:id="@+id/rent"
+                    android:onClick="rent"
+                    android:background="@drawable/buttonbg"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/saoma"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/main_Bottom_height"
+                        android:text="@string/saoma"
+                        style="@style/whiteBigTextStyle"
+                        android:gravity="center_vertical"
+                        android:layout_centerHorizontal="true"
+                        android:id="@+id/textView7" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="@dimen/main_Bottom_height"
                     android:layout_height="@dimen/main_Bottom_height"
-                    android:text="@string/saoma"
-                    style="@style/whiteBigTextStyle"
-                    android:gravity="center_vertical"
-                    android:layout_centerHorizontal="true"
-                    android:id="@+id/textView7" />
-
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/view" />
             </LinearLayout>
 
-            <View
-                android:layout_width="@dimen/main_Bottom_height"
-                android:layout_height="@dimen/main_Bottom_height"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:id="@+id/view" />
         </LinearLayout>
 
     </RelativeLayout>

@@ -1,5 +1,7 @@
 package com.joshua.a51bike.activity.control;
 
+import android.util.Log;
+
 import com.joshua.a51bike.Interface.DialogInterface;
 
 /**
@@ -7,7 +9,7 @@ import com.joshua.a51bike.Interface.DialogInterface;
  */
 
 public class DialogControl {
-    private String TAG = "DialogControl";
+    private String TAG = "MarginAlerDialog";
     private static DialogControl dialogControl = new DialogControl();
     private DialogInterface dialog;
 
@@ -27,11 +29,12 @@ public class DialogControl {
     }
 
     public void show() {
+        Log.i(TAG, "show: show ----------------");
         dialog.myShow();
     }
 
     public void cancel() {
+        Log.i(TAG, "cancel: cancel--------------- ");
         dialog.myCancel();
-//        Log.e(TAG, "dialogInterface is be cancel and is  null ? " + (dialog.getClass()));
     }
 }

@@ -6,9 +6,19 @@ public class Order {
        Integer carId;
        Time useHour;
        Integer useMoney;
-       Timestamp useTime;
+//       Timestamp useTime;
        Timestamp useStartTime;
-       Timestamp useEndTime;
+
+	public Integer getUseDistance() {
+		return useDistance;
+	}
+
+	public void setUseDistance(Integer useDistance) {
+		this.useDistance = useDistance;
+	}
+
+	Integer useDistance;
+	Timestamp useEndTime;
 	public Integer getCarId() {
 		return carId;
 	}
@@ -27,12 +37,7 @@ public class Order {
 	public void setUseMoney(Integer useMoney) {
 		this.useMoney = useMoney;
 	}
-	public Timestamp getUseTime() {
-		return useTime;
-	}
-	public void setUseTime(Timestamp useTime) {
-		this.useTime = useTime;
-	}
+
 	public Timestamp getUseStartTime() {
 		return useStartTime;
 	}

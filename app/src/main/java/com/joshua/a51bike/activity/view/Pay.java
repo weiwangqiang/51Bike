@@ -92,6 +92,7 @@ public class Pay extends BaseActivity {
         User user = userControl.getUser();
         user.setUsermoney(user.getUsermoney()-money);
         userControl.setUser(user);
+        finish();
     }
 
     private void post(){

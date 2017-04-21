@@ -130,6 +130,7 @@ public class accountRecharge extends BaseActivity {
         User user = userControl.getUser();
         user.setUsermoney(user.getUsermoney()+money);
         userControl.setUser(user);
+        finish();
     }
 
     private String url = AppUtil.BaseUrl+"/user/insertCharge";

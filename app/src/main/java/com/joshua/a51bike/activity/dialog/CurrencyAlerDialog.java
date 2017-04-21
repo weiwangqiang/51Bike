@@ -3,6 +3,7 @@ package com.joshua.a51bike.activity.dialog;
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -40,7 +41,7 @@ public class CurrencyAlerDialog extends MyAlerDialog implements View.OnClickList
          c = (TextView)findViewById(R.id.dialog_content);
          cancel = (TextView) findViewById(R.id.dialog_cancel);
          sure = (TextView) findViewById(R.id.dialog_sure);
-
+//        setCanceledOnTouchOutside(false);
         t.setText(title);
         c.setText(content);
         cancel.setOnClickListener(this);
@@ -61,9 +62,11 @@ public class CurrencyAlerDialog extends MyAlerDialog implements View.OnClickList
         switch (v.getId()){
             case R.id.dialog_cancel:
                 cancel();
+                Log.i(TAG, "onClick: dialog_cancel");
                 callBack.cancel();
                 break;
             case R.id.dialog_sure:
+                Log.i(TAG, "onClick: dialog_sure ");
                 cancel();
                 callBack.sure();
                 break;
@@ -72,11 +75,13 @@ public class CurrencyAlerDialog extends MyAlerDialog implements View.OnClickList
 
     @Override
     public void myShow() {
+        Log.i(TAG, "myShow: myShow");
         show();
     }
 
     @Override
     public void myCancel() {
+        Log.i(TAG, "myCancel: myCancel");
         cancel();
     }
 }

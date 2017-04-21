@@ -104,6 +104,7 @@ public class LoginState implements UserState {
         Intent intent = new Intent(activity, BikeControl.class);
         intent.putExtra("bid","2634");
         activity.startActivity(intent);
+        activity.finish();
     }
 
     @Override

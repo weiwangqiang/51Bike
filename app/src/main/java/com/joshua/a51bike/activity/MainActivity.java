@@ -107,12 +107,13 @@ public class MainActivity extends BaseMap {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate: task id is "+getTaskId());
         initGranted();
+        mapView = (MapView) findViewById(R.id.main_mapView);
+        mapView.onCreate(savedInstanceState);// 此方法必须重写
         init();
         if(savedInstanceState == null)
             canShow = true;
-        mapView.onCreate(savedInstanceState);// 此方法必须重写
+
         initDrawer();
     }
 
@@ -328,7 +329,6 @@ public class MainActivity extends BaseMap {
     }
 
     public void findid() {
-        mapView = (MapView) findViewById(R.id.main_mapView);
         location = (Button) findViewById(R.id.main_location);
 
         useProgressParent = findViewById(R.id.main_progress);
@@ -419,7 +419,7 @@ public class MainActivity extends BaseMap {
     }
 
     private void toRent() {
-             userControl.saoma(MainActivity.this);
+      userControl.saoma(MainActivity.this);
     }
 //*******************************************************************
 
@@ -771,7 +771,8 @@ public class MainActivity extends BaseMap {
         Log.i(TAG, "getstartlatLonPoint: "+aMapLocation.getLatitude());
         mStartPoint = new LatLonPoint(aMapLocation.getLatitude(), aMapLocation.getLongitude());
         Boolean b = dialogControl.getDialog() instanceof LocateProgress;
-         dialogControl.cancel();
+        if(b)
+           dialogControl.cancel();
 //        避免重复定位
         if (canGetPos) {
             canGetPos = false;

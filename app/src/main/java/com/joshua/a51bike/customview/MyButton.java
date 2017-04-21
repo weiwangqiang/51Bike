@@ -15,7 +15,9 @@ import com.joshua.a51bike.R;
 
 /**
  * class description here
+ *
  *  imageView 在右边，textView居于两边的relativeLayout
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

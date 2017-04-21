@@ -13,7 +13,6 @@ import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.activity.dialog.WaitProgress;
 import com.joshua.a51bike.util.AppUtil;
 import com.joshua.a51bike.util.MyTools;
-import com.joshua.a51bike.util.ToastUtil;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -33,10 +32,9 @@ import org.xutils.x;
 public class Suggest extends BaseActivity {
     private static final String TAG = "Suggest";
 
-    private String url  = AppUtil.BaseUrl+"/insertAdvice";
+    private String url  = AppUtil.BaseUrl+"/user/insertAdvice";
     @ViewInject(R.id.get_suggest)
     private EditText getSuggest;
-
 
     @ViewInject(R.id.submit)
     private Button  submit;
@@ -85,7 +83,7 @@ public class Suggest extends BaseActivity {
     }
     public void submit(){
         if(MyTools.EditTextIsNull(getSuggest)){
-            ToastUtil.show(Suggest.this,"不能为空~");
+            uiUtils.showToast("不能为空！");
             return;
         }
         dialogControl.setDialog(new WaitProgress(this));
@@ -102,6 +100,7 @@ public class Suggest extends BaseActivity {
         cancelable =  x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
+                uiUtils.showToast("感谢您的建议！");
                 getSuggest.setText("");
                 dialogControl.cancel();
             }
