@@ -25,7 +25,9 @@ import org.xutils.x;
 
 /**
  * class description here
- *  效果与扫码一样的
+ *
+ *  搜索车牌号界面，效果与扫码一样的
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

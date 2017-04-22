@@ -17,6 +17,8 @@ import org.xutils.view.annotation.ViewInject;
 /**
  * class description here
  *
+ *  用户钱包主界面
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

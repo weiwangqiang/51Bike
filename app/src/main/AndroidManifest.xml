@@ -54,8 +54,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.view.BikeMessage"/>
-        <activity android:name=".activity.view.BikeControl"/>
-        <activity android:name=".activity.view.Recharge"/>
         <activity android:name=".activity.view.Pay"/>
         <activity android:name=".activity.view.Login"/>
         <activity android:name=".activity.view.UserInfor"/>
@@ -110,7 +108,6 @@
         </activity>
         <activity android:name=".activity.view.registerOrLogin"/>
         <activity android:name=".activity.view.RegisterAgreement"/>
-        <activity android:name=".activity.view.renzheng"/>
         <activity android:name=".activity.view.ScanActivity"/>
         <activity android:name=".activity.view.UserRoute"/>
         <activity android:name=".activity.view.UserRouteMes"/>

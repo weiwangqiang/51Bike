@@ -23,6 +23,9 @@ import org.xutils.x;
 
 /**
  * Created by wangqiang on 2017/1/9.
+ *
+ *  用户使用车辆，还车后的支付界面
+ *
  */
 @ContentView(R.layout.pay)
 public class Pay extends BaseActivity {

@@ -13,6 +13,8 @@ import com.joshua.a51bike.activity.view.registerOrLogin;
 import com.joshua.a51bike.util.AppUtil;
 
 /**
+ * 用户退出登陆状态
+ *
  * Created by wangqiang on 2017/1/9.
  */
 

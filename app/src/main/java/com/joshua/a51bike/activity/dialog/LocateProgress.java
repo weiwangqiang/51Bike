@@ -8,6 +8,8 @@ import com.joshua.a51bike.Interface.MyProgress;
 import com.joshua.a51bike.R;
 
 /**
+ * 提示正在获取定位的对话框
+ *
  * Created by wangqiang on 2017/1/9.
  */
 

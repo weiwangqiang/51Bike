@@ -3,7 +3,6 @@ package com.joshua.a51bike.adapter;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +17,9 @@ import java.util.List;
 
 
 /**
+ *  我的行程列表adapter
+ *
  * Created by wangqiang on 2016/9/28.
- * 我的行程列表adapter
  */
 public class URRecyclerAdapter extends  RecyclerView.Adapter<URRecyclerAdapter.MyViewHolder> {
     private myitemLister lister;
@@ -37,8 +37,6 @@ public class URRecyclerAdapter extends  RecyclerView.Adapter<URRecyclerAdapter.M
 
     @Override
     public URRecyclerAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.e("adapter","adapter viewType is "+viewType);
-
         viewHolder = new MyViewHolder(LayoutInflater.
                 from(context).inflate(view,parent,false),context);
         return viewHolder;

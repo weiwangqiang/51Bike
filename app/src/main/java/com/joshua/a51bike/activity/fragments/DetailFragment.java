@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.joshua.a51bike.Interface.RVItemListener;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.control.UserControl;
 import com.joshua.a51bike.adapter.DetailRecyclerAdapter;
@@ -31,7 +30,9 @@ import java.util.Map;
 
 /**
  * class description here
+ *
  *  消费明细
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

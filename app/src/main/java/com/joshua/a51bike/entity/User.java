@@ -1,6 +1,13 @@
 package com.joshua.a51bike.entity;
 
 public class User {
+	//可以租车状态
+	public static final int STATE_CAN = 0;
+	//不可以租车状态
+	public static final int STATE_CANNOT = 1;
+	//正在租车状态
+	public static final int STATE_USEING = 2;
+
     private  int userid;
 	private  String username;
 	private String realName = null;

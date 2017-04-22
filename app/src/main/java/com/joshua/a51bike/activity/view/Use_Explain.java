@@ -14,6 +14,8 @@ import org.xutils.view.annotation.ContentView;
 /**
  * class description here
  *
+ * 应用使用说明界面
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

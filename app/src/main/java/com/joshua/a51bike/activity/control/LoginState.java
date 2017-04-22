@@ -11,11 +11,11 @@ import com.joshua.a51bike.activity.dialog.CurrencyAlerDialog;
 import com.joshua.a51bike.activity.dialog.GetIcnAlerDialog;
 import com.joshua.a51bike.activity.dialog.LocateProgress;
 import com.joshua.a51bike.activity.view.AccountYaJin;
-import com.joshua.a51bike.activity.view.BikeControl;
 import com.joshua.a51bike.activity.view.BikeControlActivity;
 import com.joshua.a51bike.activity.view.BikeMessage;
 import com.joshua.a51bike.activity.view.Config;
 import com.joshua.a51bike.activity.view.Pay;
+import com.joshua.a51bike.activity.view.RZRealName;
 import com.joshua.a51bike.activity.view.ScanActivity;
 import com.joshua.a51bike.activity.view.Suggest;
 import com.joshua.a51bike.activity.view.UserInfor;
@@ -25,10 +25,11 @@ import com.joshua.a51bike.activity.view.about;
 import com.joshua.a51bike.activity.view.account;
 import com.joshua.a51bike.activity.view.accountMingxi;
 import com.joshua.a51bike.activity.view.accountRecharge;
-import com.joshua.a51bike.activity.view.renzheng;
 import com.joshua.a51bike.activity.view.share;
 
 /**
+ * 用户登陆状态
+ *
  * Created by wangqiang on 2017/1/9.
  */
 
@@ -197,7 +198,7 @@ public class LoginState implements UserState {
 
     @Override
     public void renZheng(Activity activity) {
-        Intent intent = new Intent(activity, renzheng.class);
+        Intent intent = new Intent(activity, RZRealName.class);
         activity.startActivity(intent);
     }
 

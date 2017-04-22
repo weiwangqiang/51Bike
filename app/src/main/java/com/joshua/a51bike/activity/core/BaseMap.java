@@ -12,6 +12,8 @@ import com.joshua.a51bike.activity.presenter.locatePresenter;
 import com.joshua.a51bike.activity.presenter.mapPresenter;
 
 /**
+ *  map activity 的父类Activity
+ *
  * Created by wangqiang on 2017/1/8.
  */
 public abstract class BaseMap extends BaseActivity implements

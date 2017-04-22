@@ -11,7 +11,10 @@ import com.joshua.a51bike.Interface.DialogCallBack;
 import com.joshua.a51bike.Interface.MyAlerDialog;
 import com.joshua.a51bike.R;
 
-/**通用的dialog
+/**
+ * 通用的dialog
+ * 需要传 context， DialogCallBack 回调
+ *
  * Created by wangqiang on 2017/1/9.
  */
 

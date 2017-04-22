@@ -21,6 +21,8 @@ import java.util.Date;
 /**
  * class description here
  *
+ * gson解析中，将long类型转为Timestamp 的类
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

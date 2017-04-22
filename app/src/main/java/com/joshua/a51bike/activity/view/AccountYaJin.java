@@ -27,6 +27,8 @@ import static com.joshua.a51bike.pay.util.PayUtils.payUtils;
 /**
  * class description here
  *
+ * 交押金界面
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

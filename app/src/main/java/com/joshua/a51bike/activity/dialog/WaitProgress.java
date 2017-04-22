@@ -8,6 +8,8 @@ import com.joshua.a51bike.Interface.MyProgress;
 import com.joshua.a51bike.R;
 
 /**
+ * 等待对话框 就一个progress
+ *
  * Created by wangqiang on 2017/1/9.
  */
 

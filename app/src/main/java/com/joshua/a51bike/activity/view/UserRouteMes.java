@@ -38,6 +38,8 @@ import static android.support.design.widget.BottomSheetBehavior.STATE_HIDDEN;
 /**
  * class description here
  *
+ *用户的历史租车轨迹详情界面
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

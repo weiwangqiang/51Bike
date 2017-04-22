@@ -15,6 +15,8 @@ import org.xutils.view.annotation.ContentView;
 /**
  * class description here
  *
+ * 未登录时，点击用户头像跳转到这个界面
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

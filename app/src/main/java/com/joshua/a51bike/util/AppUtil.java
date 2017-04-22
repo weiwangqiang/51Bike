@@ -2,7 +2,9 @@ package com.joshua.a51bike.util;
 
 /**
  * class description here
+ *
  *  应用的全局配置
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

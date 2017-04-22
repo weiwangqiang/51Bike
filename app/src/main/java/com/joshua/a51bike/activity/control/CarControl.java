@@ -5,6 +5,8 @@ import com.joshua.a51bike.entity.Car;
 /**
  * class description here
  *
+ * car 的控制类
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

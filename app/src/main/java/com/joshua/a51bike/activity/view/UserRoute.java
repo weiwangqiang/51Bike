@@ -38,6 +38,8 @@ import java.util.List;
 /**
  * class description here
  *
+ * 用户的历史租车轨迹列表界面
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

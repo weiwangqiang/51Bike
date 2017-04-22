@@ -36,7 +36,9 @@ import java.io.File;
 
 /**
  * class description here
- *      认证学校
+ *
+ * 用户 学校认证界面
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

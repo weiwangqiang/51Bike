@@ -22,7 +22,9 @@ import com.joshua.a51bike.R;
 
 import java.io.File;
 
-/**获取用户头像的对话框
+/**
+ * 获取用户头像的对话框
+ *
  * Created by wangqiang on 2017/1/9.
  */
 

@@ -18,7 +18,9 @@ import org.xutils.view.annotation.ViewInject;
 /**
  * class description here
  *
- * @version 1.0.0
+ * 应用分享界面
+ *
+ *  @version 1.0.0
  * @outher wangqiang
  * @project 51Bike
  * @since 2017-03-07

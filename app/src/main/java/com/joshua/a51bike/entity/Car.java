@@ -1,9 +1,12 @@
 package com.joshua.a51bike.entity;
-
 public class Car {
+	//可以出租状态
 	public static final int STATE_AVALIABLE = 0;
+	//已经被出租状态，即处于不可以被其他人租
 	public static final int STATE_RENTED = 1;
+	//处于启动状态
 	public static final int STATE_START = 2;
+    //处于停产状态
 	public static final int STATE_PARKING = 3;
       int carId;
       String carName;

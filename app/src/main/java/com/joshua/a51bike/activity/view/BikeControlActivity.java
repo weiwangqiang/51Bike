@@ -26,7 +26,9 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
-
+/**
+ * 车辆控制界面
+ */
 @ContentView(R.layout.bike_control)
 public class BikeControlActivity extends BaseActivity {
     @ViewInject(R.id.bike_control_bid)
