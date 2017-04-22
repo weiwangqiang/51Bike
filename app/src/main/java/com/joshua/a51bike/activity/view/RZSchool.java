@@ -59,9 +59,6 @@ public class RZSchool extends BaseActivity {
     String after_image_path ;
     private TextView textView1,textView2,textView3,textView4;
 
-    @ViewInject(R.id.get_pro)
-    private TextView getPro;
-
     @ViewInject(R.id.renzheng_school)
     private TextView getSchool;
 

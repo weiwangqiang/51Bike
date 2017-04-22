@@ -93,7 +93,7 @@ public class URRecyclerAdapter extends  RecyclerView.Adapter<URRecyclerAdapter.M
         @Override
         public void onClick(View v) {
             if(lister != null){
-                lister.ItemLister(getAdapterPosition());
+                lister.onItemClicked(getAdapterPosition());
             }
         }
     }

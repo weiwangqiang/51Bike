@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.joshua.a51bike.Interface.myitemLister;
 import com.joshua.a51bike.R;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.Map;
  * Created by wangqiang on 2016/9/28.
  */
 public class DetailRecyclerAdapter extends  RecyclerView.Adapter<DetailRecyclerAdapter.MyViewHolder> {
-    private RVItemListener lister;
+    private myitemLister lister;
     private MyViewHolder viewHolder;
     private Context context ;
     private int view;
@@ -69,7 +70,7 @@ public class DetailRecyclerAdapter extends  RecyclerView.Adapter<DetailRecyclerA
 ////        return -1;
 //    }
 
-    public void setItemClickListener(RVItemListener lister){
+    public void setItemClickListener(myitemLister lister){
         this.lister = lister;
     }
     /**

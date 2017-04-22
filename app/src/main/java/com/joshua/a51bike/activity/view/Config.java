@@ -93,7 +93,10 @@ public class Config extends BaseActivity {
      * 退出
      */
     private void logout() {
-
+        if(userControl.getUser() == null){
+            uiUtils.showToast("你还没有登录哦~");
+            return;
+        }
         dialogControl.setDialog(new CurrencyAlerDialog(Config.this,"温馨提示",
                 "确定要离开我吗？",new callback()));
         dialogControl.show();

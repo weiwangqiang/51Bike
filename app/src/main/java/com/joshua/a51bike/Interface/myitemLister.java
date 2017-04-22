@@ -6,5 +6,5 @@ package com.joshua.a51bike.Interface;
  * recyclerView的点击事件
  */
 public interface myitemLister {
-    void ItemLister(int position);
+    void onItemClicked(int position);
 }
