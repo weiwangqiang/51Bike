@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.joshua.a51bike.Interface.myitemLister;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.control.UserControl;
 import com.joshua.a51bike.adapter.DetailRecyclerAdapter;
@@ -124,7 +125,7 @@ public class DetailFragment extends Fragment {
 
         mRecyclerView.setItemAnimator(new MyItemAnimator());
 
-        adapter.setItemClickListener(new RVItemListener() {
+        adapter.setItemClickListener(new myitemLister() {
             @Override
             public void onItemClicked(int position) {
                 Log.i(TAG, "onItemClicked: "+position);

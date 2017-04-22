@@ -297,6 +297,7 @@ public class BikeControlActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.i(TAG, "onDestroy: -------------------- ");
         mBleManager.disconnect();
     }
 }

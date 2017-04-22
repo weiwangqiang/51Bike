@@ -218,7 +218,7 @@ public class BikeMessage extends BaseActivity {
         if(result.equals("ok")){
             car  = new Car();
             car.setCarMac(post_bike_mac);
-            car.setCarState(CarState.STATE_RENTED);
+            car.setCarState(Car.STATE_RENTED);
             car.setCarMac(bike_mac);
             car.setCarId(1);
             carControl.setCar(car);

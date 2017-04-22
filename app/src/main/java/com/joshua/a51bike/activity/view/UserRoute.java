@@ -120,7 +120,7 @@ public class UserRoute extends BaseActivity implements ListView.OnItemClickListe
                 R.layout.user_route_listitem,data);
         adapter.setLister(new myitemLister() {
             @Override
-            public void ItemLister(int position) {
+            public void onItemClicked(int position) {
                 Intent intent = new Intent(UserRoute.this,UserRouteMes.class);
                 startActivity(intent);
             }

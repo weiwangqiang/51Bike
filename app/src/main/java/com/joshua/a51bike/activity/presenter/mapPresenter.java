@@ -1,22 +1,13 @@
 package com.joshua.a51bike.activity.presenter;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
-import android.view.Gravity;
-import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.model.BitmapDescriptorFactory;
-import com.amap.api.maps.model.MarkerOptions;
-import com.amap.api.maps.model.Poi;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.route.RidePath;
 import com.amap.api.services.route.RideRouteResult;
 import com.amap.api.services.route.RouteSearch;
 import com.joshua.a51bike.Interface.mapInterface;
-import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.overlay.RideRouteOverlay;
 import com.joshua.a51bike.util.ToastUtil;
 /**
@@ -60,22 +51,5 @@ public class mapPresenter implements mapInterface {
             ToastUtil.showerror(activitty, errorCode);
         }
 
-    }
-
-    @Override
-    public void showPoi(Poi poi, Context context, AMap aMap) {
-
-        Log.i("MY", poi.getPoiId()+poi.getName());
-        MarkerOptions markOptiopns = new MarkerOptions();
-        markOptiopns.position(poi.getCoordinate());
-        TextView textView = new TextView(context);
-        textView.setText("到"+poi.getName()+"去");
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextColor(Color.BLACK);
-        textView.setBackgroundResource(R.drawable.custom_info_bubble);
-        markOptiopns.icon(BitmapDescriptorFactory.fromView(textView));
-        aMap.addMarker(markOptiopns);
-        Log.e(TAG," ----->latitude is "+markOptiopns.getPosition().latitude
-                +" longitude is "+markOptiopns.getPosition().longitude);
     }
 }

@@ -11,6 +11,7 @@ import android.widget.RadioButton;
 import com.joshua.a51bike.Interface.PaySuccess;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
+import com.joshua.a51bike.activity.dialog.WaitProgress;
 import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.pay.util.PayUtils;
 import com.joshua.a51bike.util.AppUtil;
@@ -122,10 +123,12 @@ public class AccountYaJin extends BaseActivity {
 
     private String url = AppUtil.BaseUrl+"/user/insertCharge";
     private void post(){
+        dialogControl.setDialog(new WaitProgress(this));
+        dialogControl.show();
         RequestParams result_params = new RequestParams(url);
 //        Log.i(TAG, "post: userid "+ userControl.getUser().getUserid());
 //        result_params.addParameter("userId",userControl.getUser().getUserid());
-        result_params.addParameter("userId","50029");
+        result_params.addParameter("userId",userControl.getUser().getUserid());
         result_params.addParameter("userCharge","200");
 
         x.http().post(result_params, new Callback.CommonCallback<String>() {
@@ -133,17 +136,21 @@ public class AccountYaJin extends BaseActivity {
             public void onSuccess(String result) {
                 Log.i(TAG, "onSuccess: result "+result);
                 if(result.equals("ok")){
+                    dialogControl.cancel();
                     success();
                 }
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
                 Log.i("msp", ">>>>>>>>>>>>>>>>>>>>>>>>>>o2:"+ex.getMessage());
+                dialogControl.cancel();
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
+                dialogControl.cancel();
 
             }
 
