@@ -60,4 +60,21 @@ public class PrefUtils {
 		sp.edit().clear().apply();
 	}
 
+
+
+	public static int getInt(Context ctx, String key,
+									 int defaultValue) {
+		if(sp==null){
+			sp = ctx.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+		}
+		return sp.getInt(key, defaultValue);
+	}
+
+	public static void setInt(Context ctx, String key, int value) {
+		if(sp==null){
+			sp = ctx.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+		}
+		sp.edit().putInt(key, value).apply();
+	}
+
 }

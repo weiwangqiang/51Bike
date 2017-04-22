@@ -14,8 +14,10 @@ import com.joshua.a51bike.activity.dialog.OutControlDialog;
 import com.joshua.a51bike.activity.dialog.WaitProgress;
 import com.joshua.a51bike.bluetooth.BleManager;
 import com.joshua.a51bike.entity.Car;
+import com.joshua.a51bike.entity.Preference;
 import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.util.AppUtil;
+import com.joshua.a51bike.util.PrefUtils;
 import com.joshua.a51bike.util.UiUtils;
 
 import org.xutils.common.Callback;
@@ -39,6 +41,7 @@ public class BikeControlActivity extends BaseActivity {
     private static final int STATE_START = 0x20;//设备开启
     private static final int STATE_STOP = 0x22;//设备上锁
     private static final int STATE_BACK = 0x23;//设备还车
+
 
 
     @Override
@@ -65,8 +68,14 @@ public class BikeControlActivity extends BaseActivity {
     }
 
     private void initState() {
-        mCurrentState = STATE_BACK;
-        mLastState = STATE_BACK;
+        if(PrefUtils.getInt(mBaseActivity,Preference.USER_BIKE_STATE,STATE_BACK)==STATE_BACK){
+            mCurrentState = STATE_BACK;
+            mLastState = STATE_BACK;
+        }else if(PrefUtils.getInt(mBaseActivity,Preference.USER_BIKE_STATE,STATE_BACK)==STATE_STOP){
+            mCurrentState = STATE_STOP;
+            mLastState = STATE_STOP;
+        }
+
     }
 
     private void initBleManager() {
@@ -114,6 +123,10 @@ public class BikeControlActivity extends BaseActivity {
                             mCurrentState = STATE_STOP;
                             mLastState = STATE_STOP;
                             doStopBike();
+                        }else if(mLastState==STATE_STOP||mLastState==STATE_BACK){
+                            UiUtils.showToast("连接失败，请重试");
+                            mBleManager.disconnect();
+                            dialogControl.cancel();
                         }
                         break;
                     case BleManager.BIKE_ERROR:
@@ -296,5 +309,11 @@ public class BikeControlActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mBleManager.disconnect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        PrefUtils.setInt(mBaseActivity,Preference.USER_BIKE_STATE,mCurrentState);
     }
 }
