@@ -32,6 +32,8 @@ import java.util.Map;
 /**
  * class description here
  *
+ * 选择省份界面
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

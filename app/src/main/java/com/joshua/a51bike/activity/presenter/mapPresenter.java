@@ -21,6 +21,7 @@ import com.joshua.a51bike.activity.overlay.RideRouteOverlay;
 import com.joshua.a51bike.util.ToastUtil;
 /**
  * Created by wangqiang on 2017/1/3.
+ * 规划路径相关的代理
  */
 
 public class mapPresenter implements mapInterface {

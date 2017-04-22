@@ -22,7 +22,8 @@ import java.util.List;
 
 /**
  * class description here
- *  余额明细
+ *
+ *  用户的余额明细
  *
  * @version 1.0.0
  * @outher wangqiang

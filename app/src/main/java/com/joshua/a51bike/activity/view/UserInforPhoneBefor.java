@@ -13,7 +13,9 @@ import org.xutils.view.annotation.ContentView;
 
 /**
  * class description here
- *  更改手机验证
+ *
+ *  更改手机验证界面
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

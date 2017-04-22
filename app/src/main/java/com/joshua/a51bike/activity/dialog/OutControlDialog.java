@@ -10,7 +10,9 @@ import android.widget.TextView;
 import com.joshua.a51bike.Interface.MyAlerDialog;
 import com.joshua.a51bike.R;
 
-/**保证金
+/**
+ * 提示缴纳保证金的对话框
+ *
  * Created by wangqiang on 2017/1/9.
  */
 

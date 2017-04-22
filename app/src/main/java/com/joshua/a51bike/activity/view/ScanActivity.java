@@ -34,8 +34,10 @@ import java.util.Vector;
 
 /**
  * class description here
- *	扫码
- * @version 1.0.0
+ *
+ *	扫码界面
+ *
+ *  @version 1.0.0
  * @outher wangqiang
  * @project 51Bike
  * @since 2017-01-10

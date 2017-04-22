@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.joshua.a51bike.Interface.RVItemListener;
 import com.joshua.a51bike.R;
 
 import java.util.List;

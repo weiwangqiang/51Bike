@@ -20,6 +20,8 @@ import java.util.List;
 
 /**
  * Created by wangqiang on 2017/1/3.
+ *
+ *  定位相关的代理
  */
 
 public class locatePresenter implements AMapLocationListener,

@@ -22,7 +22,6 @@ import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.activity.dialog.LocateProgress;
 import com.joshua.a51bike.activity.dialog.WaitProgress;
 import com.joshua.a51bike.entity.Car;
-import com.joshua.a51bike.entity.CarState;
 import com.joshua.a51bike.entity.ReadData;
 import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.util.AMapUtil;

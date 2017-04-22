@@ -7,6 +7,8 @@ import com.joshua.a51bike.Interface.UserState;
 import com.joshua.a51bike.entity.User;
 
 /**
+ * 用户控制类
+ *
  * Created by wangqiang on 2017/1/9.
  */
 

@@ -5,6 +5,8 @@ import android.util.Log;
 import com.joshua.a51bike.Interface.DialogInterface;
 
 /**
+ * dialog 的控制类
+ *
  * Created by wangqiang on 2017/1/9.
  */
 

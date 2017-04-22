@@ -22,6 +22,8 @@ import java.util.List;
 /**
  * class description here
  *
+ *  第一次进入App时的引导界面
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 
-import com.joshua.a51bike.Interface.BlueToothLister;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

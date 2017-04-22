@@ -16,6 +16,8 @@ import org.xutils.view.annotation.ViewInject;
 /**
  * class description here
  *
+ * 条款界面 （应该使用webView加载网络条款，现阶段使用本地的textView加载服务条款）
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

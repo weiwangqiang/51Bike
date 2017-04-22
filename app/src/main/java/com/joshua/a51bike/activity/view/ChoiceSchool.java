@@ -33,6 +33,8 @@ import java.util.Map;
 /**
  * class description here
  *
+ *  选择学校界面
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

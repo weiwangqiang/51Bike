@@ -42,6 +42,8 @@ import java.io.FileNotFoundException;
 /**
  * class description here
  *
+ * 个人信息界面
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

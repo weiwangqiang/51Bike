@@ -19,7 +19,9 @@ import com.joshua.a51bike.R;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * 绘制路径图层
+ */
 public class RouteOverlay {
 	protected List<Marker> stationMarkers = new ArrayList<Marker>();
 	protected List<Polyline> allPolyLines = new ArrayList<Polyline>();

@@ -72,7 +72,9 @@ import org.xutils.view.annotation.ViewInject;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * 应用的主界面
+ */
 @ContentView(R.layout.activity_main)
 public class MainActivity extends BaseMap {
     public String TAG = "MainActivity";

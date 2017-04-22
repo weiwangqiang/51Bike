@@ -9,7 +9,9 @@ import java.util.List;
 
 /**
  * class description here
+ *
  *  第一次进入app 界面 的viewAdapter
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

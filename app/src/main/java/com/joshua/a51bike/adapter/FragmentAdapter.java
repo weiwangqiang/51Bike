@@ -9,6 +9,8 @@ import java.util.List;
 /**
  * class description here
  *
+ *  用户充值记录明细的fragmentAdapter
+ *
  * @version 1.0.0
  * @outher wangqiang
  * @project 51Bike

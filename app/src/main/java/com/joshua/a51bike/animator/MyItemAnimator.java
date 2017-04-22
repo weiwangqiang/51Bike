@@ -27,6 +27,9 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * recyclerView Item的加载动画
+ */
 public class MyItemAnimator extends SimpleItemAnimator {
     private static final boolean DEBUG = false;
 
