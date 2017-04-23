@@ -22,6 +22,7 @@ import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.activity.dialog.LocateProgress;
 import com.joshua.a51bike.activity.dialog.WaitProgress;
 import com.joshua.a51bike.entity.Car;
+import com.joshua.a51bike.entity.Order;
 import com.joshua.a51bike.entity.ReadData;
 import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.util.AMapUtil;
@@ -208,14 +209,18 @@ public class BikeMessage extends BaseActivity {
     /*更新车辆信息到UI*/
     private void upCarView() {
         uiUtils.showToast("获取信息成功!");
-        Log.i(TAG, "upCarView: upCarView");
         price.setText(carControl.getCar().getCarPrice()+"元/小时");
         account.setText(userControl.getUser().getUsermoney()+"元");
     }
 
     private void parseRent(String result) {
         Log.i(TAG, "parseRent: "+result);
-        if(result.equals("ok")){
+        long time = Long.valueOf(result);
+
+        if(time !=0L ){
+            Order order = new Order();
+            order.setUseStartTime(time);
+            userControl.setOrder(order);
             car  = new Car();
             car.setCarMac(post_bike_mac);
             car.setCarState(Car.STATE_RENTED);

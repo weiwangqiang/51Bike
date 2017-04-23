@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.LongSerializationPolicy;
 import com.joshua.a51bike.Interface.BleCallBack;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
@@ -14,6 +17,7 @@ import com.joshua.a51bike.activity.dialog.OutControlDialog;
 import com.joshua.a51bike.activity.dialog.WaitProgress;
 import com.joshua.a51bike.bluetooth.BleManager;
 import com.joshua.a51bike.entity.Car;
+import com.joshua.a51bike.entity.Order;
 import com.joshua.a51bike.entity.Preference;
 import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.util.AppUtil;
@@ -235,18 +239,26 @@ public class BikeControlActivity extends BaseActivity {
     private String rbUrl = AppUtil.BaseUrl + "/user/huanche";
     private void postServerReturnBike() {
         RequestParams params = new RequestParams(rbUrl);
-        User user = userControl.getUser();
+        final User user = userControl.getUser();
         params.addBodyParameter("userId", user.getUserid() + "");
         Car car = carControl.getCar();
         params.addBodyParameter("carId", car.getCarId() + "");
-
+        params.addBodyParameter("carPrice", car.getCarPrice() + "");
+        params.addBodyParameter("startTime",userControl.getOrder().getUseStartTime() + "");
+        params.addBodyParameter("useDistance", "4512");
+        Log.i(TAG, "postServerReturnBike: ---- "+params.toString());
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 Log.i(TAG, "onSuccess: result is " + result);
                 dialogControl.cancel();
                 try{
-                    if (result.equals("ok")) {
+                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    gsonBuilder.setLongSerializationPolicy(LongSerializationPolicy.DEFAULT);
+                    Gson gson = gsonBuilder.create();
+                    Order order = gson.fromJson(result,Order.class);
+                    if (order != null) {
+                        userControl.setOrder(order);
                         UiUtils.showToast("还车成功！");
                         mLastState=STATE_BACK;
                         mCurrentState=STATE_BACK;

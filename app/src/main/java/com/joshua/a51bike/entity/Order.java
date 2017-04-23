@@ -1,13 +1,12 @@
 package com.joshua.a51bike.entity;
 
 import java.sql.Time;
-import java.sql.Timestamp;
 public class Order {
        Integer carId;
        Time useHour;
        Integer useMoney;
 //       Timestamp useTime;
-       Timestamp useStartTime;
+long useStartTime;
 
 	public Integer getUseDistance() {
 		return useDistance;
@@ -18,7 +17,7 @@ public class Order {
 	}
 
 	Integer useDistance;
-	Timestamp useEndTime;
+	long useEndTime;
 	public Integer getCarId() {
 		return carId;
 	}
@@ -38,16 +37,16 @@ public class Order {
 		this.useMoney = useMoney;
 	}
 
-	public Timestamp getUseStartTime() {
+	public long getUseStartTime() {
 		return useStartTime;
 	}
-	public void setUseStartTime(Timestamp useStartTime) {
+	public void setUseStartTime(long useStartTime) {
 		this.useStartTime = useStartTime;
 	}
-	public Timestamp getUseEndTime() {
+	public long getUseEndTime() {
 		return useEndTime;
 	}
-	public void setUseEndTime(Timestamp useEndTime) {
+	public void setUseEndTime(long useEndTime) {
 		this.useEndTime = useEndTime;
 	}
 	   

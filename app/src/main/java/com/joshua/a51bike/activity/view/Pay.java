@@ -10,6 +10,7 @@ import android.widget.RadioButton;
 import com.joshua.a51bike.Interface.PaySuccess;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
+import com.joshua.a51bike.activity.dialog.WaitProgress;
 import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.pay.util.PayUtils;
 import com.joshua.a51bike.util.AppUtil;
@@ -31,7 +32,7 @@ import org.xutils.x;
 public class Pay extends BaseActivity {
     private String TAG = "Pay";
     private String url = AppUtil.BaseUrl +"/user/updateMoney";
-    private int money = 1;
+    private int money = 100;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,20 +100,25 @@ public class Pay extends BaseActivity {
     }
 
     private void post(){
+        dialogControl.setDialog(new WaitProgress(this));
+        dialogControl.show();
         RequestParams result_params = new RequestParams(url);
-        result_params.addParameter("userId",userControl.getUser().getUserid());
-        result_params.addParameter("usermoney",userControl.getUser().getUsermoney()-money);
-
+        result_params.addParameter("userid",userControl.getUser().getUserid());
+        result_params.addParameter("usermoney",userControl.getUser().getUsermoney() - money);
+        Log.i(TAG, "post: "+result_params.toString());
         x.http().post(result_params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 Log.i(TAG, "onSuccess: result "+result);
                 success();
+                dialogControl.cancel();
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 Log.i("msp", ">>>>>>>>>>>>>>>>>>>>>>>>>>o2:"+ex.getMessage());
+                dialogControl.cancel();
+
             }
 
             @Override

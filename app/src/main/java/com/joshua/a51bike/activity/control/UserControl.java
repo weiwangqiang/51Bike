@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.joshua.a51bike.Interface.UserState;
+import com.joshua.a51bike.entity.Order;
 import com.joshua.a51bike.entity.User;
 
 /**
@@ -15,6 +16,15 @@ import com.joshua.a51bike.entity.User;
 public class UserControl implements UserState {
     private  static UserControl userControl = new UserControl();
 
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    private Order order = null;
     public User getUser() {
         return user;
     }
