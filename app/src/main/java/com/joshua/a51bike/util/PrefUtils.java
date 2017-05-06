@@ -23,6 +23,8 @@ public class PrefUtils {
 
 	private static final String PREF_NAME = "config";
 	private static SharedPreferences sp;
+	//SharedPreferences 的各个key值 ，统一一下，不让容易出错
+	public static final String USER_NAME = "userName";
 
 	public static boolean getBoolean(Context ctx, String key,
 			boolean defaultValue) {

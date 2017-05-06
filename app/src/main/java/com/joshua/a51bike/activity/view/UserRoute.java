@@ -100,7 +100,8 @@ public class UserRoute extends BaseActivity implements ListView.OnItemClickListe
     private List<UserAndUse> list;
     private  void parseResult(String result) {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setDateFormat("yyyy-MM-dd hh:mm:ss");
+//        gsonBuilder.setDateFormat("yyyy-MM-dd hh:mm:ss");
+        gsonBuilder.setDateFormat("mm:ss");
         gsonBuilder.registerTypeAdapter(Timestamp.class,new TimestampTypeAdapter());
         Gson gson = gsonBuilder.create();
         Type type = new TypeToken<ArrayList<UserAndUse>>() {}.getType();
@@ -122,6 +123,7 @@ public class UserRoute extends BaseActivity implements ListView.OnItemClickListe
             @Override
             public void onItemClicked(int position) {
                 Intent intent = new Intent(UserRoute.this,UserRouteMes.class);
+                intent.putExtra("id",data.get(position).get("id"));
                 startActivity(intent);
             }
         });
@@ -129,13 +131,17 @@ public class UserRoute extends BaseActivity implements ListView.OnItemClickListe
     }
 
     private void addData() {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat format = new SimpleDateFormat("mm:ss");
 
         for(UserAndUse use:list ){
+            if(use == null)
+                break;
             HashMap<String,String> map = new HashMap<>();
-            map.put("time",format.format(new Date(use.getUseHour().getTime())));
+          if( use.getUseHour() !=null)
+              map.put("time","使用时长："+format.format(new Date(use.getUseHour().getTime())));
             map.put("spend",use.getUseMoney()+"");
-            map.put("carId",use.getCarId()+"");
+            map.put("carId","车牌号"+use.getCarId()+"");
+            map.put("id",use.getId()+"");
             data.add(map);
         }
 

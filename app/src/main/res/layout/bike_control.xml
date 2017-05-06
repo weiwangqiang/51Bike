@@ -40,5 +40,8 @@
             android:layout_height="300dp"
             android:layout_alignParentBottom="true" />
     </RelativeLayout>
-
+    <com.amap.api.maps.MapView
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:id="@+id/bike_control_MapView"/>
 </LinearLayout>

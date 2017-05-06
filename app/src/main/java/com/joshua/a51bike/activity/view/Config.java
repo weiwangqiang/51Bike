@@ -10,6 +10,8 @@ import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.control.LogoutState;
 import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.activity.dialog.CurrencyAlerDialog;
+import com.joshua.a51bike.application.BaseApplication;
+import com.joshua.a51bike.util.PrefUtils;
 
 import org.xutils.view.annotation.ContentView;
 
@@ -109,6 +111,7 @@ public class Config extends BaseActivity {
             userControl.setUserState(new LogoutState());
             userControl.setUser(null);
             uiUtils.showToast("注销成功！");
+            PrefUtils.setString(BaseApplication.getApplication(),PrefUtils.USER_NAME,"");
         }
 
         @Override

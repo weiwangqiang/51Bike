@@ -16,10 +16,45 @@ public class ReadData {
        byte []jindu=new byte[8]; // 经度 bcd
        byte jindubanqiu; // 经度半球 ascii
        byte carModel;// 车辆模式
-       public double wei; // 韦
-       public double jin; // 经
+
+	public int getCarBattery2() {
+		return carBattery2;
+	}
+
+	public void setCarBattery2(int carBattery2) {
+		this.carBattery2 = carBattery2;
+	}
+
+	public int carBattery2; // 电动车电池容量
+
+	public double getWei() {
+		return wei;
+	}
+
+	public void setWei(double wei) {
+		this.wei = wei;
+	}
+
+	public double getJin() {
+		return jin;
+	}
+
+	public void setJin(double jin) {
+		this.jin = jin;
+	}
+
+	public long getGpsTime() {
+		return gpsTime;
+	}
+
+	public void setGpsTime(long gpsTime) {
+		this.gpsTime = gpsTime;
+	}
+
+	public double wei; // 韦
+	public double jin; // 经
        
-       public long gpsTime;//时间戳 
+    public long gpsTime;//时间戳
        
        
        public void info() {

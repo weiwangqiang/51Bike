@@ -24,8 +24,8 @@
     <string name="text_share_info">我正在使用51get共享出行，你也来看看吧</string>
     <string name="text_share_awesome">51get共享出行</string>
     <string name="agreement">  《51get租车服务条款》</string>
-    <string name="used_time">使用时间 : 0时0分:0秒</string>
-    <string name="release_always">剩余里程 : 15公里</string>
+    <string name="used_time">车状态：锁定</string>
+    <string name="release_always">剩余电量: 暂无数据 </string>
     <string name="reback_money">保证金充值后可以全额退款</string>
     <string name="yajin_reback">为了确保合规用车，需要缴纳押金\n可随时退回付款账户</string>
     <string name="suggest">请写下您的宝贵意见,我们会及时改正</string>

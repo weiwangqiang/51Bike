@@ -7,7 +7,6 @@ import android.content.Intent;
 import com.joshua.a51bike.Interface.UserState;
 import com.joshua.a51bike.activity.view.Config;
 import com.joshua.a51bike.activity.view.Login;
-import com.joshua.a51bike.activity.view.UserRoute;
 import com.joshua.a51bike.activity.view.about;
 import com.joshua.a51bike.activity.view.registerOrLogin;
 import com.joshua.a51bike.util.AppUtil;
@@ -135,14 +134,12 @@ public class LogoutState implements UserState {
 
     @Override
     public void userRoute(Activity activity) {
-//        Choice(activity);
-        Intent intent = new Intent(activity, UserRoute.class);
-        activity.startActivity(intent);
+        Choice(activity);
     }
 
     @Override
     public void userInfor(Activity activity) {
-//        Choice(activity);
+        Choice(activity);
 
     }
 

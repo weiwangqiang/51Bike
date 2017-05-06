@@ -23,8 +23,6 @@ import com.joshua.a51bike.activity.dialog.LocateProgress;
 import com.joshua.a51bike.activity.dialog.WaitProgress;
 import com.joshua.a51bike.entity.Car;
 import com.joshua.a51bike.entity.Order;
-import com.joshua.a51bike.entity.ReadData;
-import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.util.AMapUtil;
 import com.joshua.a51bike.util.AppUtil;
 import com.joshua.a51bike.util.JsonUtil;
@@ -42,8 +40,9 @@ import org.xutils.x;
 public class BikeMessage extends BaseActivity {
     private String TAG = "BikeMessage";
     private String bike_mac;
-    private String rentUrl = AppUtil.BaseUrl +"/user/zuche";
+//    private String rentUrl = AppUtil.BaseUrl +"/user/zuche";
     private String CarMesUrl = AppUtil.BaseUrl +"/car/getCarById";
+    private String url_getCarByMac = AppUtil.BaseUrl +"/car/getCarByMac";
     private static  String url = AppUtil.BaseUrl+"/car/getGps";
     private static int GET_BIKEMESSAGE = 1;
     private static int RENT_BIKE = 2;
@@ -73,12 +72,9 @@ public class BikeMessage extends BaseActivity {
         Log.i(TAG, "getUrl: "+bike_mac);
     }
     /*获取车辆信息*/
-    private String post_bike_mac;
     private void getCarMes() {
-        RequestParams params = new RequestParams(CarMesUrl);
-        post_bike_mac = bike_mac.substring(0,12);
-        params.addBodyParameter("carId",1+"");
-
+        RequestParams params = new RequestParams(url_getCarByMac);
+        params.addBodyParameter("carMac",bike_mac);
         post(params,GET_BIKEMESSAGE);
         dialogControl.setDialog(new WaitProgress(this));
         dialogControl.show();
@@ -147,23 +143,25 @@ public class BikeMessage extends BaseActivity {
         startActivity(intent);
     }
     //点击租车
-    private Car car;
     private void rent(){
-        RequestParams params = new RequestParams(rentUrl);
-        User user = userControl.getUser();
-        long t = System.currentTimeMillis();
-        Log.i(TAG, "rent: time is "+user.getUserid());
-        params.addBodyParameter("userid",user.getUserid()+"");
-        params.addBodyParameter("carId",1+"");
-        params.addBodyParameter("useStartTime",t+"");
-        Log.i(TAG, "rent: ------------- "+params.toString() );
-        post(params,RENT_BIKE);
-        dialogControl.setDialog(new WaitProgress(this));
-        dialogControl.show();
+       if(car == null ){
+            uiUtils.showToast("失败,请重试 ");
+           return;
+       }
+//         Car car  = new Car();
+//        car.setCarMac("E899B6C8A9B9000000001036");
+        if(car.getCarState() != Car.STATE_AVALIABLE){
+            uiUtils.showToast("当前车辆不可租，请换一辆");
+            return;
+        }
+        carControl.setCar(car);
+        userControl.rent(BikeMessage.this);
+
     }
-    /*上传数据
+    /*获取数据
     * */
      private void post(final RequestParams params, final int kind){
+         Log.i(TAG, "post: paramse  "+params.toString());
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
@@ -197,37 +195,30 @@ public class BikeMessage extends BaseActivity {
             }
         });
     }
+    private Car car = null;
     private void parseCar(String result) {
-        ReadData readData = JsonUtil.getReadDataByString(result);
-        Car car = JsonUtil.getCarObject(result);
-        Log.i(TAG, "parseCar: car is "+car.getCarName());
-        if(null != car){
-            carControl.setCar(car);
+        Car myCar = JsonUtil.getCarObject(result);
+        if(null != myCar){
+            car = myCar;
             upCarView();
         }
     }
     /*更新车辆信息到UI*/
     private void upCarView() {
         uiUtils.showToast("获取信息成功!");
-        price.setText(carControl.getCar().getCarPrice()+"元/小时");
+        price.setText(car.getCarPrice()+"元/小时");
         account.setText(userControl.getUser().getUsermoney()+"元");
     }
 
     private void parseRent(String result) {
         Log.i(TAG, "parseRent: "+result);
         long time = Long.valueOf(result);
-
         if(time !=0L ){
             Order order = new Order();
             order.setUseStartTime(time);
             userControl.setOrder(order);
-            car  = new Car();
-            car.setCarMac(post_bike_mac);
-            car.setCarState(Car.STATE_RENTED);
             car.setCarMac(bike_mac);
-            car.setCarId(1);
             carControl.setCar(car);
-            uiUtils.showToast("租车成功！");
             userControl.rent(BikeMessage.this);
         }else
             uiUtils.showToast("租车失败！");

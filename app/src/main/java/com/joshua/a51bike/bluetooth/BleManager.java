@@ -19,6 +19,7 @@ import android.util.Log;
 import com.joshua.a51bike.Interface.BleCallBack;
 import com.joshua.a51bike.activity.control.CarControl;
 import com.joshua.a51bike.bluetooth.utils.Protocol;
+import com.joshua.a51bike.util.UiUtils;
 
 import java.util.List;
 import java.util.UUID;
@@ -98,13 +99,11 @@ public class BleManager {
         if (mBluetoothManager == null) {
             mBluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
             if (mBluetoothManager == null) {
-                Log.e(TAG, "Unable to initialize BluetoothManager.");
                 return false;
             }
         }
         mBluetoothAdapter = mBluetoothManager.getAdapter();
         if (mBluetoothAdapter == null) {
-            Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
             return false;
         }
         return true;
@@ -134,18 +133,15 @@ public class BleManager {
      */
     public boolean connect() {
         mDeviceId = CarControl.getCarControl().getCar().getCarMac();//扫码获取的
-        Log.d(TAG, "connect: mDeviceId"+mDeviceId);
-        String address = getDeviceAddress(mDeviceId);//
+        String address = getDeviceAddress(mDeviceId);
         //判断mBluetoothAdapter与address是否存在
         if (mBluetoothAdapter == null) {
-            Log.w(TAG, "BluetoothAdapter not initialized or unspecified address.");
             return false;
         }
         //先前连接的设备。 尝试重新连接
         if (mBluetoothDeviceAddress != null
                 && address.equals(mBluetoothDeviceAddress)
                 && mBluetoothGatt != null) {
-            Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             if (mBluetoothGatt.connect()) {
                 mConnectionState = STATE_CONNECTING;
                 return true;
@@ -236,6 +232,7 @@ public class BleManager {
      * 发送完毕后读取设备返回信息
      */
     public void sendCommandToDevice(boolean isContinue) {
+        Log.i(TAG, "sendCommandToDevice:--------------向设备发送启动数据了");
         byte[] bytes = Protocol.getBytes(mDeviceId, startCommand);
         BluetoothGattCharacteristic writeCharacteristic= getCharacteristic(writeUuid);
         if(!isContinue){
@@ -334,7 +331,8 @@ public class BleManager {
 
     }
 
-    //Gatt协议通信回调
+    private boolean isNotifi = false;//判定是否需要提示连接成功
+    //Gatt协议读写通信回调
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
 
         //gatt连接结果回调
@@ -405,9 +403,16 @@ public class BleManager {
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
             byte[] resultBytes=new byte[10];
+
             for (int i = 0; i < (characteristic.getValue().length-1); i++) {
                 resultBytes[i]=characteristic.getValue()[i];
                 System.out.println(i + "--------change success----- characteristic:" + resultBytes[i]);
+            }
+            if(resultBytes[3] == 1){
+                if(!isNotifi){
+                    UiUtils.showToast("启动成功");
+                    isNotifi = true;
+                }
             }
             mBleCallBack.getStateFromDevice(parseBytes(resultBytes));
         }

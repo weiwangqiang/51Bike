@@ -30,7 +30,6 @@ public class about extends BaseActivity {
     }
     public void init() {
         initActionBar();
-        findId();
         setLister();
     }
     private void initActionBar() {
@@ -42,10 +41,6 @@ public class about extends BaseActivity {
 //
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        getSupportActionBar().setDisplayShowHomeEnabled(true);
-    }
-
-    public void findId() {
-
     }
 
     public void setLister() {

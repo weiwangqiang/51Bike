@@ -47,12 +47,12 @@
                     android:id="@+id/textView" />
 
                 <TextView
+                    android:id="@+id/route_item_spend"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/baseColor"
-                    android:textSize="30sp"
                     android:text="￥1.0"
-                    android:id="@+id/route_item_spend"/>
+                    android:textColor="@color/baseColor"
+                    android:textSize="30sp" />
 
             </LinearLayout>
         <ImageView
@@ -108,7 +108,7 @@
                 style="@style/whiteTextNoPaddingStyle"
                 android:layout_weight="1"
                 android:layout_marginTop="10dp"
-
+                android:id="@+id/route_item_useTime"
                 android:gravity="start"
                 android:text="时长费（21.2min）"/>
             <TextView
@@ -116,6 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
+                android:id="@+id/route_item_totalMoney"
                 android:layout_marginTop="10dp"
                 style="@style/whiteTextNoPaddingStyle"
                 android:layout_alignParentRight="true"

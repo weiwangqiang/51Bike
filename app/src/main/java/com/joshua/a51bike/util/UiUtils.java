@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -131,7 +130,6 @@ public class UiUtils {
             topActivityName = localRunningTaskInfo.topActivity.getPackageName();
 //            info.topActivityName = localRunningTaskInfo.topActivity.getClassName();
         }
-        Log.i("UiUtils","topActivityName is "+topActivityName);
         return topActivityName;
     }
 }

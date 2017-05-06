@@ -41,12 +41,12 @@
             android:layout_weight="1">
 
             <Button
+                android:id="@+id/pay_button"
+                style="@style/buttonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/to_pay"
-                style="@style/buttonStyle"
                 android:layout_centerInParent="true"
-                android:id="@+id/pay_button"/>
+                android:text="@string/to_pay" />
         </RelativeLayout>
     </LinearLayout>
 

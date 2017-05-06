@@ -44,23 +44,22 @@
             android:text="123456789"/>
         <TextView
             style="@style/blackTextStyle"
-            android:id="@+id/unPay"
+            android:id="@+id/pay_or_not"
             android:text="未付款"/>
     </LinearLayout>
 
     <TextView
+        android:id="@+id/useMoney"
         style="@style/BColorBigTextStyle"
         android:layout_width="match_parent"
         android:gravity="center"
-        android:text="-1元"
-        android:id="@+id/sum"/>
+        android:text="0元" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:gravity="center_vertical"
-
         android:orientation="horizontal">
 
         <TextView
@@ -83,7 +82,7 @@
         android:orientation="horizontal">
         <TextView
             style="@style/blackTextStyle"
-            android:text="订单结束时间:"/>
+            android:text="订单结束时间"/>
         <TextView
             style="@style/grayTextStyle"
             android:id="@+id/order_endTime"
@@ -94,6 +93,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
+        android:id="@+id/pay_RadioGroup"
         >
 
         <RadioButton

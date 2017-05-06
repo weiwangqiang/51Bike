@@ -138,7 +138,7 @@ public class accountRecharge extends BaseActivity {
     private String url = AppUtil.BaseUrl+"/user/insertCharge";
     private void post(){
         RequestParams result_params = new RequestParams(url);
-        result_params.addParameter("userId",userControl.getUser().getUserid());
+        result_params.addParameter("userid",userControl.getUser().getUserid());
         result_params.addParameter("userCharge",money+"");
 
         x.http().post(result_params, new Callback.CommonCallback<String>() {

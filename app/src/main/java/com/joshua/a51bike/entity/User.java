@@ -11,7 +11,27 @@ public class User {
     private  int userid;
 	private  String username;
 	private String realName = null;
-	private  int usermoney;
+
+
+	public String getUserNumber() {
+		return userNumber;
+	}
+
+	public void setUserNumber(String userNumber) {
+		this.userNumber = userNumber;
+	}
+
+	private String userNumber = null;
+	private int usermoney;
+	public int getUserRerve() {
+		return userRerve;
+	}
+
+	public void setUserRerve(int userRerve) {
+		this.userRerve = userRerve;
+	}
+
+	private int userRerve;  //用户余额
 	private  int userstate;  // 0 可租 1不可租 2 正在租
 	private  String userpass;
 	private  String userpic;

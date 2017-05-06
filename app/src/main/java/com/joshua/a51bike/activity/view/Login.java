@@ -12,10 +12,12 @@ import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.control.LoginState;
 import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.activity.dialog.WaitProgress;
+import com.joshua.a51bike.application.BaseApplication;
 import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.util.AppUtil;
 import com.joshua.a51bike.util.JsonUtil;
 import com.joshua.a51bike.util.MyTools;
+import com.joshua.a51bike.util.PrefUtils;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -59,6 +61,7 @@ public class Login extends BaseActivity{
     public void findId() {
         getName = (EditText) findViewById(R.id.login_fast_admin);
         getCode = (EditText) findViewById(R.id.login_fast_code);
+//        getName.setText("15977086991");
         getName.setText("18852852276");
 //        getCode.setText("666666");
     }
@@ -183,6 +186,7 @@ public class Login extends BaseActivity{
             userControl.setUser(user);
             userControl.setUserState(new LoginState());
             setResult(AppUtil.INTENT_RESPONSE);
+            PrefUtils.setString(BaseApplication.getApplication(),PrefUtils.USER_NAME,user.getUsername());
             finish();
         }else   uiUtils.showToast("失败！");
     }

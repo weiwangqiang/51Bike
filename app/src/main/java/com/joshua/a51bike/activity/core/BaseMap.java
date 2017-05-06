@@ -18,7 +18,7 @@ import com.joshua.a51bike.activity.presenter.mapPresenter;
  */
 public abstract class BaseMap extends BaseActivity implements
         AMap.OnMarkerClickListener,latLonPointInterface,
-        AMap.InfoWindowAdapter, RouteSearch.OnRouteSearchListener  {
+        AMap.InfoWindowAdapter  {
     public locatePresenter locatepresener;
     public mapPresenter mappresenter = mapPresenter.getmapPresenter();
     public RouteSearch mRouteSearch;

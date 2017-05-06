@@ -6,6 +6,7 @@ import android.content.Context;
 import com.joshua.a51bike.Interface.UserState;
 import com.joshua.a51bike.entity.Order;
 import com.joshua.a51bike.entity.User;
+import com.joshua.a51bike.entity.UserAndUse;
 
 /**
  * 用户控制类
@@ -25,6 +26,16 @@ public class UserControl implements UserState {
     }
 
     private Order order = null;
+
+    public UserAndUse getUserAndUse() {
+        return userAndUse;
+    }
+
+    public void setUserAndUse(UserAndUse userAndUse) {
+        this.userAndUse = userAndUse;
+    }
+    //用户的历史订单
+    private UserAndUse userAndUse = null;
     public User getUser() {
         return user;
     }

@@ -3,18 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        >
+        android:layout_weight="1">
 
         <LinearLayout
+            android:id="@+id/bike_control_recharge"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:id="@+id/bike_control_recharge"
+            android:onClick="reCharge"
 
             android:orientation="vertical">
 
@@ -22,45 +25,46 @@
                 android:id="@+id/button"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:clickable="false"
-                android:background="@drawable/bike_recharge" />
+                android:background="@drawable/bike_recharge"
+                android:clickable="false" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:textSize="20sp"
-                android:text="充值" />
+                android:text="充值"
+                android:textSize="20sp" />
         </LinearLayout>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@drawable/y_divider"
-            />
+            android:background="@drawable/y_divider" />
+
         <LinearLayout
+            android:id="@+id/bike_control_reback"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:id="@+id/bike_control_reback"
+            android:onClick="returnBike"
             android:orientation="vertical">
 
             <Button
                 android:layout_width="56dp"
                 android:layout_height="56dp"
+                android:background="@drawable/bike_reback"
                 android:clickable="false"
-android:onClick="returnBike"
-                android:background="@drawable/bike_reback" />
+                />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:textSize="20sp"
-                android:text="还车" />
+                android:text="还车"
+                android:textSize="20sp" />
         </LinearLayout>
-       </LinearLayout>
+    </LinearLayout>
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -69,8 +73,7 @@ android:onClick="returnBike"
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        >
+        android:layout_weight="1">
 
         <LinearLayout
             android:id="@+id/bike_control_unlock"
@@ -78,14 +81,15 @@ android:onClick="returnBike"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
+            android:onClick="startBike"
             android:orientation="vertical">
 
             <Button
                 android:layout_width="56dp"
                 android:layout_height="56dp"
+                android:background="@drawable/bike_unlock"
                 android:clickable="false"
-android:onClick="startBike"
-                android:background="@drawable/bike_unlock" />
+              />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -98,30 +102,31 @@ android:onClick="startBike"
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@drawable/y_divider"
-            />
+            android:background="@drawable/y_divider" />
+
         <LinearLayout
+            android:id="@+id/bike_control_lock"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:id="@+id/bike_control_lock"
+            android:onClick="lockBike"
             android:orientation="vertical">
 
             <Button
                 android:layout_width="56dp"
                 android:layout_height="56dp"
+                android:background="@drawable/bike_lock"
                 android:clickable="false"
-                android:onClick="lockBike"
-                android:background="@drawable/bike_lock" />
+                />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:textSize="20sp"
-                android:text="锁车" />
+                android:text="锁车"
+                android:textSize="20sp" />
         </LinearLayout>
 
-        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

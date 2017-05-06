@@ -14,7 +14,7 @@ import com.joshua.a51bike.R;
 /**
  * 通用的dialog
  * 需要传 context， DialogCallBack 回调
- *
+ *   不必再次调用dialogControl.cancel()方法
  * Created by wangqiang on 2017/1/9.
  */
 
@@ -44,7 +44,7 @@ public class CurrencyAlerDialog extends MyAlerDialog implements View.OnClickList
          c = (TextView)findViewById(R.id.dialog_content);
          cancel = (TextView) findViewById(R.id.dialog_cancel);
          sure = (TextView) findViewById(R.id.dialog_sure);
-//        setCanceledOnTouchOutside(false);
+        setCanceledOnTouchOutside(false);
         t.setText(title);
         c.setText(content);
         cancel.setOnClickListener(this);

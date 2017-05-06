@@ -85,9 +85,15 @@ public class LoginState implements UserState {
     @Override
     public void saoma(Activity activity) {
         Intent intent ;
-        if(UserControl.getUserControl().getUser().getUsermoney()<200)
+        if(UserControl.getUserControl().getUser().getRealName()== null){
+            //没有进行实名认证
+            intent = new Intent(activity, RZRealName.class);
+        }
+        else if(UserControl.getUserControl().getUser().getUserRerve()<200)
+            //没有充值保证金
            intent = new Intent(activity, AccountYaJin.class);
         else
+            //进入扫码界面
           intent = new Intent(activity, ScanActivity.class);
         activity.startActivity(intent);
     }
@@ -105,6 +111,7 @@ public class LoginState implements UserState {
     public void rent(Activity activity) {
         Intent intent = new Intent(activity, BikeControlActivity.class);
         intent.putExtra("bid","2634");
+        intent.putExtra("from_where","normal");
         activity.startActivity(intent);
         activity.finish();
     }

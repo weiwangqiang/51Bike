@@ -179,34 +179,33 @@ public class RZRealName extends BaseActivity {
             uiUtils.showToast("不能为空");
             return;
         }
-        String name = getName.getText().toString();
-        String id = getId.getText().toString();
 
+        String realName = getName.getText().toString();
+        String userNumber = getId.getText().toString();
+        if(userNumber.length()!= 18){
+            uiUtils.showToast("身份证不正确");
+            return ;
+        }
         RequestParams params = new RequestParams(url);
-        params.addBodyParameter("username",name);
-        params.addBodyParameter("userstate",id);
-
-        user = new User();
-        user.setUsername(name);
-        user.setUserpass(id);
-        user.setUserstate(1);
+        params.addBodyParameter("userid",userControl.getUser().getUserid()+"");
+        params.addBodyParameter("realName",realName);
+        params.addBodyParameter("userNumber",userNumber);
         post(params);
-        userControl.getUser().setRealName(name);
         dialogControl.setDialog(new WaitProgress(this));
         dialogControl.show();
     }
 
     private void post(RequestParams params){
-        Log.d(TAG, "post: post by xutils------>>");
-        x.http().post(params, new Callback.CommonCallback<String>() {
+        Log.i(TAG, "post: params"+params.toString());
+        x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 Log.d(TAG, "success: object is "+ result.toString());
                 dialogControl.cancel();
-
                 if(result.equals("ok")){
                     uiUtils.showToast("修改成功！");
                     userControl.getUser().setRealName(getName.getText().toString());
+                    userControl.getUser().setUserNumber(getId.getText().toString());
                     finish();
                 }
 

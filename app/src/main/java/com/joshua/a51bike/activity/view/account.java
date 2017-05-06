@@ -54,7 +54,7 @@ public class account extends BaseActivity {
 
     private void initView() {
         money.setText(userControl.getUser().getUsermoney()+"");
-        if(userControl.getUser().getUsermoney() != 0){
+        if(userControl.getUser().getUserRerve()!= 0){
             yajin.setRightText("已经缴纳");
         }
         else

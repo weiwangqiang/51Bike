@@ -7,12 +7,22 @@ public class UserAndUse {
 	   Integer state;
 	   Integer userId;
 	   Integer carId;
+
+	public Integer getCarState() {
+		return carState;
+	}
+
+	public void setCarState(Integer carState) {
+		this.carState = carState;
+	}
+
+    	Integer carState;
 	   Timestamp useHour;
 	   Integer useMoney;
-	   Timestamp useTime;
 	   Integer useDistance;
 	   Timestamp useStartTime;
 	   Timestamp useEndTime;
+
 	public Integer getId() {
 		return id;
 	}
@@ -48,12 +58,6 @@ public class UserAndUse {
 	}
 	public void setUseMoney(Integer useMoney) {
 		this.useMoney = useMoney;
-	}
-	public Timestamp getUseTime() {
-		return useTime;
-	}
-	public void setUseTime(Timestamp useTime) {
-		this.useTime = useTime;
 	}
 	public Integer getUseDistance() {
 		return useDistance;

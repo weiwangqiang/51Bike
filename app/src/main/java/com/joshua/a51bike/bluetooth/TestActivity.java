@@ -31,10 +31,10 @@ public class TestActivity extends BaseActivity {
     @ViewInject(R.id.bike_control_bid)
     private TextView bid;
 
-    @ViewInject(R.id.bike_control_Route)
+    @ViewInject(R.id.bike_control_ReleasePower)
     private TextView Rout;
 
-    @ViewInject(R.id.bike_control_timer)
+    @ViewInject(R.id.bike_control_bikeState)
     private TextView textTimer;
 
     private BleManager mBleManager;

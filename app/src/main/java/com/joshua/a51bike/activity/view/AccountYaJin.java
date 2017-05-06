@@ -116,22 +116,19 @@ public class AccountYaJin extends BaseActivity {
     private void success() {
         UiUtils.showToast("支付成功");
         User user = userControl.getUser();
-        user.setUsermoney(200);
+        user.setUserRerve(200);
         userControl.setUser(user);
-        userControl.saoma(this);
+        finish();
     }
 
-    private String url = AppUtil.BaseUrl+"/user/insertCharge";
+    private String url = AppUtil.BaseUrl+"/user/insertRerver";
     private void post(){
         dialogControl.setDialog(new WaitProgress(this));
         dialogControl.show();
         RequestParams result_params = new RequestParams(url);
-//        Log.i(TAG, "post: userid "+ userControl.getUser().getUserid());
-//        result_params.addParameter("userId",userControl.getUser().getUserid());
-        result_params.addParameter("userId",userControl.getUser().getUserid());
-        result_params.addParameter("userCharge","200");
-
-        x.http().post(result_params, new Callback.CommonCallback<String>() {
+        result_params.addParameter("userid",userControl.getUser().getUserid());
+        Log.i(TAG, "post: param  "+result_params.toString() );
+        x.http().get(result_params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 Log.i(TAG, "onSuccess: result "+result);

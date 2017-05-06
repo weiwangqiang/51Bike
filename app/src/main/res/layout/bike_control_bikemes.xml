@@ -9,16 +9,18 @@
         style="@style/whiteTextStyle"
         android:textSize="25sp"
         android:id="@+id/bike_control_bid"
-        android:text="车牌号1515"/>
+        android:text="车牌号：暂无数据"/>
+
     <TextView
+        android:id="@+id/bike_control_bikeState"
         style="@style/whiteTextStyle"
-        android:id="@+id/bike_control_timer"
-        android:text="@string/used_time"/>
+        android:text="@string/used_time" />
+
     <TextView
         style="@style/whiteTextStyle"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="100dp"
-        android:id="@+id/bike_control_Route"
+        android:id="@+id/bike_control_ReleasePower"
         android:text="@string/release_always"/>
 
 </LinearLayout>

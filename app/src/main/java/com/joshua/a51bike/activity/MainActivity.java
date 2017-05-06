@@ -45,30 +45,41 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.animation.Animation;
 import com.amap.api.maps.model.animation.TranslateAnimation;
 import com.amap.api.services.core.LatLonPoint;
-import com.amap.api.services.route.BusRouteResult;
-import com.amap.api.services.route.DriveRouteResult;
-import com.amap.api.services.route.RideRouteResult;
 import com.amap.api.services.route.RouteSearch;
-import com.amap.api.services.route.WalkRouteResult;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.control.DialogControl;
 import com.joshua.a51bike.activity.control.UserControl;
 import com.joshua.a51bike.activity.core.BaseMap;
 import com.joshua.a51bike.activity.dialog.GPSAlerDialog;
 import com.joshua.a51bike.activity.dialog.LocateProgress;
+import com.joshua.a51bike.activity.dialog.WaitProgress;
 import com.joshua.a51bike.activity.presenter.locatePresenter;
+import com.joshua.a51bike.activity.view.BikeControlActivity;
+import com.joshua.a51bike.activity.view.Pay;
 import com.joshua.a51bike.activity.view.Use_Explain;
 import com.joshua.a51bike.activity.view.searchBike;
+import com.joshua.a51bike.adapter.TimestampTypeAdapter;
 import com.joshua.a51bike.customview.CircleImageView;
 import com.joshua.a51bike.customview.progress;
+import com.joshua.a51bike.entity.Car;
+import com.joshua.a51bike.entity.Order;
 import com.joshua.a51bike.entity.User;
+import com.joshua.a51bike.entity.UserAndUse;
 import com.joshua.a51bike.util.AMapUtil;
+import com.joshua.a51bike.util.AppUtil;
+import com.joshua.a51bike.util.JsonUtil;
 import com.joshua.a51bike.util.SensorEventHelper;
 import com.joshua.a51bike.util.imageUtil.ImageManager;
 
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +99,7 @@ public class MainActivity extends BaseMap {
     private Boolean canGetPos = true,canShow = false;
     private progress myProgress;
     private Marker mLocMarker;
-    private SensorEventHelper mSensorHelper;
+    private SensorEventHelper mSensorHelper;//自旋转的定位指针
     private Circle mCircle;
     private  Toolbar toolbar ;
     public LatLonPoint point1 = new LatLonPoint(32.1979265479926, 119.51321482658388);
@@ -115,7 +126,6 @@ public class MainActivity extends BaseMap {
         init();
         if(savedInstanceState == null)
             canShow = true;
-
         initDrawer();
     }
 
@@ -147,6 +157,10 @@ public class MainActivity extends BaseMap {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+
+    /**
+     * 初始化主界面的toolbar
+     */
     private void initDrawer() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -165,7 +179,7 @@ public class MainActivity extends BaseMap {
     }
 
     /**
-     * 初始化侧滑view的高宽
+     * 初始化侧滑栏view的高宽
      */
     private void initLeftMain() {
         DisplayMetrics metric = new DisplayMetrics();
@@ -180,10 +194,14 @@ public class MainActivity extends BaseMap {
     private TextView textView1,textView2,textView3,textView4;
     private List<TextView> list = new ArrayList<>();
 
-
+    /**
+     * 判断是否显示侧滑栏的进度条
+     * @param user
+     */
     private void showProgreesOrNot(User user) {
-        setProgressView(1);//更新
+        setProgressView(1);   //更新
         if(user == null ){
+            Log.i(TAG, "showProgreesOrNot: --------我消失了  --------useProgressParent.setViewGONE---");
             useProgressParent.setVisibility(View.GONE);
             return;
         }
@@ -191,10 +209,14 @@ public class MainActivity extends BaseMap {
             useProgressParent.setVisibility(View.VISIBLE);
         if(user.getRealName() != null )
             setProgressView(2);
-        if(user.getUsermoney() != 0)
+        if(user.getUserRerve() == 200)
             useProgressParent.setVisibility(View.GONE);
     }
 
+    /**
+     * 设置当前进度条
+     * @param a
+     */
     private void setProgressView(int a) {
         useProgress.setPoistion(a);
         int i ;
@@ -320,7 +342,6 @@ public class MainActivity extends BaseMap {
      * 设置一些amap的属性
      */
     private void setUpMap() {
-//        aMap.setLocationSource(this);// 设置定位监听
         mUiSettings = aMap.getUiSettings();
         mUiSettings.setZoomControlsEnabled(true);
         mUiSettings.setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
@@ -332,13 +353,11 @@ public class MainActivity extends BaseMap {
 
     public void findid() {
         location = (Button) findViewById(R.id.main_location);
-
         useProgressParent = findViewById(R.id.main_progress);
-
         userIcn = (CircleImageView) findViewById(R.id.main_user_icn);
         userName = (TextView) findViewById(R.id.main_user_name);
-        userMoney = (TextView) findViewById(R.id.money);
-        userCash = (TextView) findViewById(R.id.cash);
+        userMoney = (TextView) findViewById(R.id.money);//余额
+        userCash = (TextView) findViewById(R.id.cash);//保证金
         myProgress = (progress) findViewById(R.id.main_progress_view);
 
         textView1 = (TextView) findViewById(R.id.text1);
@@ -363,7 +382,6 @@ public class MainActivity extends BaseMap {
         aMap.setInfoWindowAdapter(this);
         locatepresener.setlatLonPointLister(this);
         mRouteSearch = new RouteSearch(this);
-        mRouteSearch.setRouteSearchListener(this);
         location.setOnClickListener(this);
         explain.setOnClickListener(this);
         findViewById(R.id.rent).setOnClickListener(this);
@@ -384,10 +402,6 @@ public class MainActivity extends BaseMap {
                 getLocation();
                 break;
             case R.id.rent:
-//                dialogControl.setDialog(new
-//                        MarginAlerDialog(MainActivity.this,
-//                        "保证金提示","请先充值保证金"));
-//                dialogControl.show();
                 toRent();
                 break;
             case R.id.main_user_icn:
@@ -420,8 +434,146 @@ public class MainActivity extends BaseMap {
         }
     }
 
+    /**
+     * 用户点击扫码按钮
+     */
     private void toRent() {
+        if(userControl.getUser() != null){
+            //用户上次没有还车或者没有付款
+            if ( userControl.getUser().getUserstate() == 2)
+            {
+                getLastOrder();
+                return ;
+            }
+        }
       userControl.saoma(MainActivity.this);
+    }
+    private String url_getCurrent = AppUtil.BaseUrl+"/user/getCurrent";
+
+    /**
+     * 获取上次没有付款的UserAndUse
+     */
+    private void getLastOrder() {
+        Log.i(TAG, "getLastOreder: ====获取上次没有付款的UserAndUse====");
+        dialogControl.setDialog(new WaitProgress(this));
+        dialogControl.show();
+        RequestParams result_params = new RequestParams(url_getCurrent);
+        result_params.addParameter("userId",userControl.getUser().getUserid());
+        x.http().get(result_params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Log.i(TAG, "onSuccess: result -------------------- -  \n "+result);
+                parseLastOrderResult(result);
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
+                Log.i("onError", ">>>>>>>>>>>>>>>>>>>>>>>>>>o2:"+ex.getMessage());
+                dialogControl.cancel();
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                dialogControl.cancel();
+
+            }
+
+            @Override
+            public void onFinished() {
+                dialogControl.cancel();
+
+            }
+        });
+    }
+
+    /**
+     * 解析getLastOrder() 方法的结果
+     * @param result
+     */
+    private Order order = new Order();
+    private void parseLastOrderResult(String result) {
+        Log.i(TAG, "parseLastOrderResult:   解析结果 ");
+        try {
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.setDateFormat("yyyy-MM-dd hh:mm:ss");
+            gsonBuilder.registerTypeAdapter(Timestamp.class,new TimestampTypeAdapter());
+            Gson gson = gsonBuilder.create();
+            UserAndUse userAndUse = gson.fromJson(result, UserAndUse.class);
+
+            if (userAndUse != null) {
+                userControl.setUserAndUse(userAndUse);
+                //正在租车，先获取car的信息 然后跳转到控制界面
+                if(userAndUse.getCarState() == Car.STATE_START){
+                    Log.i(TAG, "parseLastOrderResult: 没有还车 ");
+                    order.setUseStartTime(userAndUse.getUseStartTime().getTime());
+                    order.setCarId(userAndUse.getCarId());
+                    userControl.setOrder(order);
+                    getCarMes();
+                }
+                //已经还车，但是没有付款
+                else if (userAndUse.getCarState() == Car.STATE_AVALIABLE){
+                    Log.i(TAG, "parseLastOrderResult: 没有付款，跳到付款界面");
+                     Order order = new Order();
+                    order.setCarId(userAndUse.getCarId());
+                    order.setUseMoney(userAndUse.getUseMoney());
+                    order.setUseStartTime(userAndUse.getUseStartTime().getTime());
+                    order.setUseEndTime(userAndUse.getUseEndTime().getTime());
+                    userControl.setOrder(order);
+                    startActivity(new Intent(MainActivity.this,Pay.class));
+
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 用户正在租车，先获取车辆信息，然后直接跳转到控制界面
+     */
+    private String url_getCarById  = AppUtil.BaseUrl+"/car/getCarById";
+    public void getCarMes(){
+        Log.i(TAG, "getCarMes: -----获取车辆信息-----------------------");
+        RequestParams result_params = new RequestParams(url_getCarById);
+        result_params.addParameter("carId",userControl.getUserAndUse().getCarId());
+        Log.i(TAG, "getCarMes: paramse "+result_params.toString());
+        x.http().get(result_params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Log.i(TAG, "onSuccess: result -------------------- -  \n "+result);
+                    Car car = JsonUtil.getCarObject(result);
+                    if(car != null){
+                        Log.i(TAG, "onSuccess: 跳转道控制界面了-----------");
+                        carControl.setCar(car);
+                        Intent intent = new Intent(MainActivity.this, BikeControlActivity.class);
+                        intent.putExtra("from_where","Exception");
+                        startActivity(intent);
+                    }
+                dialogControl.cancel();
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
+                Log.i("onError", ">>>>>>>>>>>>>>>>>>>>>>>>>>o2:"+ex.getMessage());
+                dialogControl.cancel();
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                dialogControl.cancel();
+
+            }
+
+            @Override
+            public void onFinished() {
+                dialogControl.cancel();
+
+            }
+        });
     }
 //*******************************************************************
 
@@ -460,6 +612,9 @@ public class MainActivity extends BaseMap {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * 跳转到搜索界面
+     */
     private void toSearchActivty() {
       startActivity(new Intent(this,searchBike.class));
     }
@@ -555,59 +710,7 @@ public class MainActivity extends BaseMap {
             Log.i(TAG, "onCancel: ");
         }
     }
-    //**********************搜索路径规划方案********************************************
 
-    /**
-     * 开始搜索路径规划方案
-     */
-    public void searchRouteResult(int routeType, int mode) {
-        if (mStartPoint == null) {
-            uiUtils.showToast("定位中，稍后再试...");
-            return;
-        }
-        if (mEndPoint == null) {
-            uiUtils.showToast("终点未设置");
-        }
-
-        dialogControl.setDialog(new LocateProgress(MainActivity.this, "正在搜索......"));
-        dialogControl.show();
-        final RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(
-                mStartPoint, mEndPoint);
-        FAT = fromAndTo;
-        if (routeType == ROUTE_TYPE_RIDE) {// 骑行路径规划
-            RouteSearch.RideRouteQuery query = new RouteSearch.RideRouteQuery(fromAndTo, mode);
-            mRouteSearch.calculateRideRouteAsyn(query);// 异步路径规划骑行模式查询
-        }
-    }
-    //*******************路径规划结果回调***********************************************
-    /**
-     * 骑行路径结果回调
-     *
-     * @param result
-     * @param errorCode
-     */
-    @Override
-    public void onRideRouteSearched(RideRouteResult result, int errorCode) {
-        dialogControl.cancel();
-        aMap.clear();// 清理地图上的所有覆盖物
-        mappresenter.showRideRoute(result, this
-                , errorCode, aMap, FAT);
-    }
-
-    @Override
-    public void onBusRouteSearched(BusRouteResult result, int errorCode) {
-
-    }
-
-    @Override
-    public void onDriveRouteSearched(DriveRouteResult result, int errorCode) {
-
-    }
-
-    @Override
-    public void onWalkRouteSearched(WalkRouteResult result, int errorCode) {
-
-    }
     //***********************生命周期*******************************************
     @Override
     protected void onRestart() {
@@ -636,6 +739,10 @@ public class MainActivity extends BaseMap {
         }
 
     }
+
+    /**
+     * 显示开启gps的dialog
+     */
     private void showDialog() {
         Log.i(TAG, "onCreate: saveInstanceState is null");
         dialogControl.setDialog(new GPSAlerDialog(MainActivity.this));
@@ -648,7 +755,6 @@ public class MainActivity extends BaseMap {
     protected void onPause() {
         super.onPause();
         mapView.onPause();
-        Log.i(TAG, "onPause: ");
         if (mSensorHelper != null) {
             mSensorHelper.unRegisterSensorListener();
             mSensorHelper.setCurrentMarker(null);
@@ -660,7 +766,6 @@ public class MainActivity extends BaseMap {
     @Override
     public void onStop() {
         super.onStop();
-        Log.i(TAG, "onStop: ");
     }
     /**
      * 方法必须重写
@@ -669,7 +774,6 @@ public class MainActivity extends BaseMap {
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
-        Log.i(TAG, "onDestroy: ");
     }
 //*******************异常退出保留数据方法*******************************
     /** 异常退出保留数据
@@ -679,7 +783,6 @@ public class MainActivity extends BaseMap {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.i(TAG, "onSaveInstanceState: ");
         mapView.onSaveInstanceState(outState);
         outState.putInt("IntTest", 0);
     }
@@ -687,7 +790,6 @@ public class MainActivity extends BaseMap {
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        Log.i(TAG, "onRestoreInstanceState: ");
         int IntTest = savedInstanceState.getInt("IntTest");
     }
 
@@ -720,7 +822,7 @@ public class MainActivity extends BaseMap {
         String after_image_path = "";
         userName.setText(userControl.getUser().getUsername());
         userMoney.setText(userControl.getUser().getUsermoney()+"");
-        userCash.setText(userControl.getUser().getUsermoney()+"");
+        userCash.setText(userControl.getUser().getUserRerve()+"");
         showProgreesOrNot(user);
         if(after_image_path == null )
             return;
@@ -761,7 +863,7 @@ public class MainActivity extends BaseMap {
     }
 
 
-//**************************************************
+//***********自定义的定位回调**************************************
 
     /**
      * 定位成功的回调
@@ -770,7 +872,6 @@ public class MainActivity extends BaseMap {
      */
     @Override
     public void getstartlatLonPoint(AMapLocation aMapLocation) {
-        Log.i(TAG, "getstartlatLonPoint: "+aMapLocation.getLatitude());
         mStartPoint = new LatLonPoint(aMapLocation.getLatitude(), aMapLocation.getLongitude());
         Boolean b = dialogControl.getDialog() instanceof LocateProgress;
         if(b)
@@ -780,20 +881,10 @@ public class MainActivity extends BaseMap {
             canGetPos = false;
             LastPoint = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
             aMap.clear();
-
-
             addCircle(LastPoint, aMapLocation.getAccuracy());//添加定位精度圆
             addMarker(LastPoint);//添加定位图标
             mSensorHelper.setCurrentMarker(mLocMarker);//定位图标旋转
-
-//            aMap.addMarker(new MarkerOptions()
-//                    .position(AMapUtil.convertToLatLng(mStartPoint))
-//                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.start)));
             addCarMarker();
-//            aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
-//            aMap.moveCamera(CameraUpdateFactory.
-//                    changeLatLng(new LatLng(mStartPoint.getLatitude(),
-//                            mStartPoint.getLongitude())));
             /*移动到当前位置  CameraPosition 第三参数是偏移经度的角度*/
             addMarkersToMap();
             changeCamera(
@@ -824,6 +915,11 @@ public class MainActivity extends BaseMap {
     private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
     private static final int FILL_COLOR = Color.argb(10, 0, 0, 180);
 
+    /**
+     * 添加精度圆
+     * @param latlng
+     * @param radius
+     */
     private void addCircle(LatLng latlng, double radius) {
         CircleOptions options = new CircleOptions();
         options.strokeWidth(1f);
@@ -833,6 +929,11 @@ public class MainActivity extends BaseMap {
         options.radius(radius);
         mCircle = aMap.addCircle(options);
     }
+
+    /**
+     * 添加maker
+     * @param latlng
+     */
     private void addMarker(LatLng latlng) {
         Bitmap bMap = BitmapFactory.decodeResource(this.getResources(),
                 R.drawable.navi_map_gps_locked);
@@ -856,6 +957,9 @@ public class MainActivity extends BaseMap {
     public void getEndlatLonPoint(LatLonPoint point) {
     }
 
+    /**
+     * 定位失败的回调
+     */
     @Override
     public void Error() {
         uiUtils.showToast("定位失败，请重试");

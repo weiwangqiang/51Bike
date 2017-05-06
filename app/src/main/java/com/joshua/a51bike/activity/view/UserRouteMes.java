@@ -9,31 +9,44 @@ import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
-import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
-import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.route.BusRouteResult;
 import com.amap.api.services.route.DriveRouteResult;
+import com.amap.api.services.route.RidePath;
 import com.amap.api.services.route.RideRouteResult;
 import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkRouteResult;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseMap;
 import com.joshua.a51bike.activity.dialog.WaitProgress;
-import com.joshua.a51bike.util.AMapUtil;
+import com.joshua.a51bike.activity.overlay.RideRouteOverlay;
+import com.joshua.a51bike.adapter.TimestampTypeAdapter;
+import com.joshua.a51bike.entity.UserAndUse;
+import com.joshua.a51bike.util.AppUtil;
 
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
+
+import java.sql.Timestamp;
 
 import static android.support.design.widget.BottomSheetBehavior.STATE_COLLAPSED;
 import static android.support.design.widget.BottomSheetBehavior.STATE_EXPANDED;
 import static android.support.design.widget.BottomSheetBehavior.STATE_HIDDEN;
+import static com.alipay.sdk.app.statistic.c.r;
 
 /**
  * class description here
@@ -46,7 +59,7 @@ import static android.support.design.widget.BottomSheetBehavior.STATE_HIDDEN;
  * @since 2017-03-01
  */
 @ContentView(R.layout.user_route_mes)
-public class UserRouteMes extends BaseMap {
+public class UserRouteMes extends BaseMap implements RouteSearch.OnRouteSearchListener {
     private static final String TAG = "UserRouteMes";
     private CheckBox checkBox;
     private View blackView;
@@ -59,6 +72,19 @@ public class UserRouteMes extends BaseMap {
     private final int ROUTE_TYPE_RIDE = 4;
     private  RouteSearch.FromAndTo FAT;
 
+    @ViewInject(R.id.route_item_spend)
+    private TextView route_item_spend;
+
+    @ViewInject(R.id.route_item_carId)
+    private TextView route_item_carId;
+
+    @ViewInject(R.id.route_item_useTime)
+    private TextView route_item_useTime;
+
+    @ViewInject(R.id.route_item_totalMoney)
+    private TextView route_item_totalMoney;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,12 +92,13 @@ public class UserRouteMes extends BaseMap {
         mEndPoint =new LatLonPoint(32.19794016630354, 119.51738834381104);
         init();
         mapView.onCreate(savedInstanceState); // 此方法必须重写
-
-        searchRouteResult(ROUTE_TYPE_RIDE, RouteSearch.RidingDefault);
-
+        getBikeMes();
     }
-
+    private String id ;
     public void init() {
+        Intent intent = getIntent();
+        id = intent.getStringExtra("id");
+
         findId();
         setLister();
         initmap();
@@ -126,6 +153,77 @@ public class UserRouteMes extends BaseMap {
             }
         });
     }
+
+    /**
+     * 通过服务器获取用户历史骑车信息
+     */
+    private String url = AppUtil.BaseUrl+"/car/getOrderById";
+    public void getBikeMes(){
+        RequestParams params = new RequestParams(url);
+        params.addBodyParameter("id",id);
+        Log.i(TAG, "getBikeMes: params ---"+params.toString());
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Log.i(TAG, "onSuccess: -------------------");
+                Log.i(TAG, "onSuccess: "+result);
+                parseResult(result);
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                Log.i(TAG, "onError: --------------------");
+                ex.printStackTrace();
+//              1handler.sendEmptyMessage(NET_ERROR);
+                dialogControl.cancel();
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                Log.e(TAG, "onCancelled: cancel", null);
+                dialogControl.cancel();
+
+            }
+
+            @Override
+            public void onFinished() {
+                dialogControl.cancel();
+
+            }
+        });
+    }
+
+    /**
+     * 更新订单详情界面
+     */
+    private void upOrderMes() {
+        route_item_spend.setText(use.getUseMoney()+"");
+        route_item_carId.setText(use.getCarId()+"");
+        route_item_useTime.setText(use.getUseHour().toString());
+        route_item_totalMoney.setText(use.getUseMoney()+"");
+        searchRouteResult(ROUTE_TYPE_RIDE, RouteSearch.RidingDefault);
+    }
+
+    private  UserAndUse use = null;
+    private void parseResult(String result) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("yyyy-MM-dd hh:mm:ss");
+        gsonBuilder.registerTypeAdapter(Timestamp.class,new TimestampTypeAdapter());
+        Gson gson = gsonBuilder.create();
+        try {
+            use = gson.fromJson(result,UserAndUse.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(null == use ){
+            dialogControl.cancel();
+            uiUtils.showToast("获取失败！");
+        }
+        else
+            upOrderMes();
+    }
+
     private void initmap() {
         mapView = (MapView) findViewById(R.id.route_mapView);
 
@@ -136,29 +234,9 @@ public class UserRouteMes extends BaseMap {
         aMap.clear();
         mUiSettings = aMap.getUiSettings();
         mUiSettings.setZoomControlsEnabled(false);
-
         mRouteSearch = new RouteSearch(this);
         mRouteSearch.setRouteSearchListener(this);
-
-//        addMarker();
     }
-
-    private void addMarker() {
-        LatLonPoint point1 = new LatLonPoint(32.1979265479926 ,119.51321482658388) ;
-        MarkerOptions markerOptions = new MarkerOptions()
-                .title("车牌号 : 2525")
-                .snippet("可行驶里程 : "+20+" 公里")
-                .position(AMapUtil.convertToLatLng(point1))
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.bike));
-        Marker marker = aMap.addMarker(markerOptions);
-        marker.showInfoWindow();
-        aMap.moveCamera(CameraUpdateFactory.zoomTo(16));
-        aMap.moveCamera(CameraUpdateFactory.
-                changeLatLng(new LatLng(point1.getLatitude(),
-                        point1.getLongitude())));
-        Log.i(TAG, "addMarker: -------------------");
-    }
-
 
 
     /**
@@ -229,35 +307,6 @@ public class UserRouteMes extends BaseMap {
         return false;
     }
 
-    @Override
-    public void onBusRouteSearched(BusRouteResult busRouteResult, int i) {
-
-    }
-
-    @Override
-    public void onDriveRouteSearched(DriveRouteResult driveRouteResult, int i) {
-
-    }
-
-    @Override
-    public void onWalkRouteSearched(WalkRouteResult walkRouteResult, int i) {
-
-    }
-    /**
-     * 骑行路径结果回调
-     * @param result
-     * @param errorCode
-     */
-    @Override
-    public void onRideRouteSearched(RideRouteResult result, int errorCode) {
-        Log.i(TAG, "onRideRouteSearched: ");
-        dialogControl.cancel();
-        isfirst = false;
-        aMap.clear();// 清理地图上的所有覆盖物
-        mappresenter.showRideRoute(result,UserRouteMes.this
-                ,errorCode,aMap,FAT);
-
-    }
 
     @Override
     public void getstartlatLonPoint(AMapLocation aMapLocation) {
@@ -310,4 +359,43 @@ public class UserRouteMes extends BaseMap {
         mapView.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onBusRouteSearched(BusRouteResult busRouteResult, int i) {
+
+    }
+
+    @Override
+    public void onDriveRouteSearched(DriveRouteResult driveRouteResult, int i) {
+
+    }
+
+    @Override
+    public void onWalkRouteSearched(WalkRouteResult walkRouteResult, int i) {
+
+    }
+
+    @Override
+    public void onRideRouteSearched(RideRouteResult result, int errorCode) {
+        Log.i(TAG, "onRideRouteSearched: ==========回调");
+        if (errorCode == AMapException.CODE_AMAP_SUCCESS) {
+            if (r != null && result.getPaths() != null) {
+                if (result.getPaths().size() > 0) {
+                    final RidePath ridePath = result.getPaths()
+                            .get(0);
+                    RideRouteOverlay rideRouteOverlay = new RideRouteOverlay(
+                            UserRouteMes.this ,aMap, ridePath,
+                            result.getStartPos(),
+                            result.getTargetPos());
+                    rideRouteOverlay.removeFromMap();
+                    rideRouteOverlay.addToMap();
+                    rideRouteOverlay.zoomToSpan();
+                } else if (r != null && result.getPaths() == null) {
+                    uiUtils.showToast("对不起，没有搜索到相关数据！");
+
+                }
+            } else {
+                uiUtils.showToast("对不起，没有搜索到相关数据！");
+            }
+        }
+    }
 }
