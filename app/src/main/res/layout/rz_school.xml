@@ -67,7 +67,7 @@
                 android:layout_height="45dp"
                 android:layout_margin="20dp"
                 android:gravity="center_vertical"
-                android:hint="所在学校"
+                android:hint="所在学校:请点击选择"
                 android:lines="1" />
 
             <EditText

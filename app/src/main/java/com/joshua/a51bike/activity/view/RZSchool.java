@@ -171,7 +171,7 @@ public class RZSchool extends BaseActivity {
         // TODO Auto-generated method stub
         Log.i(TAG,"Result Coode is "+resultCode+" requestCode is "+requestCode);
         if(requestCode == GET_PRO && resultCode == GET_PRO_RESULT ) {
-            getSchool.setText(data.getStringExtra("school"));
+            getSchool.setText("所在学校："+data.getStringExtra("school"));
             return;
         }
         if (resultCode != RESULT_OK)
@@ -257,12 +257,12 @@ public class RZSchool extends BaseActivity {
 //        params.addBodyParameter("userpass",id);
         params.addBodyParameter("userstate",id);
 
-        user = new User();
-        user.setRealName(name);
-        user.setSchool(school);
-        post(params);
+        userControl.getUser().setRealName(name);
+        userControl.getUser().setSchool(school);
         dialogControl.setDialog(new WaitProgress(this));
         dialogControl.show();
+        post(params);
+
     }
 
     private void post(RequestParams params){

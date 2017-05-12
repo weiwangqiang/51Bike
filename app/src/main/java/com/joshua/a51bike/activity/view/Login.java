@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.control.LoginState;
@@ -18,11 +18,16 @@ import com.joshua.a51bike.util.AppUtil;
 import com.joshua.a51bike.util.JsonUtil;
 import com.joshua.a51bike.util.MyTools;
 import com.joshua.a51bike.util.PrefUtils;
+import com.joshua.a51bike.util.UiUtils;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -47,6 +52,8 @@ public class Login extends BaseActivity{
     private EditText getName, getCode;
     private   User user;
 
+    @ViewInject(R.id.get_code)
+    private TextView get_code;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,13 +69,13 @@ public class Login extends BaseActivity{
         getName = (EditText) findViewById(R.id.login_fast_admin);
         getCode = (EditText) findViewById(R.id.login_fast_code);
 //        getName.setText("15977086991");
-        getName.setText("18852852276");
+//        getName.setText("18852852276");
 //        getCode.setText("666666");
     }
 
     public void setLister() {
         findViewById(R.id.button_fast_login).setOnClickListener(this);
-        findViewById(R.id.get_code).setOnClickListener(this);
+        get_code.setOnClickListener(this);
         findViewById(R.id.bike_mes_agreement).setOnClickListener(this);
 
     }
@@ -104,13 +111,16 @@ public class Login extends BaseActivity{
     }
 
 
-    public void getCode ( ){
-        if(MyTools.EditTextIsNull(getName))
+    public void getCode (){
+        if(MyTools.EditTextIsNull(getName)){
+           UiUtils.showToast("请输入正确的手机号");
             return ;
-//        if(!MyTools.isMobileNO(getName.getText().toString())){
-//            ToastUtil.show(Login.this,"请输入正确的手机号");
-//            return;
-//        }
+
+        }
+        if(!MyTools.isMobileNO(getName.getText().toString())){
+            UiUtils.showToast("请输入正确的手机号");
+            return;
+        }
         type = GET_CODE;
         RequestParams params = new RequestParams(mesUrl);
         params.addBodyParameter("phoneNumber",getName.getText().toString());
@@ -122,23 +132,24 @@ public class Login extends BaseActivity{
     }
     private void login(){
 //        if (MyTools.EditTextIsNull(getName) || MyTools.EditTextIsNull(getCode)) {
-//            ToastUtil.show(Login.this,"手机号或验证码不能为空~");
+//            UiUtils.showToast("手机号或验证码不能为空~");
 //            return;
 //        }
         type = LOGIN;
         String name = getName.getText().toString();
         String code = getCode.getText().toString();
 //        if(!code.equals(resultCode)){
-//            ToastUtil.show(Login.this,"验证码出错了~");
+//            UiUtils.showToast("验证码出错了~");
 //            return;
 //        }
         RequestParams params = new RequestParams(url);
         params.addBodyParameter("username",name);
         user = new User();
         user.setUsername(name);
-        post(params);
         dialogControl.setDialog(new WaitProgress(this));
         dialogControl.show();
+        post(params);
+
     }
     private   Callback.Cancelable cancelable;
     private void post(RequestParams params){
@@ -166,7 +177,7 @@ public class Login extends BaseActivity{
 
             @Override
             public void onCancelled(CancelledException cex) {
-                Toast.makeText(x.app(), "cancelled", Toast.LENGTH_LONG).show();
+                UiUtils.showToast("cancelled");
                 dialogControl.cancel();
 
             }
@@ -192,10 +203,49 @@ public class Login extends BaseActivity{
     }
     //获取验证码成功
     private void getCodeSuccess(String result) {
+        Log.i(TAG, "getCodeSuccess: "+result);
         if(result.length() == 6 ){
             resultCode = result;
+            startTime();
             uiUtils.showToast("已发送验证码，请注意查收");
-        }else   uiUtils.showToast("获取验证码失败");
+        }else
+            uiUtils.showToast("获取验证码失败");
+    }
+
+    Timer timer ;
+    private TimeTask timeTask ;
+    private int release;
+
+    //开始倒计时
+    private void startTime() {
+        timer = new Timer();
+        timeTask = new TimeTask();
+        release = 60;
+        timer.schedule(timeTask, 1000, 1000);       // timeTask
+        get_code.setClickable(false);
+        get_code.setBackgroundResource(R.drawable.button_fast_nor);
+
+    }
+    class TimeTask extends TimerTask{
+
+        @Override
+        public void run() {
+
+            runOnUiThread(new Runnable() {      // UI thread
+                @Override
+                public void run() {
+                    release--;
+                    get_code.setText(""+release+"秒");
+                    if(release < 0){
+                        timer.cancel();
+                        timeTask.cancel();
+                        get_code.setClickable(true);
+                        get_code.setBackgroundResource(R.drawable.button_fast_pre);
+                        get_code.setText("获取验证码");
+                    }
+                }
+            });
+        }
     }
 
     @Override

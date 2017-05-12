@@ -21,9 +21,9 @@ import com.joshua.a51bike.activity.control.CarControl;
 import com.joshua.a51bike.bluetooth.utils.Protocol;
 import com.joshua.a51bike.util.UiUtils;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
-
 
 
 /**
@@ -85,6 +85,9 @@ public class BleManager {
         this.mBleCallBack=bleCallBack;
     }
 
+    public BluetoothGatt getmBluetoothGatt(){
+        return mBluetoothGatt;
+    }
 
     /**
      * 检查设备是否支持BLE蓝牙，并初始化mBluetoothManager与mBluetoothAdapter
@@ -116,6 +119,7 @@ public class BleManager {
      * 调用该方法前要先调用checkAndInit
      */
     public void checkOpenBLE() {
+        if(mBluetoothAdapter == null) return;
         // 为了确保设备上蓝牙能使用, 如果当前蓝牙设备没启用,弹出对话框向用户要求授予权限来启用
         if (!mBluetoothAdapter.isEnabled()) {
             if (!mBluetoothAdapter.isEnabled()) {
@@ -123,6 +127,10 @@ public class BleManager {
                 context.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             }
         }
+        Log.i(TAG, "onActivityResult: ----------->> 开启蓝牙配对模式啦===========");
+        Intent in=new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        in.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3600); //3600为蓝牙设备可见时间
+        context.startActivity(in);
     }
 
 
@@ -133,35 +141,68 @@ public class BleManager {
      */
     public boolean connect() {
         mDeviceId = CarControl.getCarControl().getCar().getCarMac();//扫码获取的
+        Log.i(TAG, "connect: mDevice  "+mDeviceId);
         String address = getDeviceAddress(mDeviceId);
+        Log.i(TAG, "connect: address  "+address);
         //判断mBluetoothAdapter与address是否存在
         if (mBluetoothAdapter == null) {
+            Log.i(TAG, "connect: ==============");
             return false;
         }
+        Log.i(TAG, "connect: ---------------------- ");
         //先前连接的设备。 尝试重新连接
         if (mBluetoothDeviceAddress != null
                 && address.equals(mBluetoothDeviceAddress)
                 && mBluetoothGatt != null) {
+            Log.i(TAG, "connect: connect  two  ");
             if (mBluetoothGatt.connect()) {
+                Log.i(TAG, "connect: connnect scucess ");
                 mConnectionState = STATE_CONNECTING;
                 return true;
             } else {
                 return false;
             }
         }
+
         //获取ble设备
         final BluetoothDevice device = mBluetoothAdapter
                 .getRemoteDevice(address);
-        Log.d(TAG, "GET BLe device"+device.getAddress());
+        Log.i(TAG, "GET BLe device"+device.getAddress());
+        refreshDeviceCache();
         //真正进行连接的方法
-        mBluetoothGatt = device.connectGatt(context, true, mGattCallback);
-        Log.d(TAG, "Trying to create a new connection.");
+        //android 6 设置为false
+        mBluetoothGatt = device.connectGatt(context, false, mGattCallback);
+//        mBluetoothGatt.registerApp(mBluetoothGatt);
+        Log.i(TAG, "Trying to create a new connection.");
         //保存当前设备的地址，便于下次连接
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
         return true;
     }
-
+    /**
+     * Clears the internal cache and forces a refresh of the services from the
+     * remote device.
+     */
+    public boolean refreshDeviceCache() {
+        if (mBluetoothGatt != null) {
+            try {
+                BluetoothGatt localBluetoothGatt = mBluetoothGatt;
+                Method localMethod = localBluetoothGatt.getClass().getMethod(
+                        "refresh", new Class[0]);
+                if (localMethod != null) {
+                    boolean bool = ((Boolean) localMethod.invoke(
+                            localBluetoothGatt, new Object[0])).booleanValue();
+                    //如果
+//                    mBluetoothGatt.disconnect();
+//                    mBluetoothGatt.close();
+                    return bool;
+                }
+            } catch (Exception localException) {
+                Log.i(TAG, "An exception occured while refreshing device");
+            }
+        }
+        return false;
+    }
     /**
      * 将扫描到的设备id转换成设备MAC地址
      * 格式为 E8:99:B6:C8:A9:B9
@@ -210,7 +251,7 @@ public class BleManager {
         return BIKE_ERROR;
     }
     /**
-     * 根据uuid获取Characteristic
+     * 根据uuid获取Characteristic 来进行读写操作
      * 读 or 写
      */
     private BluetoothGattCharacteristic getCharacteristic(String uuid) {
@@ -225,7 +266,6 @@ public class BleManager {
     }
 
 
-
     /**
      * 执行具体的通信任务
      * 数据分两次发送
@@ -235,6 +275,7 @@ public class BleManager {
         Log.i(TAG, "sendCommandToDevice:--------------向设备发送启动数据了");
         byte[] bytes = Protocol.getBytes(mDeviceId, startCommand);
         BluetoothGattCharacteristic writeCharacteristic= getCharacteristic(writeUuid);
+
         if(!isContinue){
             byte[] pre_20 = new byte[20];
             System.arraycopy(bytes, 0, pre_20, 0, 20);
@@ -248,13 +289,12 @@ public class BleManager {
             writeCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
             this.writeCharacteristic(writeCharacteristic);
         }
-
-
     }
     /**
      * 向Ble设备读取数据
      */
     public void readStateFromDevice(){
+        Log.i(TAG, "readStateFromDevice: ================   readUuid \n "+readUuid);
         BluetoothGattCharacteristic readCharacteristic = getCharacteristic(readUuid);
         this.setCharacteristicNotification(
                 readCharacteristic, true);
@@ -273,7 +313,6 @@ public class BleManager {
         mBluetoothGatt.writeCharacteristic(characteristic);
 
     }
-
     /**
      * 从ble设备读数据
      */
@@ -282,9 +321,9 @@ public class BleManager {
             Log.w(TAG, "BluetoothAdapter not initialized");
             return;
         }
+        Log.i(TAG, "readCharacteristic: 开始读数据啦 ");
         mBluetoothGatt.readCharacteristic(characteristic);
     }
-
     /**
      * 设置可观察
      */
@@ -297,10 +336,13 @@ public class BleManager {
         mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
         BluetoothGattDescriptor descriptor = characteristic.getDescriptor(UUID
                 .fromString(CLIENT_CHARACTERISTIC_CONFIG));
+
+//        BluetoothGattDescriptor descriptor1 = characteristic.
+//                getDescriptor(com.characteristic.smart.smartpen.bluetooth.HD_Profile.UUID_CHAR_NOTIFY_DIS);
+//        if(descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE)){ }
         if (descriptor != null) {
             Log.w(TAG, "desc not null , set notify");
-            descriptor
-                    .setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+            descriptor .setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);//  android 6 设置这个
             mBluetoothGatt.writeDescriptor(descriptor);
         }
     }
@@ -327,6 +369,7 @@ public class BleManager {
             mBluetoothGatt.disconnect();
             mBluetoothGatt.close();
             mBluetoothGatt = null;
+            Log.i(TAG, "disconnect: mBluetoothGatt 断开了 ");
         }
 
     }
@@ -338,6 +381,8 @@ public class BleManager {
         //gatt连接结果回调
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+            Log.i(TAG, "onConnectionStateChange: "+status +" : "+newState);
+            Log.i(TAG, "onConnectionStateChange: =============================");
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 Log.w(TAG, "onConnectionStateChange STATE_CONNECTED ");
                 //保存当前状态
@@ -356,7 +401,7 @@ public class BleManager {
         //发现服务后的回调
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            Log.i(TAG, "onServicesDiscovered: ");
+            Log.i(TAG, "onServicesDiscovered:  -==========  ");
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 //真正通知前台设备链接成功
                 mBleCallBack.onGattConnect(ACTION_GATT_CONNECTED);
@@ -368,24 +413,43 @@ public class BleManager {
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt,
                                          BluetoothGattCharacteristic characteristic, int status) {
+            Log.i(TAG, "onCharacteristicRead: ================ ");
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 for (int i = 0; i < characteristic.getValue().length; i++) {
                     System.out.println(i + "--------read success----- characteristic:" + characteristic.getValue()[i]);
                 }
             }
         }
-
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt,
                                       BluetoothGattDescriptor descriptor, int status) {
+            Log.i(TAG, "onDescriptorWrite: ===========================  ");
             System.out.println("onDescriptorWrite = " + status
                     + ", descriptor =" + descriptor.getUuid().toString());
+        }
+
+        /**
+         * Callback indicating the MTU for a given device connection has changed.
+         * <p>
+         * This callback is triggered in response to the
+         * {@link BluetoothGatt#requestMtu} function, or in response to a connection
+         * event.
+         *
+         * @param gatt   GATT client invoked {@link BluetoothGatt#requestMtu}
+         * @param mtu    The new MTU size
+         * @param status {@link BluetoothGatt#GATT_SUCCESS} if the MTU has been changed successfully
+         */
+        @Override
+        public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
+            super.onMtuChanged(gatt, mtu, status);
+            Log.i(TAG, "onMtuChanged: ===============");
         }
 
 
         //向BLE设备写入成功后的回调
         public void onCharacteristicWrite(BluetoothGatt gatt,
                                           BluetoothGattCharacteristic characteristic, int status) {
+            Log.i(TAG, "onCharacteristicWrite: ======================");
             for (int i = 0; i < characteristic.getValue().length; i++) {
                 int result = characteristic.getValue()[i] & 0xff;
                 System.out.println(i + "--------write success----- characteristic:" + result);
@@ -402,6 +466,7 @@ public class BleManager {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
+            Log.i(TAG, "onCharacteristicChanged: ===============================");
             byte[] resultBytes=new byte[10];
 
             for (int i = 0; i < (characteristic.getValue().length-1); i++) {

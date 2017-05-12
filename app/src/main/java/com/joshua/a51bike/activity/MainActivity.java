@@ -48,6 +48,7 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.route.RouteSearch;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.control.DialogControl;
 import com.joshua.a51bike.activity.control.UserControl;
@@ -65,6 +66,7 @@ import com.joshua.a51bike.customview.CircleImageView;
 import com.joshua.a51bike.customview.progress;
 import com.joshua.a51bike.entity.Car;
 import com.joshua.a51bike.entity.Order;
+import com.joshua.a51bike.entity.ReadData;
 import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.entity.UserAndUse;
 import com.joshua.a51bike.util.AMapUtil;
@@ -79,9 +81,12 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.joshua.a51bike.util.JsonUtil.gson;
 
 /**
  * 应用的主界面
@@ -102,10 +107,6 @@ public class MainActivity extends BaseMap {
     private SensorEventHelper mSensorHelper;//自旋转的定位指针
     private Circle mCircle;
     private  Toolbar toolbar ;
-    public LatLonPoint point1 = new LatLonPoint(32.1979265479926, 119.51321482658388);
-    public LatLonPoint point2 = new LatLonPoint(32.19794016630354, 119.51738834381104);
-    public LatLonPoint point3 = new LatLonPoint(32.20268375393801, 119.51433062553406);
-    public LatLonPoint[] points = new LatLonPoint[]{point1, point2, point3};
     private  MapView mapView;
     private  AMap aMap;
 
@@ -125,7 +126,7 @@ public class MainActivity extends BaseMap {
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         init();
         if(savedInstanceState == null)
-            canShow = true;
+        canShow = true;
         initDrawer();
     }
 
@@ -201,7 +202,6 @@ public class MainActivity extends BaseMap {
     private void showProgreesOrNot(User user) {
         setProgressView(1);   //更新
         if(user == null ){
-            Log.i(TAG, "showProgreesOrNot: --------我消失了  --------useProgressParent.setViewGONE---");
             useProgressParent.setVisibility(View.GONE);
             return;
         }
@@ -280,15 +280,8 @@ public class MainActivity extends BaseMap {
             }
         });
     }
-    /**
-     * 在地图上添加marker
-     */
-    private void addMarkersToMap() {
-        addMarkerInScreenCenter();
-    }
 
     Marker screenMarker = null;
-
     /**
      * 在屏幕中心添加一个Marker
      */
@@ -575,12 +568,69 @@ public class MainActivity extends BaseMap {
             }
         });
     }
+
+    /**
+     * 获取所有可出租车辆信息
+     */
+    private String getMesList_url =AppUtil.BaseUrl+ "/car/getgpsList";
+    public void getCarMesList(){
+        Log.i(TAG, "getCarMesList: ===================");
+        RequestParams result_params = new RequestParams(getMesList_url);
+        x.http().get(result_params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Log.i(TAG, "onSuccess: 获取车辆信息列表：\n"+result);
+                parseResult(result);
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
+    //解析结果
+    private List<ReadData> readDataList;
+    private  void parseResult(String result) {
+        Type type = new TypeToken<ArrayList<ReadData>>() {}.getType();
+        readDataList =gson.fromJson(result, type);
+        addCarMarker(readDataList);
+    }
+
+    public LatLonPoint point1 = new LatLonPoint(32.1979265479926, 119.51321482658388);
+    public LatLonPoint point2 = new LatLonPoint(32.19794016630354, 119.51738834381104);
+    public LatLonPoint point3 = new LatLonPoint(32.20268375393801, 119.51433062553406);
+    LatLonPoint current = new LatLonPoint(32.210541666666664,119.508058);
+    private void addCarMarker(List<ReadData> readDataList) {
+        for(ReadData r : readDataList){
+            MarkerOptions markerOptions = new MarkerOptions()
+//                       .icon(BitmapDescriptorFactory.fromView(view))
+                    .title("车牌号:"+r.getCarBattery2())
+//                    .snippet("可行驶里程: " + i + " 公里")
+                    .position(AMapUtil.convertToLatLng(new LatLonPoint(r.getWei(),r.getJin())))
+//                    .position(AMapUtil.convertToLatLng(current))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.bike));
+            aMap.addMarker(markerOptions);
+        }
+    }
 //*******************************************************************
 
     /**
      * 获取当前位置
      */
     private void getLocation() {
+//        getCarMesList();
         showCurrentPosition();
         //获取最新地理位置
         canGetPos = true;
@@ -696,8 +746,6 @@ public class MainActivity extends BaseMap {
         aMap.animateCamera(update, 1000, callback);
 
     }
-    //******************************************************************
-
     private class myCancelableCallback implements AMap.CancelableCallback {
 
         @Override
@@ -710,19 +758,6 @@ public class MainActivity extends BaseMap {
             Log.i(TAG, "onCancel: ");
         }
     }
-
-    //***********************生命周期*******************************************
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.i(TAG, "onRestart()");
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.i(TAG, "onStart: ");
-    }
-
     /**
      * 方法必须重写
      */
@@ -737,14 +772,13 @@ public class MainActivity extends BaseMap {
             showDialog();
             canShow = false;
         }
-
+        getCarMesList();
     }
 
     /**
      * 显示开启gps的dialog
      */
     private void showDialog() {
-        Log.i(TAG, "onCreate: saveInstanceState is null");
         dialogControl.setDialog(new GPSAlerDialog(MainActivity.this));
         dialogControl.show();
     }
@@ -763,10 +797,6 @@ public class MainActivity extends BaseMap {
         mapView.onPause();
         canGetPos = true;
     }
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
     /**
      * 方法必须重写
      */
@@ -775,24 +805,6 @@ public class MainActivity extends BaseMap {
         super.onDestroy();
         mapView.onDestroy();
     }
-//*******************异常退出保留数据方法*******************************
-    /** 异常退出保留数据
-     *
-     * 方法必须重写
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
-        outState.putInt("IntTest", 0);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        int IntTest = savedInstanceState.getInt("IntTest");
-    }
-
     //***************** g更新ui  ********************************
     /*显示当前位置*/
     private void showCurrentPosition() {
@@ -800,14 +812,13 @@ public class MainActivity extends BaseMap {
             LatLng mLatLng = new LatLng(mStartPoint.getLatitude(),mStartPoint.getLongitude());
             changeCamera(
                     CameraUpdateFactory.newCameraPosition(new CameraPosition(
-                            mLatLng, 17, 0, 0)), new myCancelableCallback());
+                            mLatLng, 15, 0, 0)), new myCancelableCallback());
         }
     }
     /*判断用户是否处于陆状态*/
     private void initUI() {
-        if(null != userControl.getUser()){
+        if(null != userControl.getUser())
             initUserMessage();
-    }
         else
             initLogOut();
     }
@@ -872,24 +883,23 @@ public class MainActivity extends BaseMap {
      */
     @Override
     public void getstartlatLonPoint(AMapLocation aMapLocation) {
-        mStartPoint = new LatLonPoint(aMapLocation.getLatitude(), aMapLocation.getLongitude());
         Boolean b = dialogControl.getDialog() instanceof LocateProgress;
         if(b)
            dialogControl.cancel();
 //        避免重复定位
         if (canGetPos) {
+            aMap.clear();
+            getCarMesList();
             canGetPos = false;
             LastPoint = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
-            aMap.clear();
             addCircle(LastPoint, aMapLocation.getAccuracy());//添加定位精度圆
             addMarker(LastPoint);//添加定位图标
             mSensorHelper.setCurrentMarker(mLocMarker);//定位图标旋转
-            addCarMarker();
             /*移动到当前位置  CameraPosition 第三参数是偏移经度的角度*/
-            addMarkersToMap();
+            addMarkerInScreenCenter();
             changeCamera(
                     CameraUpdateFactory.newCameraPosition(new CameraPosition(
-                            LastPoint, 17, 0, 0)), new myCancelableCallback());
+                            LastPoint, 15, 0, 0)), new myCancelableCallback());
 
         }
         else if( null != LastPoint){
@@ -899,17 +909,6 @@ public class MainActivity extends BaseMap {
         }
     }
 
-    private void addCarMarker() {
-        for (int i = 0; i < points.length; i++) {
-            MarkerOptions markerOptions = new MarkerOptions()
-//                       .icon(BitmapDescriptorFactory.fromView(view))
-                    .title("车牌号:2525")
-                    .snippet("可行驶里程: " + i + " 公里")
-                    .position(AMapUtil.convertToLatLng(points[i]))
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.bike));
-            aMap.addMarker(markerOptions);
-        }
-    }
 
 
     private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
@@ -938,8 +937,6 @@ public class MainActivity extends BaseMap {
         Bitmap bMap = BitmapFactory.decodeResource(this.getResources(),
                 R.drawable.navi_map_gps_locked);
         BitmapDescriptor des = BitmapDescriptorFactory.fromBitmap(bMap);
-
-//		BitmapDescriptor des = BitmapDescriptorFactory.fromResource(R.drawable.navi_map_gps_locked);
         MarkerOptions options = new MarkerOptions();
         options.icon(des);
         options.anchor(0.5f, 0.5f);

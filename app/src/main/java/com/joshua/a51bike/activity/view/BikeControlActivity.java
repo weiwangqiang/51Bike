@@ -55,7 +55,7 @@ public class BikeControlActivity extends BaseActivity {
     private TextView bikeState;
 
     private BleManager mBleManager;
-    private final static String TAG = "TestActivity";
+    private final static String TAG = "BikeControlActivity";
     private int mCurrentState;//设备当前状态
     private int mLastState;//设备上一次的状态
     private static final int STATE_START = 0x20;//设备开启
@@ -84,7 +84,6 @@ public class BikeControlActivity extends BaseActivity {
         findViewById(R.id.left_back).setOnClickListener(this);
         mapView = (MapView) findViewById(R.id.bike_control_MapView);
     }
-
     /**
      * 方法必须重写
      */
@@ -151,6 +150,8 @@ public class BikeControlActivity extends BaseActivity {
                     mBleManager.startBike();
                 } else if (BleManager.ACTION_GATT_DISCONNECTED
                         .equals(action)) {
+                    mBleManager.getmBluetoothGatt().disconnect();
+                    mBleManager.getmBluetoothGatt().close();
                     UiUtils.runOnUiThread(new ConnectErrorRun());
                 }
             }
@@ -177,11 +178,11 @@ public class BikeControlActivity extends BaseActivity {
                 switch (state) {
                     //设备处于启动状态
                     case BleManager.BIKE_START:
+                        Log.i(TAG, "getStateFromDevice: 设备启动啦==========");
                         if (mLastState == STATE_BACK||mLastState == STATE_STOP) {
                             mCurrentState = STATE_START;
                             mLastState = STATE_START;
-                           doStartBike();
-                           UiUtils.runOnUiThread(new UpBikeMesRun());
+                           UiUtils.runOnUiThread(new doStartBikeRun());
                         }
                         break;
                     //设置处于上锁状态
@@ -189,9 +190,7 @@ public class BikeControlActivity extends BaseActivity {
                         if (mLastState == STATE_START) {
                             mCurrentState = STATE_STOP;
                             mLastState = STATE_STOP;
-                            doStopBike();
-                            UiUtils.runOnUiThread(new UpBikeMesRun());
-
+                            UiUtils.runOnUiThread(new doStopBikeRun());
                         }else if(mLastState==STATE_STOP||mLastState==STATE_BACK){
 //                            UiUtils.showToast("连接失败，请重试");
                             mBleManager.disconnect();
@@ -217,11 +216,14 @@ public class BikeControlActivity extends BaseActivity {
      * 进行开启电动车的一系列逻辑操作
      */
     private void doStartBike() {
+        Log.i(TAG, "doStartBike: 通知服务器租车啦===============");
         dialogControl.cancel();
         int state=userControl.getUser().getUserstate();
         if(state==User.STATE_USEING){
-        }else
-            postServerStartBike();
+        }else{
+            if( !from.equals("Exception") )
+                postServerStartBike();
+        }
     }
 
 
@@ -229,8 +231,6 @@ public class BikeControlActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         mapView.onResume();// 此方法必须重写
-
-        Log.i(TAG, "onResume: ------------------------");
         //检查设备是否支持Ble
         if (!mBleManager.checkAndInit())
             UiUtils.showToast("启动失败");
@@ -248,10 +248,19 @@ public class BikeControlActivity extends BaseActivity {
         }
     }
 
-    //更新当前车辆状态显示信息
-    private class UpBikeMesRun implements Runnable{
+    //停止的runnable
+    private class doStopBikeRun implements Runnable{
         @Override
         public void run() {
+            doStopBike();
+            upDataBikeState();
+        }
+    }
+    //启动的runnable
+    private class doStartBikeRun implements Runnable{
+        @Override
+        public void run() {
+            doStartBike();
             upDataBikeState();
         }
     }
@@ -266,8 +275,8 @@ public class BikeControlActivity extends BaseActivity {
         userControl.accountRecharge(BikeControlActivity.this);
     }
     public void startBike(View view) {
-        if( !from.equals("Exception") )
-            postServerStartBike();
+        if(  mBleManager.getmBluetoothGatt() != null)
+        mBleManager.getmBluetoothGatt().close();
         Log.i(TAG, "startBike: ----------------点击开启车辆-----------");
         Log.i(TAG, "startBike: mLastState is "+mLastState);
         Log.i(TAG, "startBike: STATE_BACK is "+STATE_BACK
@@ -279,7 +288,8 @@ public class BikeControlActivity extends BaseActivity {
                 if (!mBleManager.connect()) {
                     UiUtils.showToast("启动失败");
                     dialogControl.cancel();
-                }
+                }else
+                    Log.i(TAG, "startBike: success =================== ");
             }else {
                 UiUtils.showToast("请不要重复开启车辆");
             }
@@ -345,6 +355,7 @@ public class BikeControlActivity extends BaseActivity {
             userControl.setOrder(order);
 //            car.setCarMac(bike_mac);
             carControl.setCar(car);
+            userControl.getUser().setUserstate(User.STATE_USEING);
             UiUtils.showToast("租车成功");
         }else
             uiUtils.showToast("租车失败！");
@@ -496,6 +507,29 @@ public class BikeControlActivity extends BaseActivity {
                 break;
         }
     }
+
+    /**
+     * Dispatch incoming result to the correct fragment.
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    private static final int REQUEST_ENABLE_BT = 0x01;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK){
+            switch (resultCode){
+                case REQUEST_ENABLE_BT:
+                    //设置蓝牙可配对模式
+
+                    break;
+            }
+        }
+    }
+
     @Override
     public void onBackPressed() {
         dialogControl.setDialog(new OutControlDialog(mBaseActivity,

@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,15 +56,12 @@ public class progress extends ViewGroup {
     /*测量view*/
     @Override
     protected void onMeasure(int widthMeasureSpec,int heightMeasureSpec){
-        Log.i(TAG, "onMeasure: ");
         builMenu();
         MeaSureParent(widthMeasureSpec, heightMeasureSpec);
         MeaSureChild();
-        Log.i(TAG, "onMeasure: with "+parentWith+" height "+parentHeight);
     }
     public void setPoistion(int p){
         this.position = p;
-        Log.i(TAG, "setPoistion: ");
         RebuilMenu();
         drawBackGround(new Canvas());
     }
@@ -82,7 +78,6 @@ public class progress extends ViewGroup {
             TextView tv = new TextView(context);
             tv.setText(i+"");
             tv.setTextColor(getResources().getColor(R.color.baseColor));
-//            tv.setBackgroundResource(R.drawable.progress_ok);
             tv.setGravity(Gravity.CENTER);
             addView(tv);
         }
@@ -102,14 +97,11 @@ public class progress extends ViewGroup {
     private void MeaSureChild(){
 
         okImageRadius =(int)( parentHeight * RADIUS_DEFAULT);
-        Log.i(TAG, "MeaSureChild: okImageRadius " + okImageRadius);
         childPadding = (parentHeight>>1) -okImageRadius;
-        Log.i(TAG, "MeaSureChild: childPadding "+childPadding);
         childWith = parentWith -(childPadding + okImageRadius )* 2 ;
         paragraphWith = childWith /6;
 
         final int child = getChildCount();
-        Log.i(TAG, "MeaSureChild: childSize "+child);
         int childMode = MeasureSpec.EXACTLY;
         for(int i = 0;i<child;i++){
             final View view = getChildAt(i);
@@ -121,10 +113,8 @@ public class progress extends ViewGroup {
     }
     private void MeaSureParent(int widthMeasureSpec, int heightMeasureSpec) {
         int width = MeasureSpec.getSize(widthMeasureSpec);
-        Log.i(TAG, "MeaSureParent: width "+width);
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
-        Log.i(TAG, "MeaSureParent: height "+height);
         int heighMode = MeasureSpec.getMode(heightMeasureSpec);
         if(widthMode != MeasureSpec.EXACTLY
                 || heighMode != MeasureSpec.EXACTLY){
@@ -156,11 +146,9 @@ public class progress extends ViewGroup {
     }
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        Log.i(TAG, "onLayout: ");
 //        drawBackGround();
         setBackgroundResource(R.drawable.progress_bg);
         final int childCount = getChildCount();
-        Log.i(TAG, "onLayout: chilSize "+childCount);
         for(int i = 0;i <childCount;i++) {
             final View child = getChildAt(i);
             if(child.getVisibility() == View.GONE){
@@ -176,8 +164,6 @@ public class progress extends ViewGroup {
                         childPadding+paragraphWith *i*2+ 2*okImageRadius,
                         childPadding + okImageRadius * 2);
             }
-            Log.i(TAG, "onLayout: chil "+i+" layout is "+child.getLeft()+" top "+child.getTop()+" right "+
-                    child.getRight() +" bottom "+ child.getBottom());
         }
     }
 
@@ -198,7 +184,6 @@ public class progress extends ViewGroup {
 
     private static final float RECT_HEIGHT = 2/9f;
     public void drawBackGround(Canvas canvas){
-        Log.i(TAG, "drawBackGround: ");
         Paint paint = new Paint();
         paint.setColor(getResources().getColor(R.color.baseColor));
         int i = position -1;
@@ -208,14 +193,10 @@ public class progress extends ViewGroup {
         int top = (parentHeight -height) /2;
         int right  = left+ okImageRadius +  paragraphWith *i*2+paragraphWith;
         if(i == 3){
-            Log.i(TAG, "drawBackGround: parent width is "+parentWith );
-            Log.i(TAG, "drawBackGround: i == 3 "+right+" childPadding "+childPadding);
             right = right - childPadding;
-            Log.i(TAG, "drawBackGround: "+right);
         }
         int bottom = top + height;
         canvas.drawRect(left,top,right,bottom,paint);
-//        requestLayout();//
     }
     /**
      * Manually render this view (and all of its children) to the given Canvas.
@@ -230,7 +211,6 @@ public class progress extends ViewGroup {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        Log.i(TAG, "draw: ");
     }
     /**
      * Implement this to do your drawing.
