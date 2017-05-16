@@ -122,15 +122,13 @@ public class BleManager {
         if(mBluetoothAdapter == null) return;
         // 为了确保设备上蓝牙能使用, 如果当前蓝牙设备没启用,弹出对话框向用户要求授予权限来启用
         if (!mBluetoothAdapter.isEnabled()) {
-            if (!mBluetoothAdapter.isEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 context.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             }
-        }
-        Log.i(TAG, "onActivityResult: ----------->> 开启蓝牙配对模式啦===========");
-        Intent in=new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        in.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3600); //3600为蓝牙设备可见时间
-        context.startActivity(in);
+//        Log.i(TAG, "onActivityResult: ----------->> 开启蓝牙配对模式啦===========");
+//        Intent in=new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+//        in.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3600); //3600为蓝牙设备可见时间
+//        context.startActivity(in);
     }
 
 
@@ -146,7 +144,7 @@ public class BleManager {
         Log.i(TAG, "connect: address  "+address);
         //判断mBluetoothAdapter与address是否存在
         if (mBluetoothAdapter == null) {
-            Log.i(TAG, "connect: ==============");
+            Log.i(TAG, "connect: =====mBluetoothAdapter is null =========");
             return false;
         }
         Log.i(TAG, "connect: ---------------------- ");
@@ -171,7 +169,7 @@ public class BleManager {
         refreshDeviceCache();
         //真正进行连接的方法
         //android 6 设置为false
-        mBluetoothGatt = device.connectGatt(context, false, mGattCallback);
+        mBluetoothGatt = device.connectGatt(context, true, mGattCallback);
 //        mBluetoothGatt.registerApp(mBluetoothGatt);
         Log.i(TAG, "Trying to create a new connection.");
         //保存当前设备的地址，便于下次连接

@@ -15,7 +15,7 @@ import com.joshua.a51bike.Interface.BleCallBack;
 import com.joshua.a51bike.Interface.DialogCallBack;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
-import com.joshua.a51bike.activity.dialog.CurrencyAlerDialog;
+import com.joshua.a51bike.activity.dialog.OpenBLEAlerDialog;
 import com.joshua.a51bike.activity.dialog.OutControlDialog;
 import com.joshua.a51bike.activity.dialog.WaitProgress;
 import com.joshua.a51bike.adapter.TimestampTypeAdapter;
@@ -103,8 +103,7 @@ public class BikeControlActivity extends BaseActivity {
         if(from.equals("Exception")){
             //是异常退出，显=显示开启蓝牙的对话框
             dialogControl.setDialog(new
-                    CurrencyAlerDialog(this,
-                    "温馨提示","请重新连接蓝牙",
+                    OpenBLEAlerDialog(this,
                     new DialogCallBack() {
                         @Override
                         public void sure() {
@@ -275,8 +274,11 @@ public class BikeControlActivity extends BaseActivity {
         userControl.accountRecharge(BikeControlActivity.this);
     }
     public void startBike(View view) {
-        if(  mBleManager.getmBluetoothGatt() != null)
-        mBleManager.getmBluetoothGatt().close();
+        //mBluetoothGatt 不为null说明之前有连接过，先把他断开
+        if(  mBleManager.getmBluetoothGatt() != null){
+            mBleManager.getmBluetoothGatt().disconnect();
+            mBleManager.getmBluetoothGatt().close();
+        }
         Log.i(TAG, "startBike: ----------------点击开启车辆-----------");
         Log.i(TAG, "startBike: mLastState is "+mLastState);
         Log.i(TAG, "startBike: STATE_BACK is "+STATE_BACK
@@ -305,8 +307,16 @@ public class BikeControlActivity extends BaseActivity {
         //判断是否停在江大内部
         dialogControl.setDialog(new WaitProgress(mBaseActivity));
         dialogControl.show();
-        getGPSMes(REQUEST_GETGPS_INSCHOOL);
-    }
+//        getGPSMes(REQUEST_GETGPS_INSCHOOL);
+        if (mCurrentState == STATE_START) {
+            UiUtils.showToast("请先长按按钮锁车");
+        }else if(mCurrentState==STATE_STOP){
+            dialogControl.setDialog(new WaitProgress(mBaseActivity));
+            dialogControl.show();
+            postServerReturnBike();
+        }
+//        postServerReturnBike();
+}
     /**
      * 通知服务器租车
      */
@@ -365,6 +375,7 @@ public class BikeControlActivity extends BaseActivity {
      */
     private String rbUrl = AppUtil.BaseUrl + "/user/huanche2";
     private void postServerReturnBike() {
+        Log.i(TAG, "postServerReturnBike: ----------------");
         RequestParams params = new RequestParams(rbUrl);
         final User user = userControl.getUser();
         params.addBodyParameter("userId", user.getUserid() + "");
@@ -373,7 +384,7 @@ public class BikeControlActivity extends BaseActivity {
         params.addBodyParameter("carPrice", car.getCarPrice() + "");
         params.addBodyParameter("startTime",userControl.getOrder().getUseStartTime() + "");
         params.addBodyParameter("useDistance", "4512");
-        Log.i(TAG, "postServerReturnBike: ---- "+params.toString());
+        Log.i(TAG, "postServerReturnBike: ------------ "+params.toString());
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
@@ -435,6 +446,7 @@ public class BikeControlActivity extends BaseActivity {
         RequestParams params = new RequestParams(getGPS_URL);
         Log.i(TAG, "getGPSMes: carid length : "+carId.length());
         params.addBodyParameter("id",carId);
+        Log.i(TAG, "getGPSMes: "+params.toString());
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
@@ -451,6 +463,8 @@ public class BikeControlActivity extends BaseActivity {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 ex.printStackTrace();
+                UiUtils.showToast("获取车辆位置失败");
+                dialogControl.cancel();
             }
 
             @Override
@@ -473,7 +487,7 @@ public class BikeControlActivity extends BaseActivity {
         ReleasePower.setText("剩余电量："+readData.getCarBattery2()+" % ");
 
     }
-    //判断是否在学校
+    //判断是否在学校，如果在本校则通知服务器还车
     public void checkInSchool(ReadData readData){
         dialogControl.cancel();
 

@@ -234,7 +234,6 @@ public class MainActivity extends BaseMap {
         findid();
         initmap();
         registerListener();
-        locatepresener.getcurrentLocation(mlocationClient);//开始定位
     }
     /*初始化map*/
     private void initmap() {
@@ -766,6 +765,7 @@ public class MainActivity extends BaseMap {
         super.onResume();
         mapView.onResume();
         showCurrentPosition();
+        locatepresener.getcurrentLocation(mlocationClient);//开始定位
         SensorHelper();
         initUI();
         if(canShow){
