@@ -57,6 +57,10 @@ public class WelCome extends BaseActivity {
     }
 
     public void init() {
+        if(isFirst()){
+            toFirstView();
+            return ;
+        }
         getUserMes();
     }
     private String url = AppUtil.BaseUrl +"/user/login";
@@ -246,7 +250,7 @@ public class WelCome extends BaseActivity {
     public void toFirstView(){
         startActivity(new Intent(this,FirstClick.class));
         finish();
-        PrefUtils.setBoolean(this,"isFirst",false);
+//        PrefUtils.setBoolean(this,"isFirst",false);
     }
     private boolean isSkip = false;
     //跳转到主界面

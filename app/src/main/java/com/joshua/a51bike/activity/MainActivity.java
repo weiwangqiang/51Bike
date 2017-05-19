@@ -304,7 +304,7 @@ public class MainActivity extends BaseMap {
                     .setDelay(1000)
                     .setBackgroundAlpha(70)
                     .setCloseButtonColor(Color.WHITE)
-                    .setCloseButtonTextColor(Color.GREEN)
+                    .setCloseButtonTextColor(Color.WHITE)
                     .setCallback(new ViewCallBack())
                     .build();
             showtips.show(this);
@@ -329,7 +329,7 @@ public class MainActivity extends BaseMap {
                     .setDelay(0)
                     .setBackgroundAlpha(70)
                     .setCloseButtonColor(Color.WHITE)
-                    .setCloseButtonTextColor(Color.GREEN)
+                    .setCloseButtonTextColor(Color.WHITE)
                     .build();
             showtips.show(MainActivity.this);
             PrefUtils.setBoolean(MainActivity.this,"isFirst",false);
@@ -569,6 +569,7 @@ public class MainActivity extends BaseMap {
         switch (item.getItemId()) {
             case R.id.nav_search:
                 toSearchActivty();
+                return true;
             case android.R.id.home:
                 startActivity(new Intent(this, LeftMain.class));
                 return true;

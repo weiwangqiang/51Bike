@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.joshua.a51bike.R;
-import com.joshua.a51bike.activity.MainActivity;
 import com.joshua.a51bike.activity.core.BaseActivity;
 
 import org.xutils.view.annotation.ContentView;
@@ -50,10 +49,6 @@ public class share extends BaseActivity {
         myToolbar.setTitle("");
         myToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.title_back));
         setSupportActionBar(myToolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
     public void findId() {
 
@@ -67,8 +62,7 @@ public class share extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Log.i(TAG, "onOptionsItemSelected: finished");
-                startActivity(new Intent(share.this, MainActivity.class));
+//                startActivity(new Intent(share.this, MainActivity.class));
                 finish();
                 return true;
             default:

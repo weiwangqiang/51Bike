@@ -71,7 +71,6 @@ public class BikeControlActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         findid();
-        Log.i(TAG, "onCreate: ");
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         initBikeMes();
         //初始化Ble管理器
@@ -143,7 +142,6 @@ public class BikeControlActivity extends BaseActivity {
             //Gatt连接回调
             @Override
             public void onGattConnect(String action) {
-                Log.i(TAG, "onGattConnect: ---------------");
                 if (BleManager.ACTION_GATT_CONNECTED.equals(action)) {
                     //蓝牙连接成功
                     mBleManager.startBike();

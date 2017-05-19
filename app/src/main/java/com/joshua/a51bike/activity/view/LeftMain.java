@@ -39,10 +39,14 @@ public class LeftMain extends BaseActivity {
 
     @ViewInject(R.id.main_progress_view)
     private progress useProgress;
+
+    @ViewInject(R.id.scan_title)
+    private TextView scan_title;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
+        scan_title.setText("个人中心");
     }
 
     public void init() {
