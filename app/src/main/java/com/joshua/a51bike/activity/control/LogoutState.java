@@ -8,7 +8,6 @@ import com.joshua.a51bike.Interface.UserState;
 import com.joshua.a51bike.activity.view.Config;
 import com.joshua.a51bike.activity.view.Login;
 import com.joshua.a51bike.activity.view.about;
-import com.joshua.a51bike.activity.view.registerOrLogin;
 import com.joshua.a51bike.util.AppUtil;
 
 /**
@@ -156,7 +155,7 @@ public class LogoutState implements UserState {
     }
     //登陆，注册 二选一界面
     private void Choice(Activity activity){
-        Intent intent = new Intent(activity, registerOrLogin.class);
+        Intent intent = new Intent(activity, Login.class);
         activity.startActivity(intent);
     }
 }

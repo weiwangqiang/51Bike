@@ -22,7 +22,6 @@ import com.joshua.a51bike.entity.UserAndUse;
 import com.joshua.a51bike.util.AppUtil;
 import com.joshua.a51bike.util.JsonUtil;
 import com.joshua.a51bike.util.PrefUtils;
-import com.joshua.a51bike.util.UiUtils;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -92,7 +91,7 @@ public class WelCome extends BaseActivity {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 ex.printStackTrace();
-                UiUtils.showToast("获取用户信息失败！");
+//                UiUtils.showToast("获取用户信息失败！");
                 ToMainActivity();
 
             }
@@ -113,15 +112,12 @@ public class WelCome extends BaseActivity {
     }
     //登陆成功
     private void parseUserMes(String result) {
-        Log.i(TAG, "loginSuccess:--------------\n "+result);
         User user = JsonUtil.getUserObject(result);
         if(user != null){
-            uiUtils.showToast("成功！");
             userControl.setUser(user);
             userControl.setUserState(new LoginState());
             toRent();
         }else{
-            uiUtils.showToast("失败！");
             ToMainActivity();
         }
 
@@ -146,22 +142,17 @@ public class WelCome extends BaseActivity {
      * 获取上次没有付款的UserAndUse
      */
     private void getLastOreder() {
-        Log.i(TAG, "getLastOreder: ====获取上次没有付款的UserAndUse====");
-//        dialogControl.setDialog(new WaitProgress(this));
-//        dialogControl.show();
         RequestParams result_params = new RequestParams(url_getCurrent);
         result_params.addParameter("userId",userControl.getUser().getUserid());
         x.http().get(result_params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.i(TAG, "onSuccess: result -------------------- -  \n "+result);
                 parseLastOrderResult(result);
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 ex.printStackTrace();
-                Log.i("onError", ">>>>>>>>>>>>>>>>>>>>>>>>>>o2:"+ex.getMessage());
                 dialogControl.cancel();
 
             }
@@ -186,7 +177,6 @@ public class WelCome extends BaseActivity {
      */
     private Order order = new Order();
     private void parseLastOrderResult(String result) {
-        Log.i(TAG, "parseLastOrderResult:   解析结果 ");
         try {
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.setDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -214,17 +204,13 @@ public class WelCome extends BaseActivity {
      */
     private String url_getCarById  = AppUtil.BaseUrl+"/car/getCarById";
     public void getCarMes(){
-        Log.i(TAG, "getCarMes: -----获取车辆信息-----------------------");
         RequestParams result_params = new RequestParams(url_getCarById);
         result_params.addParameter("carId",userControl.getUserAndUse().getCarId());
-        Log.i(TAG, "getCarMes: paramse "+result_params.toString());
         x.http().get(result_params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.i(TAG, "onSuccess: result -------------------- -  \n "+result);
                 Car car = JsonUtil.getCarObject(result);
                 if(car != null){
-                    Log.i(TAG, "onSuccess: 跳转道控制界面了-----------");
                     carControl.setCar(car);
                     Intent intent =  new Intent(WelCome.this, BikeControlActivity.class);
                     intent.putExtra("from_where","Exception");
@@ -236,7 +222,6 @@ public class WelCome extends BaseActivity {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 ex.printStackTrace();
-                Log.i("onError", ">>>>>>>>>>>>>>>>>>>>>>>>>>o2:"+ex.getMessage());
                 dialogControl.cancel();
 
             }

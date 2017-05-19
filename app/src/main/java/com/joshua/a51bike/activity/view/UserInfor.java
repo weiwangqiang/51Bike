@@ -73,7 +73,9 @@ public class UserInfor extends BaseActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        after_image_path = pre_image_path +"/"+userControl.getUser().getUsername()+".jpg";
+        if(userControl.getUser()!=null)
+            after_image_path
+                    = pre_image_path +"/"+userControl.getUser().getUsername()+".jpg";
         init();
         ImageManager manager = new  ImageManager();
         if(userControl.getUser().getUserpic() != null){
@@ -112,27 +114,33 @@ public class UserInfor extends BaseActivity  {
         findViewById(R.id.user_infor_icn).setOnClickListener(this);
         findViewById(R.id.user_infor_school).setOnClickListener(this);
 //        findViewById(R.id.user_infor_save).setOnClickListener(this);
-        renzhen.setOnClickListener(this);
         userPhone.setOnClickListener(this);
+        renzhen.setOnClickListener(this);
     }
     /**
      * 初始化用户信息
      */
     private void initUserMessage() {
         if(userControl.getUser().getRealName() != null){
+            renzhen.setClickable(false);
             renzhen.setRightText("已认证");
             userName.setRightText(userControl.getUser().getRealName());
-
         }
         else{
+            renzhen.setClickable(true);
             renzhen.setRightText("未认证");
             userName.setRightText("无");
         }
         if(userControl.getUser().getSchool() != ""){
             mySchool.setRightText("已认证");
+            mySchool.setClickable(false);
+
         }
-        else
+        else{
+            mySchool.setClickable(true);
             mySchool.setRightText("未认证");
+
+        }
 
         userPhone.setRightText(userControl.getUser().getUsername());
     }

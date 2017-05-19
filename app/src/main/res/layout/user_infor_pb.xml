@@ -26,13 +26,13 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:id="@+id/bp_phone_number"
+            style="@style/OrangeTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/OrangeTextStyle"
-            android:lines="1"
-            android:id="@+id/bp_phone_number"
             android:hint="请输入手机号"
-            />
+            android:inputType="phone"
+            android:lines="1" />
     </android.support.design.widget.TextInputLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,16 +53,20 @@
                 style="@style/OrangeTextStyle"
                 android:id="@+id/bp_code"
                 android:lines="1"
+                android:inputType="number"
                 android:hint="请输验证码"
                 />
         </android.support.design.widget.TextInputLayout>
-
         <TextView
-            android:id="@+id/bp_get_code"
-            style="@style/OrangeTextStyle"
-            android:layout_width="wrap_content"
+            android:id="@+id/getCode"
+            style="@style/WhiteTextStyle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="getCode"
+            android:layout_weight="2"
+            android:padding="5dp"
+            android:button="@null"
+            android:background="@drawable/button_fast_pre"
+            android:gravity="center_horizontal"
             android:text="获取验证码" />
     </LinearLayout>
 
@@ -74,6 +78,7 @@
         style="@style/whiteBigTextStyle"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:onClick="next"
         android:background="@drawable/button_fast_bg"
         android:id="@+id/bp_next" />
 </LinearLayout>

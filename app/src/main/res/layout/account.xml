@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:gravity="center"
-        android:text="我的余额（元）"/>
+        android:text="我的余额"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

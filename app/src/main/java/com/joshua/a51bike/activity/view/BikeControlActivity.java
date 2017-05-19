@@ -298,6 +298,10 @@ public class BikeControlActivity extends BaseActivity {
     }
 
     public void lockBike(View view) {
+        if(mCurrentState == STATE_BACK){
+            UiUtils.showToast("没有车辆可以控制哦~");
+            return;
+        }
         UiUtils.showToast("请直接长按按钮锁车");
     }
     private MapView  mapView;
@@ -305,18 +309,19 @@ public class BikeControlActivity extends BaseActivity {
 
     public void returnBike(View view) {
         //判断是否停在江大内部
-        dialogControl.setDialog(new WaitProgress(mBaseActivity));
-        dialogControl.show();
+//        dialogControl.setDialog(new WaitProgress(mBaseActivity));
+//        dialogControl.show();
 //        getGPSMes(REQUEST_GETGPS_INSCHOOL);
+        Log.i(TAG, "returnBike: mCurrentState is "+mCurrentState );
         if (mCurrentState == STATE_START) {
             UiUtils.showToast("请先长按按钮锁车");
         }else if(mCurrentState==STATE_STOP){
             dialogControl.setDialog(new WaitProgress(mBaseActivity));
             dialogControl.show();
             postServerReturnBike();
-        }
-//        postServerReturnBike();
-}
+        }else if(mCurrentState == STATE_BACK)
+            UiUtils.showToast("没有车辆可以还哦~");
+    }
     /**
      * 通知服务器租车
      */

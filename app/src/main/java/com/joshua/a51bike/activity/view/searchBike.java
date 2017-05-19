@@ -11,11 +11,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
-import com.joshua.a51bike.entity.school.School;
-import com.joshua.a51bike.entity.school.SchoolList;
+import com.joshua.a51bike.activity.dialog.WaitProgress;
+import com.joshua.a51bike.entity.Car;
+import com.joshua.a51bike.util.AppUtil;
+import com.joshua.a51bike.util.JsonUtil;
+import com.joshua.a51bike.util.UiUtils;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -62,17 +64,20 @@ public class searchBike extends BaseActivity {
     }
 
     private   Callback.Cancelable cancelable;
-
-    private void post(RequestParams params){
-        Log.i(TAG, "post:");
-        cancelable =  x.http().post(params, new Callback.CommonCallback<String>() {
+    private String search_url = AppUtil.BaseUrl +"car/getCarByNum";
+    private void post(String num){
+        dialogControl.setDialog(new WaitProgress(this));
+        dialogControl.show();
+        RequestParams param =  new RequestParams(search_url);
+        param.addBodyParameter("carNum",num);
+        Log.i(TAG, "post:"+param.toString());
+        cancelable =  x.http().post(param, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.i(TAG, "onSuccess: result is ");
-                School p = new Gson().fromJson(result, School.class);
-                for(SchoolList pro : p.getData()){
-                    Log.i(TAG, "onSuccess: pro name "+pro.getSchool_name());
-                }
+                Log.i(TAG, "onSuccess: result is "+result);
+                dialogControl.cancel();
+                Car car = JsonUtil.getCarObject(result);
+                userControl.toBikeMes(searchBike.this,car.getCarMac());
             }
 
             @Override
@@ -127,19 +132,15 @@ public class searchBike extends BaseActivity {
             case R.id.one:
                 sb.append("1");
                 updataEditView();
-
                 break;
-
             case R.id.two:
                 sb.append("2");
                 updataEditView();
                 break;
-
             case R.id.three:
                 sb.append("3");
                 updataEditView();
                 break;
-
             case R.id.four:
                 sb.append("4");
                 updataEditView();
@@ -148,53 +149,44 @@ public class searchBike extends BaseActivity {
                 sb.append("5");
                 updataEditView();
                 break;
-
             case R.id.six:
                 sb.append("6");
                 updataEditView();
                 break;
-
             case R.id.seven:
                 sb.append("7");
                 updataEditView();
                 break;
-
             case R.id.eight:
                 sb.append("8");
                 updataEditView();
                 break;
-
             case R.id.nine:
                 sb.append("9");
                 updataEditView();
-
                 break;
-
             case R.id.zero:
                 sb.append("0");
                 updataEditView();
                 break;
-
             case R.id.delete:
                 if(sb.length() == 0 ) break;
                 sb.delete(sb.length()-1,sb.length());
                 updataEditView();
                 break;
-
             case R.id.sure:
-                if(sb.length() < 2 )
-                    break;
-                userControl.toBikeMes(this,"  ");
-
-//                RequestParams params = new RequestParams();
-//                params.addHeader("Content-Type","application/json");
-//                post(params);
+                    if(sb.length() < 2 ){
+                        UiUtils.showToast("请输入正确的车牌号");
+                        break;
+                    }
+                post(sb.toString());
                 break;
             case R.id.search_button:
-                if(sb.length() < 2 )
+                if(sb.length() < 2 ){
+                    UiUtils.showToast("请输入正确的车牌号");
                     break;
-                userControl.toBikeMes(this,"  ");
-
+                }
+                userControl.toBikeMes(this,"C48CBD64C41F000000000006");
                 break;
             default:
                 break;

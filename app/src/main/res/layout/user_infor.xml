@@ -45,7 +45,7 @@
                     android:layout_centerHorizontal="true" />
 
                 <TextView
-                    android:text="未设置"
+                    android:text=""
                     style="@style/whiteTextStyle"
                     android:id="@+id/main_user_name"
                     android:layout_below="@+id/user_infor_icn"

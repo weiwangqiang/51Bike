@@ -53,12 +53,15 @@ public class account extends BaseActivity {
     }
 
     private void initView() {
-        money.setText(userControl.getUser().getUsermoney()+"");
+        money.setText(userControl.getUser().getUsermoney()+" 元");
         if(userControl.getUser().getUserRerve()!= 0){
             yajin.setRightText("已经缴纳");
+            yajin.setClickable(false);
         }
-        else
+        else{
+            yajin.setClickable(true);
             yajin.setRightText("未缴纳，点击缴纳");
+        }
 
     }
 

@@ -124,15 +124,17 @@ public class BleManager {
         if (!mBluetoothAdapter.isEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 context.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-            }
-//        Log.i(TAG, "onActivityResult: ----------->> 开启蓝牙配对模式啦===========");
+        }
+        Log.i(TAG, "onActivityResult: ----------->> 开启蓝牙搜索模式啦===========");
 //        Intent in=new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
 //        in.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3600); //3600为蓝牙设备可见时间
 //        context.startActivity(in);
+        mBluetoothAdapter.startDiscovery();
     }
 
 
-    /**
+    /**  用户点击开启车辆的时候会调用这个方法
+     *
      * 尝试连接ble设备
      * 返回尝试连接结果
      * 此时若返回true，并不能确定已经连接成功，还需要看mGattCallback回调结果
@@ -169,6 +171,7 @@ public class BleManager {
         refreshDeviceCache();
         //真正进行连接的方法
         //android 6 设置为false
+        if(device == null ) return false;
         mBluetoothGatt = device.connectGatt(context, true, mGattCallback);
 //        mBluetoothGatt.registerApp(mBluetoothGatt);
         Log.i(TAG, "Trying to create a new connection.");

@@ -3,6 +3,8 @@ package com.joshua.a51bike.activity.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -41,7 +43,7 @@ import java.util.TimerTask;
  * @since 2017-01-10
  */
 @ContentView(R.layout.login)
-public class Login extends BaseActivity{
+public class Login extends BaseActivity  {
     private String TAG = "Login";
     private String url = AppUtil.BaseUrl +"/user/login";
     private String mesUrl = AppUtil.BaseUrl +"/user/getCode";
@@ -54,6 +56,10 @@ public class Login extends BaseActivity{
 
     @ViewInject(R.id.get_code)
     private TextView get_code;
+
+
+    @ViewInject(R.id.button_fast_login)
+    private TextView button_fast_login;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,12 +80,36 @@ public class Login extends BaseActivity{
     }
 
     public void setLister() {
-        findViewById(R.id.button_fast_login).setOnClickListener(this);
+        button_fast_login.setOnClickListener(this);
         get_code.setOnClickListener(this);
+        getCode.addTextChangedListener(new myTextWatcher());
         findViewById(R.id.bike_mes_agreement).setOnClickListener(this);
 
     }
+    public class myTextWatcher implements TextWatcher {
 
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if(s.length() > 0){
+                button_fast_login.setBackgroundResource(R.drawable.button_fast_pre);
+                button_fast_login.setClickable(true);
+            }else{
+                button_fast_login.setBackgroundResource(R.drawable.button_fast_nor);
+                button_fast_login.setClickable(false);
+            }
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    }
 
     /**
      * Called when a view has been clicked.
@@ -113,9 +143,8 @@ public class Login extends BaseActivity{
 
     public void getCode (){
         if(MyTools.EditTextIsNull(getName)){
-           UiUtils.showToast("请输入正确的手机号");
+           UiUtils.showToast("手机号不能为空");
             return ;
-
         }
         if(!MyTools.isMobileNO(getName.getText().toString())){
             UiUtils.showToast("请输入正确的手机号");
@@ -131,10 +160,15 @@ public class Login extends BaseActivity{
 
     }
     private void login(){
-//        if (MyTools.EditTextIsNull(getName) || MyTools.EditTextIsNull(getCode)) {
-//            UiUtils.showToast("手机号或验证码不能为空~");
-//            return;
-//        }
+        if (MyTools.EditTextIsNull(getName)) {
+            UiUtils.showToast("手机号不能为空~");
+            return;
+        }
+        if (MyTools.EditTextIsNull(getCode)) {
+            UiUtils.showToast("验证码不能为空~");
+            return;
+        }
+
         type = LOGIN;
         String name = getName.getText().toString();
         String code = getCode.getText().toString();
@@ -149,7 +183,6 @@ public class Login extends BaseActivity{
         dialogControl.setDialog(new WaitProgress(this));
         dialogControl.show();
         post(params);
-
     }
     private   Callback.Cancelable cancelable;
     private void post(RequestParams params){
@@ -223,6 +256,7 @@ public class Login extends BaseActivity{
         release = 60;
         timer.schedule(timeTask, 1000, 1000);       // timeTask
         get_code.setClickable(false);
+        get_code.setText(release+"秒");
         get_code.setBackgroundResource(R.drawable.button_fast_nor);
 
     }
@@ -235,7 +269,7 @@ public class Login extends BaseActivity{
                 @Override
                 public void run() {
                     release--;
-                    get_code.setText(""+release+"秒");
+                    get_code.setText(release+"秒");
                     if(release < 0){
                         timer.cancel();
                         timeTask.cancel();

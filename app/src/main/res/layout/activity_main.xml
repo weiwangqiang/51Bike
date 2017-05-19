@@ -11,12 +11,12 @@
             layout="@layout/main"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-        <include
-            layout="@layout/left_main"
-            android:id="@+id/leftMain"
-            android:layout_width="match_parent"
-            android:layout_gravity="start"
-            android:fitsSystemWindows="true"
-            android:layout_height="match_parent" />
+        <!--<include-->
+            <!--layout="@layout/left_main"-->
+            <!--android:id="@+id/leftMain"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_gravity="start"-->
+            <!--android:fitsSystemWindows="true"-->
+            <!--android:layout_height="match_parent" />-->
     </android.support.v4.widget.DrawerLayout>
 

@@ -2,15 +2,30 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/detail_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/gray_little"
-            />
-    </android.support.v4.widget.SwipeRefreshLayout>
+    <!--<android.support.v4.widget.SwipeRefreshLayout-->
+        <!--android:id="@+id/swipeRefresh"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
+ <RelativeLayout
+     android:layout_width="match_parent"
+     android:layout_height="match_parent">
+     <android.support.v7.widget.RecyclerView
+         android:id="@+id/detail_recyclerView"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:background="@color/gray_little"
+         />
+     <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:gravity="center"
+         android:visibility="gone"
+         android:layout_centerInParent="true"
+         android:id="@+id/error_TextView"
+         android:text="您还没有行车记录\n快来体验一下吧"
+         android:textSize="18sp"/>
+
+ </RelativeLayout>
+
 </FrameLayout>

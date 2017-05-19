@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,6 +54,8 @@ public class UserRoute extends BaseActivity implements ListView.OnItemClickListe
     @ViewInject(R.id.route_List)
     private RecyclerView recyclerView;
     private List<HashMap<String,String>> data = new ArrayList<>();
+    @ViewInject(R.id.error_TextView)
+    private TextView error_TextView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,10 +109,6 @@ public class UserRoute extends BaseActivity implements ListView.OnItemClickListe
         Gson gson = gsonBuilder.create();
         Type type = new TypeToken<ArrayList<UserAndUse>>() {}.getType();
         list =gson.fromJson(result, type);
-        for(UserAndUse use :list){
-            Log.i(TAG, "parseResult: "+use.getUseDistance()
-                    +" time  "+use.getUseHour());
-        }
         initListView();
     }
     private void initListView() {
@@ -144,6 +143,10 @@ public class UserRoute extends BaseActivity implements ListView.OnItemClickListe
             map.put("id",use.getId()+"");
             data.add(map);
         }
+        if(data.size() == 0)
+            error_TextView.setVisibility(View.VISIBLE);
+        else
+            error_TextView.setVisibility(View.GONE);
 
     }
     public void setLister() {

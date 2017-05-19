@@ -61,10 +61,6 @@ public class accountRecharge extends BaseActivity {
         myToolbar.setTitle("");
         myToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.title_back));
         setSupportActionBar(myToolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     public void findId() {

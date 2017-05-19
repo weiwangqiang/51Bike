@@ -255,7 +255,7 @@ public class RZSchool extends BaseActivity {
         RequestParams params = new RequestParams(url);
         params.addBodyParameter("username",name);
 //        params.addBodyParameter("userpass",id);
-        params.addBodyParameter("userstate",id);
+//        params.addBodyParameter("userstate",id);
 
         userControl.getUser().setRealName(name);
         userControl.getUser().setSchool(school);
@@ -275,7 +275,6 @@ public class RZSchool extends BaseActivity {
 
                 if(result.equals("ok")){
                     uiUtils.showToast("修改成功！");
-                    userControl.setUser(user);
                     finish();
                 }
 

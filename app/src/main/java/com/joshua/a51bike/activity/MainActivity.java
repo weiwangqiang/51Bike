@@ -9,20 +9,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.TextView;
@@ -58,22 +52,23 @@ import com.joshua.a51bike.activity.dialog.LocateProgress;
 import com.joshua.a51bike.activity.dialog.WaitProgress;
 import com.joshua.a51bike.activity.presenter.locatePresenter;
 import com.joshua.a51bike.activity.view.BikeControlActivity;
+import com.joshua.a51bike.activity.view.LeftMain;
 import com.joshua.a51bike.activity.view.Pay;
-import com.joshua.a51bike.activity.view.Use_Explain;
 import com.joshua.a51bike.activity.view.searchBike;
 import com.joshua.a51bike.adapter.TimestampTypeAdapter;
-import com.joshua.a51bike.customview.CircleImageView;
-import com.joshua.a51bike.customview.progress;
 import com.joshua.a51bike.entity.Car;
 import com.joshua.a51bike.entity.Order;
 import com.joshua.a51bike.entity.ReadData;
-import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.entity.UserAndUse;
 import com.joshua.a51bike.util.AMapUtil;
 import com.joshua.a51bike.util.AppUtil;
 import com.joshua.a51bike.util.JsonUtil;
+import com.joshua.a51bike.util.PrefUtils;
 import com.joshua.a51bike.util.SensorEventHelper;
-import com.joshua.a51bike.util.imageUtil.ImageManager;
+
+import net.frederico.showtipsview.ShowTipsBuilder;
+import net.frederico.showtipsview.ShowTipsView;
+import net.frederico.showtipsview.ShowTipsViewInterface;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -86,6 +81,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.joshua.a51bike.R.id.rent;
 import static com.joshua.a51bike.util.JsonUtil.gson;
 
 /**
@@ -94,15 +90,11 @@ import static com.joshua.a51bike.util.JsonUtil.gson;
 @ContentView(R.layout.activity_main)
 public class MainActivity extends BaseMap {
     public String TAG = "MainActivity";
-    private CircleImageView userIcn;
-    private TextView userName,userMoney,userCash;
-    private DrawerLayout drawer;
     private Context mContext;
     private Button location;
     public LatLng LastPoint;
     //canGetPos 是否可以更新当前位置
     private Boolean canGetPos = true,canShow = false;
-    private progress myProgress;
     private Marker mLocMarker;
     private SensorEventHelper mSensorHelper;//自旋转的定位指针
     private Circle mCircle;
@@ -112,10 +104,6 @@ public class MainActivity extends BaseMap {
 
     @ViewInject(R.id.main_use_explain)
     private TextView explain;
-
-    private View useProgressParent;
-    @ViewInject(R.id.main_progress_view)
-    private progress useProgress;
 
     private static final int REQUEST_CODE_LOCATION = 0x0001;
     @Override
@@ -145,11 +133,9 @@ public class MainActivity extends BaseMap {
         switch (requestCode) {
             case REQUEST_CODE_LOCATION:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission Granted
                     Toast.makeText(MainActivity.this, "Location Granted", Toast.LENGTH_SHORT)
                             .show();
                 } else {
-                    // Permission Denied
                     Toast.makeText(MainActivity.this, "Location Denied", Toast.LENGTH_SHORT)
                             .show();
                 }
@@ -166,67 +152,12 @@ public class MainActivity extends BaseMap {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_reorder_white_24dp);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        initLeftMain();
-        //实现左右滑动
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
-    /**
-     * 初始化侧滑栏view的高宽
-     */
-    private void initLeftMain() {
-        DisplayMetrics metric = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metric);
-        int windowsWight = metric.widthPixels;
-        View leftMenu = findViewById(R.id.leftMain);
-        ViewGroup.LayoutParams leftParams = leftMenu.getLayoutParams();
-        findViewById(R.id.left_back).setOnClickListener(this);
-        leftParams.width = windowsWight;
-        leftMenu.setLayoutParams(leftParams);
-    }
-    private TextView textView1,textView2,textView3,textView4;
-    private List<TextView> list = new ArrayList<>();
-
-    /**
-     * 判断是否显示侧滑栏的进度条
-     * @param user
-     */
-    private void showProgreesOrNot(User user) {
-        setProgressView(1);   //更新
-        if(user == null ){
-            useProgressParent.setVisibility(View.GONE);
-            return;
-        }
-        if(useProgressParent.getVisibility() == View.GONE)
-            useProgressParent.setVisibility(View.VISIBLE);
-        if(user.getRealName() != null )
-            setProgressView(2);
-        if(user.getUserRerve() == 200)
-            useProgressParent.setVisibility(View.GONE);
-    }
-
-    /**
-     * 设置当前进度条
-     * @param a
-     */
-    private void setProgressView(int a) {
-        useProgress.setPoistion(a);
-        int i ;
-        for(TextView T:list){
-            T.setTextColor(getResources().getColor(R.color.gray));
-        }
-        for(i = 0;i<a;i++){
-            list.get(i).setTextColor(getResources().getColor(R.color.baseColor));
-        }
-    }
     public void init() {
         mContext = this.getApplicationContext();
         userControl = UserControl.getUserControl();
@@ -345,23 +276,6 @@ public class MainActivity extends BaseMap {
 
     public void findid() {
         location = (Button) findViewById(R.id.main_location);
-        useProgressParent = findViewById(R.id.main_progress);
-        userIcn = (CircleImageView) findViewById(R.id.main_user_icn);
-        userName = (TextView) findViewById(R.id.main_user_name);
-        userMoney = (TextView) findViewById(R.id.money);//余额
-        userCash = (TextView) findViewById(R.id.cash);//保证金
-        myProgress = (progress) findViewById(R.id.main_progress_view);
-
-        textView1 = (TextView) findViewById(R.id.text1);
-        textView2 = (TextView) findViewById(R.id.text2);
-        textView3 = (TextView) findViewById(R.id.text3);
-        textView4 = (TextView) findViewById(R.id.text4);
-
-        list.add(textView1);
-        list.add(textView2);
-        list.add(textView3);
-        list.add(textView4);
-
     }
 
 //*************** listener 相关的方法***********************************
@@ -369,6 +283,7 @@ public class MainActivity extends BaseMap {
     /**
      * 注册监听
      */
+    public View rentView;
     private void registerListener() {
         aMap.setOnMarkerClickListener(this);
         aMap.setInfoWindowAdapter(this);
@@ -376,50 +291,58 @@ public class MainActivity extends BaseMap {
         mRouteSearch = new RouteSearch(this);
         location.setOnClickListener(this);
         explain.setOnClickListener(this);
-        findViewById(R.id.rent).setOnClickListener(this);
-        //LeftMain
-        userIcn.setOnClickListener(this);
-        findViewById(R.id.main_setting).setOnClickListener(this);
-        findViewById(R.id.user_route).setOnClickListener(this);
-        findViewById(R.id.account).setOnClickListener(this);
-        findViewById(R.id.service).setOnClickListener(this);
-        findViewById(R.id.share).setOnClickListener(this);
+        rentView =  findViewById(R.id.rent);
+        rentView.setOnClickListener(this);
 
+        View v =  findViewById(R.id.search_view);
+        //用户第一次进来 ，介绍使用方法
+        if(isFirst()){
+            // ShowTipsView
+            ShowTipsView showtips = new ShowTipsBuilder(this)
+                    .setTarget(v)
+                    .setDescription("这里可以通过搜索车牌号租车哦")
+                    .setDelay(1000)
+                    .setBackgroundAlpha(70)
+                    .setCloseButtonColor(Color.WHITE)
+                    .setCloseButtonTextColor(Color.GREEN)
+                    .setCallback(new ViewCallBack())
+                    .build();
+            showtips.show(this);
+        }
+    }
+    public boolean isFirst(){
+        Log.i(TAG, "isFirst: ");
+        return PrefUtils.getBoolean(this,"isFirst",true);
     }
 
+    /**
+     * 第一次用户进来的引导界面
+     */
+    public class ViewCallBack implements ShowTipsViewInterface {
+
+        @Override
+        public void gotItClicked() {
+            // ShowTipsView
+            ShowTipsView showtips = new ShowTipsBuilder(MainActivity.this)
+                    .setTarget(location)
+                    .setDescription("这里可以定位哦")
+                    .setDelay(0)
+                    .setBackgroundAlpha(70)
+                    .setCloseButtonColor(Color.WHITE)
+                    .setCloseButtonTextColor(Color.GREEN)
+                    .build();
+            showtips.show(MainActivity.this);
+            PrefUtils.setBoolean(MainActivity.this,"isFirst",false);
+        }
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_location:
                 getLocation();
                 break;
-            case R.id.rent:
+            case rent:
                 toRent();
-                break;
-            case R.id.main_user_icn:
-                userControl.toChoice(MainActivity.this);
-                break;
-            case R.id.main_setting:
-                userControl.config(MainActivity.this);
-                break;
-            case R.id.user_route:
-                userControl.userRoute(MainActivity.this);
-                break;
-            case R.id.service:
-                userControl.service(MainActivity.this);
-                break;
-            case R.id.account:
-                userControl.account(MainActivity.this);
-                break;
-            case R.id.share:
-                userControl.share(MainActivity.this);
-                break;
-            case R.id.main_use_explain:
-             startActivity(new Intent(this, Use_Explain.class));
-                break;
-            case R.id.left_back:
-                if(drawer.isDrawerOpen(GravityCompat.START))
-                    drawer.closeDrawer(GravityCompat.START);
                 break;
             default:
                 break;
@@ -441,12 +364,10 @@ public class MainActivity extends BaseMap {
       userControl.saoma(MainActivity.this);
     }
     private String url_getCurrent = AppUtil.BaseUrl+"/user/getCurrent";
-
     /**
      * 获取上次没有付款的UserAndUse
      */
     private void getLastOrder() {
-        Log.i(TAG, "getLastOreder: ====获取上次没有付款的UserAndUse====");
         dialogControl.setDialog(new WaitProgress(this));
         dialogControl.show();
         RequestParams result_params = new RequestParams(url_getCurrent);
@@ -454,14 +375,12 @@ public class MainActivity extends BaseMap {
         x.http().get(result_params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.i(TAG, "onSuccess: result -------------------- -  \n "+result);
                 parseLastOrderResult(result);
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 ex.printStackTrace();
-                Log.i("onError", ">>>>>>>>>>>>>>>>>>>>>>>>>>o2:"+ex.getMessage());
                 dialogControl.cancel();
 
             }
@@ -486,7 +405,6 @@ public class MainActivity extends BaseMap {
      */
     private Order order = new Order();
     private void parseLastOrderResult(String result) {
-        Log.i(TAG, "parseLastOrderResult:   解析结果 ");
         try {
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.setDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -498,7 +416,6 @@ public class MainActivity extends BaseMap {
                 userControl.setUserAndUse(userAndUse);
                 //正在租车，先获取car的信息 然后跳转到控制界面
                 if(userAndUse.getCarState() == Car.STATE_START){
-                    Log.i(TAG, "parseLastOrderResult: 没有还车 ");
                     order.setUseStartTime(userAndUse.getUseStartTime().getTime());
                     order.setCarId(userAndUse.getCarId());
                     userControl.setOrder(order);
@@ -506,7 +423,6 @@ public class MainActivity extends BaseMap {
                 }
                 //已经还车，但是没有付款
                 else if (userAndUse.getCarState() == Car.STATE_AVALIABLE){
-                    Log.i(TAG, "parseLastOrderResult: 没有付款，跳到付款界面");
                      Order order = new Order();
                     order.setCarId(userAndUse.getCarId());
                     order.setUseMoney(userAndUse.getUseMoney());
@@ -527,17 +443,13 @@ public class MainActivity extends BaseMap {
      */
     private String url_getCarById  = AppUtil.BaseUrl+"/car/getCarById";
     public void getCarMes(){
-        Log.i(TAG, "getCarMes: -----获取车辆信息-----------------------");
         RequestParams result_params = new RequestParams(url_getCarById);
         result_params.addParameter("carId",userControl.getUserAndUse().getCarId());
-        Log.i(TAG, "getCarMes: paramse "+result_params.toString());
         x.http().get(result_params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.i(TAG, "onSuccess: result -------------------- -  \n "+result);
                     Car car = JsonUtil.getCarObject(result);
                     if(car != null){
-                        Log.i(TAG, "onSuccess: 跳转道控制界面了-----------");
                         carControl.setCar(car);
                         Intent intent = new Intent(MainActivity.this, BikeControlActivity.class);
                         intent.putExtra("from_where","Exception");
@@ -549,7 +461,6 @@ public class MainActivity extends BaseMap {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 ex.printStackTrace();
-                Log.i("onError", ">>>>>>>>>>>>>>>>>>>>>>>>>>o2:"+ex.getMessage());
                 dialogControl.cancel();
 
             }
@@ -573,12 +484,10 @@ public class MainActivity extends BaseMap {
      */
     private String getMesList_url =AppUtil.BaseUrl+ "/car/getgpsList";
     public void getCarMesList(){
-        Log.i(TAG, "getCarMesList: ===================");
         RequestParams result_params = new RequestParams(getMesList_url);
         x.http().get(result_params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.i(TAG, "onSuccess: 获取车辆信息列表：\n"+result);
                 parseResult(result);
             }
 
@@ -618,7 +527,6 @@ public class MainActivity extends BaseMap {
                     .title("车牌号:"+r.getCarBattery2())
 //                    .snippet("可行驶里程: " + i + " 公里")
                     .position(AMapUtil.convertToLatLng(new LatLonPoint(r.getWei(),r.getJin())))
-//                    .position(AMapUtil.convertToLatLng(current))
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.bike));
             aMap.addMarker(markerOptions);
         }
@@ -646,9 +554,15 @@ public class MainActivity extends BaseMap {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main, menu);
+
+        // ShowTipsView
+
         return true;
     }
-
+    @Override public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        return true;
+    }
     //处理menu事件
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -656,6 +570,7 @@ public class MainActivity extends BaseMap {
             case R.id.nav_search:
                 toSearchActivty();
             case android.R.id.home:
+                startActivity(new Intent(this, LeftMain.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -720,20 +635,11 @@ public class MainActivity extends BaseMap {
             {
                 marker.hideInfoWindow();
             }
-        } else {
+        } else
             marker.showInfoWindow();
-        }
-
-//        if (null != LastPoint) {
-//            x = LastPoint.latitude - marker.getPosition().latitude;
-//            y = LastPoint.longitude - marker.getPosition().longitude;
-//        }
-//        Log.w(TAG, " x is " + x + " y is " + y);
         changeCamera(
                 CameraUpdateFactory.newCameraPosition(new CameraPosition(
                         marker.getPosition(), 17, 0, 0)), new myCancelableCallback());
-
-//        changeCamera(CameraUpdateFactory.scrollBy(100,100), new myCancelableCallback());
         return false;
     }
 //*********************************************************************************
@@ -767,7 +673,6 @@ public class MainActivity extends BaseMap {
         showCurrentPosition();
         locatepresener.getcurrentLocation(mlocationClient);//开始定位
         SensorHelper();
-        initUI();
         if(canShow){
             showDialog();
             canShow = false;
@@ -815,49 +720,8 @@ public class MainActivity extends BaseMap {
                             mLatLng, 15, 0, 0)), new myCancelableCallback());
         }
     }
-    /*判断用户是否处于陆状态*/
-    private void initUI() {
-        if(null != userControl.getUser())
-            initUserMessage();
-        else
-            initLogOut();
-    }
-
-    /**
-     * 初始化用户信息
-     */
-    String pre_image_path = Environment.getExternalStorageDirectory()+"/51get";
-
-    private void initUserMessage() {
-        User user = userControl.getUser();
-        String after_image_path = "";
-        userName.setText(userControl.getUser().getUsername());
-        userMoney.setText(userControl.getUser().getUsermoney()+"");
-        userCash.setText(userControl.getUser().getUserRerve()+"");
-        showProgreesOrNot(user);
-        if(after_image_path == null )
-            return;
-        after_image_path = pre_image_path +"/"+userControl.getUser().getUsername()+".jpg";
-        ImageManager manager = new  ImageManager();
-        if(userControl.getUser().getUserpic() != null){
-            manager.bindImageWithBitmap(userIcn,
-                    after_image_path);
-        }
-    }
 
 
-    /**
-     * 未登录状态
-     */
-    private void initLogOut() {
-        userName.setText("未登录");
-        userMoney.setText("0");
-        userCash.setText("0");
-        setProgressView(0);
-        if(useProgressParent.getVisibility() == View.GONE)
-            useProgressParent.setVisibility(View.VISIBLE);
-        userIcn.setImageResource(R.drawable.default_icn);
-    }
 
     private void SensorHelper() {
         if (mSensorHelper != null) {

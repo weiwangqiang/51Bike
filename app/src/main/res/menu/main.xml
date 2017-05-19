@@ -4,6 +4,6 @@
     <item
         android:id="@+id/nav_search"
         android:icon="@drawable/search"
-        android:title="Share"
+        android:title="search"
         app:showAsAction="ifRoom" />
 </menu>

@@ -32,13 +32,6 @@
             android:layout_marginBottom="10dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
-            <!--<ProgressBar-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_margin="10dp"-->
-                <!---->
-                <!--style="@style/CustomProgressStyle"/>-->
-
                 <Button
                     android:layout_width="@dimen/main_Bottom_height"
                     android:layout_height="match_parent"
