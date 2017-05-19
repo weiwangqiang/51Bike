@@ -27,7 +27,7 @@ import com.joshua.a51bike.entity.ReadData;
 import com.joshua.a51bike.entity.User;
 import com.joshua.a51bike.util.AppUtil;
 import com.joshua.a51bike.util.JsonUtil;
-import com.joshua.a51bike.util.LocateManager;
+
 import com.joshua.a51bike.util.PrefUtils;
 import com.joshua.a51bike.util.UiUtils;
 
@@ -494,13 +494,13 @@ public class BikeControlActivity extends BaseActivity {
     public void checkInSchool(ReadData readData){
         dialogControl.cancel();
 
-        LocateManager l = new LocateManager(mapView.getMap());
-        Log.i(TAG, "checkInSchool: jin :"+readData.getJin()+"\n : wei "+readData.getWei());
-        LatLng lat = new LatLng(readData.getWei(),readData.getJin());
-        if(!l.isInSchool(lat)){
-            UiUtils.showToast("请将车辆停在江苏大学内部");
-//            return ;
-        }
+//        LocateManager l = new LocateManager(mapView.getMap());
+//        Log.i(TAG, "checkInSchool: jin :"+readData.getJin()+"\n : wei "+readData.getWei());
+//        LatLng lat = new LatLng(readData.getWei(),readData.getJin());
+//        if(!l.isInSchool(lat)){
+//            UiUtils.showToast("请将车辆停在江苏大学内部");
+////            return ;
+//        }
 
         if (mCurrentState == STATE_START) {
             UiUtils.showToast("请先长按按钮锁车");

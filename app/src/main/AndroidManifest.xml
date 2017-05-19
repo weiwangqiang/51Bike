@@ -117,7 +117,8 @@
         <activity android:name=".activity.view.UserRoute"/>
         <activity android:name=".activity.view.UserRouteMes"/>
         <activity android:name=".activity.view.ChargingRule"/>
-        <activity android:name=".activity.view.FirstClick"/>
+        <activity android:name=".activity.view.FirstClick"
+            android:theme="@style/AppThemeNoFit"/>
         <activity android:name=".activity.view.LeftMain"/>
         <activity
             android:name=".activity.view.RZRealName"

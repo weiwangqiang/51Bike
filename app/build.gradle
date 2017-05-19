@@ -3,10 +3,10 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         config {
-            keyAlias 'wei'
-            keyPassword '1995421'
-            storeFile file('G:/android/key/androidkey/wei.jks')
-            storePassword '1995421'
+//            keyAlias 'wei'
+//            keyPassword '1995421'
+//            storeFile file('G:/android/key/androidkey/wei.jks')
+//            storePassword '1995421'
         }
     }
     compileSdkVersion 24
@@ -56,7 +56,7 @@ dependencies {
     androidTestCompile 'com.android.support.test:runner:0.4.1'
     androidTestCompile 'com.android.support.test:rules:0.4.1'
 
-    compile project(path: ':showTipsView')
+    compile 'net.fredericosilva:showTipsView:1.0.4'
 }
 
 
@@ -64,10 +64,10 @@ dependencies {
 android {
     signingConfigs {
         config {
-            keyAlias 'wei'
-            keyPassword '1995421'
-            storeFile file('G:/android/key/androidkey/wei.jks')
-            storePassword '1995421'
+//            keyAlias 'wei'
+//            keyPassword '1995421'
+//            storeFile file('G:/android/key/androidkey/wei.jks')
+//            storePassword '1995421'
         }
     }
     buildTypes {
