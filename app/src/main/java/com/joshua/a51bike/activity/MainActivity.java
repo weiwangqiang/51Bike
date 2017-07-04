@@ -81,7 +81,7 @@ import static com.joshua.a51bike.R.id.rent;
 import static com.joshua.a51bike.util.JsonUtil.gson;
 
 /**
- * 应用的主界面
+ *  应用的主界面 =_=  ~~_~~
  */
 @ContentView(R.layout.activity_main)
 public class MainActivity extends BaseMap {
@@ -115,7 +115,7 @@ public class MainActivity extends BaseMap {
     }
 
     /**
-     * 初始化权限
+     *     初 始化权限
      */
     private void initGranted() {
         int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
