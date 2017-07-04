@@ -116,12 +116,12 @@
         android:text="支付宝支付"
         android:textSize="20sp" />
 
-    <RadioButton
-        android:id="@+id/pay_weixin"
-        style="@style/payRadioButton"
-        android:drawableLeft="@drawable/weixin"
-        android:drawableRight="@drawable/radio_red_circular"
-        android:text="微信支付" />
+    <!--<RadioButton-->
+        <!--android:id="@+id/pay_weixin"-->
+        <!--style="@style/payRadioButton"-->
+        <!--android:drawableLeft="@drawable/weixin"-->
+        <!--android:drawableRight="@drawable/radio_red_circular"-->
+        <!--android:text="微信支付" />-->
 </RadioGroup>
 
 

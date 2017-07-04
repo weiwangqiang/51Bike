@@ -15,6 +15,7 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
 -keep class * extends
 -libraryjars libs/alipaySDK-20150602.jar
 -keep class com.alipay.android.app.IAlixPay{*;}

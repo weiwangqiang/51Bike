@@ -12,6 +12,7 @@ import android.view.View;
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.activity.fragments.DetailFragment;
+import com.joshua.a51bike.activity.fragments.UseFragment;
 import com.joshua.a51bike.adapter.FragmentAdapter;
 import com.joshua.a51bike.util.AppUtil;
 
@@ -61,9 +62,14 @@ public class accountMingxi extends BaseActivity {
         }
         tabLayout.setupWithViewPager(viewPager);
     }
+    private String reCahrge_url = AppUtil.BaseUrl+"/user/getChargesByid";
+    private String minxi_url = AppUtil.BaseUrl+"/car/getList";
     private void initViewPager(){
-        list.add(new DetailFragment());
-        list.add(new DetailFragment());
+        DetailFragment xiaofei =  new DetailFragment().newInstance(reCahrge_url,"充值明细");
+        UseFragment reCharge = new UseFragment().newInstance(minxi_url,"消费明细");
+        list.add(reCharge);
+
+        list.add(xiaofei);
         //刚开始只会加载前两个fragment
         adapter  = new FragmentAdapter(getSupportFragmentManager(), list);
         viewPager.setAdapter(adapter);
@@ -77,10 +83,6 @@ public class accountMingxi extends BaseActivity {
         myToolbar.setTitle("");
         myToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.title_back));
         setSupportActionBar(myToolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     public void findId() {

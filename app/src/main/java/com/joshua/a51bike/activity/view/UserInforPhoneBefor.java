@@ -110,7 +110,7 @@ public class UserInforPhoneBefor extends BaseActivity {
 
     /*获取验证码*/
     private void getCode() {
-        if (MyTools.EditTextIsNull(Ecode)) {
+        if (MyTools.EditTextIsNull(Ephone)) {
             UiUtils.showToast("验证码不能为空~");
             return;
         }

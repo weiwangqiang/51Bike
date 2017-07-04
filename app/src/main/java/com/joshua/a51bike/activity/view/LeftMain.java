@@ -142,6 +142,9 @@ public class LeftMain extends BaseActivity {
         userName.setText("未登录");
         userMoney.setText("0");
         userCash.setText("0");
+
+//        findViewById(R.id.moneyleft).setVisibility(View.VISIBLE);
+//        findViewById(R.id.yuan).setVisibility(View.VISIBLE);
         setProgressView(0);
         if(useProgressParent.getVisibility() == View.GONE)
             useProgressParent.setVisibility(View.VISIBLE);
@@ -156,7 +159,14 @@ public class LeftMain extends BaseActivity {
         String after_image_path = "";
         userName.setText(userControl.getUser().getUsername());
         userMoney.setText(userControl.getUser().getUsermoney()+"");
-        userCash.setText(userControl.getUser().getUserRerve()+"");
+//        if(user.getUserNumber()!=null){
+//            if(user.getUserNumber().length() !=0){
+//                userCash.setText("免");
+//                findViewById(R.id.moneyleft).setVisibility(View.GONE);
+//                findViewById(R.id.yuan).setVisibility(View.GONE);
+//            }
+//        }else
+        userCash.setText(user.getUserRerve()+"");
         showProgreesOrNot(user);
         if(after_image_path == null )
             return;
@@ -196,14 +206,14 @@ public class LeftMain extends BaseActivity {
             case R.id.share:
                 userControl.share(LeftMain.this);
                 break;
-            case R.id.main_use_explain:
-                startActivity(new Intent(this, Use_Explain.class));
-                break;
+
             default:
                 break;
         }
     }
-
+    public void UseExplain(View view){
+        startActivity(new Intent(this, Use_Explain.class));
+    }
     /**
      * Called when an activity you launched exits
      */

@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent">
 
         <SurfaceView
             android:id="@+id/preview_view"
@@ -18,12 +18,13 @@
             android:id="@+id/viewfinder_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
         <include
             android:id="@+id/include1"
+            layout="@layout/top_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            layout="@layout/top_layout" />
+            android:layout_alignParentTop="true" />
 
     </RelativeLayout>
 

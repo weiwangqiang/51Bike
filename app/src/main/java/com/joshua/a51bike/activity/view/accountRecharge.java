@@ -110,9 +110,9 @@ public class accountRecharge extends BaseActivity {
             payUtils.setPaySuccess(new myPaySuccess());
             payUtils.payV2(this,money);
         }
-        else {
-            post();
-        }
+//        else {
+//            post();
+//        }
 
     }
     private class myPaySuccess implements PaySuccess {

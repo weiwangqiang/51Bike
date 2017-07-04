@@ -13,8 +13,8 @@ package com.joshua.a51bike.util;
 public class AppUtil {
     private static String TAG = "AppUtil";
 //    public static String BaseUrl = "http://192.168.1.104:8080/diandongche";
-    public static String BaseUrl = "http://123.206.104.107/diandongche";
-//    public static String BaseUrl = "http://d16i425105.iask.in/diandongche";
+    public static String BaseUrl = "https://51get.club/diandongche";
+//    public static String BaseUrl = "http://1r720574t3.51mypc.cn/diandongche";
     public static final int INTENT_REQUSET = 100;
     public static final int INTENT_RESPONSE = 101;
 }

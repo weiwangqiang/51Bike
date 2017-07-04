@@ -3,10 +3,10 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         config {
-//            keyAlias 'wei'
-//            keyPassword '1995421'
-//            storeFile file('G:/android/key/androidkey/wei.jks')
-//            storePassword '1995421'
+            keyAlias 'wei'
+            keyPassword '1995421'
+            storeFile file('G:/android/key/androidkey/wei.jks')
+            storePassword '1995421'
         }
     }
     compileSdkVersion 24
@@ -21,8 +21,13 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'),'proguard-rules.pro'
+            minifyEnabled false //混淆
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        buildType {
+            debuggable true
+        }
+        debug {
             signingConfig signingConfigs.config
         }
     }
@@ -40,9 +45,9 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile fileTree(dir: 'libs', include: '*.jar')
+    compile fileTree(include: '*.jar', dir: 'libs')
     compile 'com.android.support:appcompat-v7:24.0.0'
-        compile 'org.xutils:xutils:3.3.40'
+    compile 'org.xutils:xutils:3.3.40'
     compile 'com.lovedise:permissiongen:0.0.6'
     compile 'com.android.support:design:24.0.0'
     compile 'com.android.support:cardview-v7:24.0.0'
@@ -55,27 +60,4 @@ dependencies {
     androidTestCompile 'com.android.support:support-annotations:24.0.0'
     androidTestCompile 'com.android.support.test:runner:0.4.1'
     androidTestCompile 'com.android.support.test:rules:0.4.1'
-
-    compile 'net.fredericosilva:showTipsView:1.0.4'
-}
-
-
-
-android {
-    signingConfigs {
-        config {
-//            keyAlias 'wei'
-//            keyPassword '1995421'
-//            storeFile file('G:/android/key/androidkey/wei.jks')
-//            storePassword '1995421'
-        }
-    }
-    buildTypes {
-        buildType {
-            signingConfig signingConfigs.config
-        }
-    }
-    lintOptions  {
-        checkReleaseBuilds false
-    }
 }

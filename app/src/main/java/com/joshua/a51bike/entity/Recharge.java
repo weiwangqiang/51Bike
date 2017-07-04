@@ -2,14 +2,23 @@ package com.joshua.a51bike.entity;
 
 import java.sql.Timestamp;
 public class Recharge {
-       Integer userId;
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	Integer id;
+       Integer userid;
        Integer userCharge;
        Timestamp userTime;
 	public Integer getUserId() {
-		return userId;
+		return userid;
 	}
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setUserId(Integer userid) {
+		this.userid = userid;
 	}
 	public Integer getUserCharge() {
 		return userCharge;

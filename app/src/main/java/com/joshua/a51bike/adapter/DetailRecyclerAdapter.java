@@ -6,14 +6,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.joshua.a51bike.Interface.myitemLister;
 import com.joshua.a51bike.R;
+import com.joshua.a51bike.entity.Recharge;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by wangqiang on 2016/9/28.
@@ -26,9 +28,9 @@ public class DetailRecyclerAdapter extends  RecyclerView.Adapter<DetailRecyclerA
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_FOOTER = 1;
     private String TAG = "recyclerAdapter";
-    private List<Map<String,String>> data ;
-    private String[] from;
-    public DetailRecyclerAdapter(Context context, int view,List<Map<String,String>>data,String[] from){
+    private List<Recharge> data ;
+    private String from;
+    public DetailRecyclerAdapter(Context context, int view,List<Recharge>data,String from){
         this.context = context;
         this.view = view;
         this.data = data;
@@ -41,19 +43,6 @@ public class DetailRecyclerAdapter extends  RecyclerView.Adapter<DetailRecyclerA
 
         viewHolder = new MyViewHolder(LayoutInflater.
                 from(context).inflate(view,parent,false));
-
-//        if (viewType == TYPE_ITEM) {
-//            return viewHolder;
-//        }
-//        // type == TYPE_FOOTER 返回footerView
-//        else if (viewType == TYPE_FOOTER) {
-//            Log.e("adapter","adapter viewType is "+viewType+" has get View footer");
-//            View view = LayoutInflater.from(parent.getContext()).inflate(
-//                    R.layout.footer, null);
-//            view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT,
-//                    RecyclerView.LayoutParams.WRAP_CONTENT));
-//            return new MyViewHolder(view,null);
-//        }
         return viewHolder;
     }
 //    @Override
@@ -73,31 +62,14 @@ public class DetailRecyclerAdapter extends  RecyclerView.Adapter<DetailRecyclerA
     public void setItemClickListener(myitemLister lister){
         this.lister = lister;
     }
-    /**
-     * Called by RecyclerView to display the data at the specified position. This method should
-     * update the contents of the {@link #} to reflect the item at the given
-     * position.
-     * <p/>
-     * Note that unlike {@link ListView}, RecyclerView will not call this method
-     * again if the position of the item changes in the data set unless the item itself is
-     * invalidated or the new position cannot be determined. For this reason, you should only
-     * use the <code>position</code> parameter while acquiring the related data item inside
-     * this method and should not keep a copy of it. If you need the position of an item later
-     * on (e.g. in a click listener), use {@link #()} which will
-     * have the updated juhe.jiangdajiuye.adapter position.
-     * <p/>
-     * Override {@link #(, int, List)} instead if Adapter can
-     * handle effcient partial bind.
-     *
-     * @param holder   The ViewHolder which should be updated to represent the contents of the
-     *                 item at the given position in the data set.
-     * @param position The position of the item within the juhe.jiangdajiuye.adapter's data set.
-     */
+    DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
     @Override
     public void onBindViewHolder(DetailRecyclerAdapter.MyViewHolder holder, final int position) {
-        holder.title.setText(data.get(position).get(from[0]));
-        holder.time.setText(data.get(position).get(from[1]));
-        holder.money.setText(data.get(position).get(from[2]));
+        holder.title.setText(from);
+        Date date= new Date(data.get(position).getUserTime().getTime());
+        holder.time.setText(format.format(date));
+        holder.money.setText(data.get(position).getUserCharge()+"元");
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,10 +89,11 @@ public class DetailRecyclerAdapter extends  RecyclerView.Adapter<DetailRecyclerA
     public int getItemCount() {
         return data.size();
     }
-    public void RefreshDate (Map<String,String> map){
-        data.add(0,map);
-        notifyItemInserted(0);
+    public void RefreshDate (List<Recharge> data){
+        this.data = data;
+        notifyDataSetChanged();
     }
+
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView title,time,money;

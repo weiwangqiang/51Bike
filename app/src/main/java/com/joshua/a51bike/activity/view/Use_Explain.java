@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.joshua.a51bike.R;
 import com.joshua.a51bike.activity.core.BaseActivity;
+import com.joshua.a51bike.util.PrefUtils;
 
 import org.xutils.view.annotation.ContentView;
 
@@ -35,6 +36,8 @@ public class Use_Explain extends BaseActivity {
         initActionBar();
         findId();
         setLister();
+        PrefUtils.setBoolean(this,"isExplain",true);
+
     }
 
     private void initActionBar() {

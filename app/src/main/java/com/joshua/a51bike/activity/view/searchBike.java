@@ -64,14 +64,14 @@ public class searchBike extends BaseActivity {
     }
 
     private   Callback.Cancelable cancelable;
-    private String search_url = AppUtil.BaseUrl +"car/getCarByNum";
+    private String search_url = AppUtil.BaseUrl +"/car/getCarByNum";
     private void post(String num){
         dialogControl.setDialog(new WaitProgress(this));
         dialogControl.show();
         RequestParams param =  new RequestParams(search_url);
         param.addBodyParameter("carNum",num);
         Log.i(TAG, "post:"+param.toString());
-        cancelable =  x.http().post(param, new Callback.CommonCallback<String>() {
+        x.http().get(param, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 Log.i(TAG, "onSuccess: result is "+result);
@@ -175,22 +175,22 @@ public class searchBike extends BaseActivity {
                 updataEditView();
                 break;
             case R.id.sure:
-                    if(sb.length() < 2 ){
-                        UiUtils.showToast("请输入正确的车牌号");
-                        break;
-                    }
-                post(sb.toString());
+                search();
                 break;
             case R.id.search_button:
-                if(sb.length() < 2 ){
-                    UiUtils.showToast("请输入正确的车牌号");
-                    break;
-                }
-                userControl.toBikeMes(this,"C48CBD64C41F000000000006");
+                search();
                 break;
             default:
                 break;
         }
+    }
+
+    private void search() {
+        if(editText.getText().length() ==0){
+            UiUtils.showToast("请输入正确的车牌号");
+            return;
+        }
+        post(editText.getText().toString());
     }
 
     private void updataEditView() {

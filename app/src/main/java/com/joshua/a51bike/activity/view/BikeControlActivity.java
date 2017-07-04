@@ -100,7 +100,7 @@ public class BikeControlActivity extends BaseActivity {
         Intent intent = getIntent();
         from = intent.getStringExtra("from_where");
         if(from.equals("Exception")){
-            //是异常退出，显=显示开启蓝牙的对话框
+            //是异常退出，显示开启蓝牙的对话框
             dialogControl.setDialog(new
                     OpenBLEAlerDialog(this,
                     new DialogCallBack() {
@@ -541,7 +541,8 @@ public class BikeControlActivity extends BaseActivity {
             switch (resultCode){
                 case REQUEST_ENABLE_BT:
                     //设置蓝牙可配对模式
-
+                    Log.i(TAG, "onActivityResult: 用户打开了蓝牙 ，我收到回调了");
+                    mBleManager.startScanDevice();
                     break;
             }
         }

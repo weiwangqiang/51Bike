@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/first2"
+        android:id="@+id/first_item_image"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/TopTextView"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:visibility="invisible"
+        android:textSize="20dp"
+        android:textColor="@color/topBaseColor"
+        android:text="随时随地享受骑车的\n乐趣"
+        android:background="@color/gray_translate"/>
+</RelativeLayout>

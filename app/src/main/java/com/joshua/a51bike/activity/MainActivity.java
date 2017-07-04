@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -54,6 +53,7 @@ import com.joshua.a51bike.activity.presenter.locatePresenter;
 import com.joshua.a51bike.activity.view.BikeControlActivity;
 import com.joshua.a51bike.activity.view.LeftMain;
 import com.joshua.a51bike.activity.view.Pay;
+import com.joshua.a51bike.activity.view.Use_Explain;
 import com.joshua.a51bike.activity.view.searchBike;
 import com.joshua.a51bike.adapter.TimestampTypeAdapter;
 import com.joshua.a51bike.entity.Car;
@@ -65,10 +65,6 @@ import com.joshua.a51bike.util.AppUtil;
 import com.joshua.a51bike.util.JsonUtil;
 import com.joshua.a51bike.util.PrefUtils;
 import com.joshua.a51bike.util.SensorEventHelper;
-
-import net.frederico.showtipsview.ShowTipsBuilder;
-import net.frederico.showtipsview.ShowTipsView;
-import net.frederico.showtipsview.ShowTipsViewInterface;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -133,11 +129,11 @@ public class MainActivity extends BaseMap {
         switch (requestCode) {
             case REQUEST_CODE_LOCATION:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(MainActivity.this, "Location Granted", Toast.LENGTH_SHORT)
-                            .show();
+//                    Toast.makeText(MainActivity.this, "Location Granted", Toast.LENGTH_SHORT)
+//                            .show();
                 } else {
-                    Toast.makeText(MainActivity.this, "Location Denied", Toast.LENGTH_SHORT)
-                            .show();
+//                    Toast.makeText(MainActivity.this, "Location Denied", Toast.LENGTH_SHORT)
+//                            .show();
                 }
                 break;
             default:
@@ -296,45 +292,51 @@ public class MainActivity extends BaseMap {
 
         View v =  findViewById(R.id.search_view);
         //用户第一次进来 ，介绍使用方法
-        if(isFirst()){
-            // ShowTipsView
-            ShowTipsView showtips = new ShowTipsBuilder(this)
-                    .setTarget(v)
-                    .setDescription("这里可以通过搜索车牌号租车哦")
-                    .setDelay(1000)
-                    .setBackgroundAlpha(70)
-                    .setCloseButtonColor(Color.WHITE)
-                    .setCloseButtonTextColor(Color.WHITE)
-                    .setCallback(new ViewCallBack())
-                    .build();
-            showtips.show(this);
-        }
+//        if(isFirst()){
+//            // ShowTipsView
+//            ShowTipsView showtips = new ShowTipsBuilder(this)
+//                    .setTarget(v)
+//                    .setDescription("这里可以通过搜索车牌号租车哦")
+//                    .setDelay(1000)
+//                    .setBackgroundAlpha(70)
+//                    .setCloseButtonColor(Color.WHITE)
+//                    .setCloseButtonTextColor(Color.WHITE)
+//                    .setCallback(new ViewCallBack())
+//                    .build();
+//            showtips.show(this);
+//        }
+        if(isExplain())
+            explain.setVisibility(View.GONE);
     }
     public boolean isFirst(){
         Log.i(TAG, "isFirst: ");
         return PrefUtils.getBoolean(this,"isFirst",true);
     }
+    //用户有没有看过使用手册
+    public boolean isExplain(){
+        return PrefUtils.getBoolean(this,"isExplain",false);
+    }
 
     /**
      * 第一次用户进来的引导界面
      */
-    public class ViewCallBack implements ShowTipsViewInterface {
-
-        @Override
-        public void gotItClicked() {
-            // ShowTipsView
-            ShowTipsView showtips = new ShowTipsBuilder(MainActivity.this)
-                    .setTarget(location)
-                    .setDescription("这里可以定位哦")
-                    .setDelay(0)
-                    .setBackgroundAlpha(70)
-                    .setCloseButtonColor(Color.WHITE)
-                    .setCloseButtonTextColor(Color.WHITE)
-                    .build();
-            showtips.show(MainActivity.this);
-            PrefUtils.setBoolean(MainActivity.this,"isFirst",false);
-        }
-    }
+//    public class ViewCallBack implements ShowTipsViewInterface {
+//
+//        @Override
+//        public void gotItClicked() {
+//            // ShowTipsView
+//            ShowTipsView showtips = new ShowTipsBuilder(MainActivity.this)
+//                    .setTarget(location)
+//                    .setDescription("这里可以定位哦")
+//                    .setDelay(0)
+//                    .setBackgroundAlpha(70)
+//                    .setCloseButtonColor(Color.WHITE)
+//                    .setCloseButtonTextColor(Color.WHITE)
+//                    .build();
+//            showtips.show(MainActivity.this);
+//            PrefUtils.setBoolean(MainActivity.this,"isFirst",false);
+//        }
+//    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -343,6 +345,9 @@ public class MainActivity extends BaseMap {
                 break;
             case rent:
                 toRent();
+                break;
+            case R.id.main_use_explain:
+                startActivity(new Intent(this, Use_Explain.class));
                 break;
             default:
                 break;

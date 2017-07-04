@@ -22,8 +22,11 @@ import com.joshua.a51bike.bluetooth.utils.Protocol;
 import com.joshua.a51bike.util.UiUtils;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+
+import static com.joshua.a51bike.util.UiUtils.runOnUiThread;
 
 
 /**
@@ -70,7 +73,7 @@ public class BleManager {
 
     private static final String serviceUuid = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
     private static final String writeUuid = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
-    private static final String readUuid = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+    private static final String readUuid  = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
 
     private static final byte startCommand = 0x01;//开机命令
     private BleCallBack mBleCallBack;
@@ -124,15 +127,33 @@ public class BleManager {
         if (!mBluetoothAdapter.isEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 context.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            return ;
         }
-        Log.i(TAG, "onActivityResult: ----------->> 开启蓝牙搜索模式啦===========");
-//        Intent in=new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-//        in.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3600); //3600为蓝牙设备可见时间
-//        context.startActivity(in);
-        mBluetoothAdapter.startDiscovery();
+        //如果启用了，就直接搜索设备
+//        startScanDevice();
     }
 
+    public void startScanDevice() {
+        Log.i(TAG, "onActivityResult: ----------->> 开启蓝牙搜索模式啦===========");
+        mBluetoothAdapter.startLeScan(mLeScanCallback);
+    }
+     private String CAR_MAC = CarControl.getCarControl().getCar().getCarMac();
+    private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
 
+        @Override
+        public void onLeScan(final BluetoothDevice device, int rssi, final byte[] scanRecord) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(device.getAddress().equals(CAR_MAC )){
+                        //搜索到设备
+                        connect();
+                        mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                    }
+                }
+            });
+        }
+    };
     /**  用户点击开启车辆的时候会调用这个方法
      *
      * 尝试连接ble设备
@@ -253,7 +274,7 @@ public class BleManager {
     }
     /**
      * 根据uuid获取Characteristic 来进行读写操作
-     * 读 or 写
+     *
      */
     private BluetoothGattCharacteristic getCharacteristic(String uuid) {
         List<BluetoothGattService> services = this
@@ -280,12 +301,16 @@ public class BleManager {
         if(!isContinue){
             byte[] pre_20 = new byte[20];
             System.arraycopy(bytes, 0, pre_20, 0, 20);
+            Log.i(TAG, "sendCommandToDevice: =====================================");
+            System.out.print("发送的数组pre_20："+Arrays.toString(pre_20));
             writeCharacteristic.setValue(pre_20);
             writeCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
             this.writeCharacteristic(writeCharacteristic);
         } else {
             byte[] after_5 = new byte[5];
             System.arraycopy(bytes, 20, after_5, 0, 5);
+            System.out.print("发送的数组after_5："+ Arrays.toString(after_5));
+
             writeCharacteristic.setValue(after_5);
             writeCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
             this.writeCharacteristic(writeCharacteristic);
@@ -337,10 +362,6 @@ public class BleManager {
         mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
         BluetoothGattDescriptor descriptor = characteristic.getDescriptor(UUID
                 .fromString(CLIENT_CHARACTERISTIC_CONFIG));
-
-//        BluetoothGattDescriptor descriptor1 = characteristic.
-//                getDescriptor(com.characteristic.smart.smartpen.bluetooth.HD_Profile.UUID_CHAR_NOTIFY_DIS);
-//        if(descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE)){ }
         if (descriptor != null) {
             Log.w(TAG, "desc not null , set notify");
             descriptor .setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);//  android 6 设置这个

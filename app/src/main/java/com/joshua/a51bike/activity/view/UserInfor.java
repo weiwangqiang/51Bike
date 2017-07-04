@@ -111,7 +111,7 @@ public class UserInfor extends BaseActivity  {
 
     public void setLister() {
 //        findViewById(R.id.user_infor_Logout).setOnClickListener(this);
-        findViewById(R.id.user_infor_icn).setOnClickListener(this);
+//        findViewById(R.id.user_infor_icn).setOnClickListener(this);
         findViewById(R.id.user_infor_school).setOnClickListener(this);
 //        findViewById(R.id.user_infor_save).setOnClickListener(this);
         userPhone.setOnClickListener(this);

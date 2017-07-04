@@ -126,7 +126,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/money"
-                     />
+                        android:id="@+id/moneyleft"
+
+                        />
 
                     <TextView
                         android:id="@+id/cash"
@@ -141,6 +143,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="元"
+                        android:id="@+id/yuan"
                         android:layout_marginLeft="10dp"
                         android:textColor="@color/gray"
 />
@@ -184,6 +187,15 @@
                 style="@style/listButtonStyle"
                 android:text="分享"
                 android:id="@+id/share"
+                android:background="@drawable/main_b_white_gray_bg"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/listButtonStyle"
+                android:text="使用说明"
+                android:id="@+id/UseExplain"
+                android:onClick="UseExplain"
                 android:background="@drawable/main_b_white_gray_bg"/>
 
             <Button

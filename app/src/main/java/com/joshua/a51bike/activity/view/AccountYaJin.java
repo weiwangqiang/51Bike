@@ -39,7 +39,6 @@ import static com.joshua.a51bike.pay.util.PayUtils.payUtils;
 public class AccountYaJin extends BaseActivity {
     private static final String TAG = "AccountYaJin";
 
-
     @ViewInject(R.id.pay_zhifubao)
     private RadioButton zhifubao;
 

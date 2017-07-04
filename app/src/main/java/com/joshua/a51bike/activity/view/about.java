@@ -2,6 +2,8 @@ package com.joshua.a51bike.activity.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +29,14 @@ public class about extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
+        HandlerThread handlerThread  = new HandlerThread("thread");
+        Handler handler = new Handler(handlerThread.getLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
     }
     public void init() {
         initActionBar();
