@@ -81,7 +81,7 @@ import static com.joshua.a51bike.R.id.rent;
 import static com.joshua.a51bike.util.JsonUtil.gson;
 
 /**
- *  应用的主界面 =_=  ~~_~~  
+ *  应用的主界面 =_=  ~~_~~   呜啦啦，暴漫每周五更新
  */
 @ContentView(R.layout.activity_main)
 public class MainActivity extends BaseMap {
