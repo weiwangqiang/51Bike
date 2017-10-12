@@ -44,8 +44,8 @@ public class UserControl implements UserState {
         this.user = user;
     }
 
-    private  UserState userState = new LogoutState();
-    private User user = null ;
+    private  UserState userState = new LoginState();
+    private User user = new User() ;
     public static UserControl getUserControl(){
         return  userControl;
     }

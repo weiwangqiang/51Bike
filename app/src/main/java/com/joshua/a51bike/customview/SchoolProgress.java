@@ -68,7 +68,7 @@ public class SchoolProgress extends ViewGroup {
     public void builMenu(){
         for(int i = 1; i <=position;i++){
             TextView tv = new TextView(context);
-            tv.setText(i+"");
+//            tv.setText(i+"");
             tv.setTextColor(getResources().getColor(R.color.baseColor));
             tv.setBackgroundResource(R.drawable.progress_ok);
             tv.setGravity(Gravity.CENTER);
@@ -76,7 +76,7 @@ public class SchoolProgress extends ViewGroup {
         }
         for(int i = position+1; i <=4;i++){
             TextView tv = new TextView(context);
-            tv.setText(i+"");
+//            tv.setText(i+"");
             tv.setTextColor(getResources().getColor(R.color.baseColor));
 //            tv.setBackgroundResource(R.drawable.progress_ok);
             tv.setGravity(Gravity.CENTER);

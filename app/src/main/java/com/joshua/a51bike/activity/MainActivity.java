@@ -358,14 +358,14 @@ public class MainActivity extends BaseMap {
      * 用户点击扫码按钮
      */
     private void toRent() {
-        if(userControl.getUser() != null){
-            //用户上次没有还车或者没有付款
-            if ( userControl.getUser().getUserstate() == 2)
-            {
-                getLastOrder();
-                return ;
-            }
-        }
+//        if(userControl.getUser() != null){
+//            //用户上次没有还车或者没有付款
+//            if ( userControl.getUser().getUserstate() == 2)
+//            {
+//                getLastOrder();
+//                return ;
+//            }
+//        }
       userControl.saoma(MainActivity.this);
     }
     private String url_getCurrent = AppUtil.BaseUrl+"/user/getCurrent";

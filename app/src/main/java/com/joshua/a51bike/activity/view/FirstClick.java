@@ -22,6 +22,7 @@ import com.joshua.a51bike.activity.MainActivity;
 import com.joshua.a51bike.activity.core.BaseActivity;
 import com.joshua.a51bike.adapter.FirstVPAdapter;
 import com.joshua.a51bike.adapter.mytransformer;
+import com.joshua.a51bike.util.PrefUtils;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -185,6 +186,7 @@ public class FirstClick extends BaseActivity {
                 finish();
                 break;
             case R.id.first_start:
+                PrefUtils.setBoolean(this,"isFirst",false);
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
                 break;

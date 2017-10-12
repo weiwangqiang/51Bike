@@ -129,6 +129,7 @@
         <activity
             android:name=".activity.view.RZSchool"
             android:launchMode="singleTop"
+            android:windowSoftInputMode="stateHidden"
             android:configChanges="orientation|keyboardHidden"/>
         <activity
             android:name=".activity.view.searchBike"

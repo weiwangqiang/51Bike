@@ -8,9 +8,9 @@ public class User {
 	//正在租车状态
 	public static final int STATE_USEING = 2;
 
-    private  int userid;
-	private  String username;
-	private String realName = null;
+    private  int userid = 0;
+	private  String username = "";
+	private String realName = "";
 
 
 	public String getUserNumber() {
@@ -31,10 +31,10 @@ public class User {
 		this.userRerve = userRerve;
 	}
 
-	private int userRerve;  //用户余额
-	private  int userstate;  // 0 可租 1不可租 2 正在租
-	private  String userpass;
-	private  String userpic;
+	private int userRerve = 200;  //用户余额
+	private  int userstate = 0;  // 0 可租 1不可租 2 正在租
+	private  String userpass = "" ;
+	private  String userpic = "";
 	public String getSchool() {
 		return school;
 	}
