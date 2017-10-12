@@ -32,8 +32,6 @@
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="true"/>
-
-
     <application
         android:name=".application.BaseApplication"
         android:allowBackup="true"
