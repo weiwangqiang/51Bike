@@ -11,3 +11,6 @@
 - 采用android 低功耗蓝牙方案（BLE）与设备通信<br />
 - 支持路径规划，支持电子栅栏技术<br />
 - 支持用户拍照，选择相册来更换头像<br />
+<img src="https://raw.githubusercontent.com/weiwangqiang/ProjectIcn/master/picture/51get/Screenshot_2017-03-30-12-05-38_meitu_2.jpg" width="30%" height="30%"> 
+<img src="https://github.com/weiwangqiang/ProjectIcn/blob/master/picture/51get/Screenshot_2017-03-30-12-09-41_meitu_3.jpg" width="30%" height="30%">
+<img src="https://raw.githubusercontent.com/weiwangqiang/ProjectIcn/master/picture/51get/Screenshot_2017-03-31-14-06-15.png" width="30%" height="30%">
